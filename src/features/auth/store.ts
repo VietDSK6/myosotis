@@ -1,4 +1,4 @@
-// features/auth/store.ts
+
 
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -10,21 +10,21 @@ interface AuthStore extends AuthState, AuthActions {}
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
-      // State
+      
       user: null,
       loginData: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
 
-      // Actions
+      
       login: async (payload: LoginPayload) => {
         try {
           set({ isLoading: true, error: null });
           
           const response = await loginUser(payload);
           
-          // For now, create a simplified user object from login response
+          
           const user: User = {
             id: response.user_id,
             email: response.email,
@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthStore>()(
           
           const response = await registerUser(payload);
           
-          // Create user object from register response
+          
           const user: User = {
             id: response.id,
             email: response.email,
@@ -98,7 +98,7 @@ export const useAuthStore = create<AuthStore>()(
         } catch (error) {
           console.error('Logout error:', error);
         } finally {
-          // Clear state
+          
           set({
             user: null,
             loginData: null,

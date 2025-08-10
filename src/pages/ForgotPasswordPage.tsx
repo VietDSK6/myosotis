@@ -1,59 +1,53 @@
-// pages/ForgotPasswordPage.tsx
 import { useNavigate } from 'react-router-dom';
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Quên mật khẩu
+    <div className="min-h-screen bg-cyan-50 antialiased text-[18px] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-semibold text-gray-900">
+            Forgot Password
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Tính năng khôi phục mật khẩu sẽ được phát triển sớm
+          <p className="mt-2 text-lg text-gray-600">
+            Password recovery feature coming soon
           </p>
         </div>
         
-        <div className="bg-white py-8 px-6 shadow-lg rounded-lg">
-          <div className="space-y-4">
+        <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="space-y-6">
             <div className="text-center">
-              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">
-                Tính năng đang phát triển
+              <div className="h-12 w-12 mx-auto mb-4 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center">
+                <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Feature in Development
               </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Chúng tôi đang xây dựng tính năng khôi phục mật khẩu. 
-                Vui lòng liên hệ với bộ phận hỗ trợ nếu bạn cần giúp đỡ.
+              <p className="text-lg text-gray-600">
+                We're building the password recovery feature. 
+                Please contact support if you need assistance.
               </p>
             </div>
             
             <div className="flex flex-col space-y-3">
               <button
                 onClick={() => navigate('/login')}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors w-full"
               >
-                Quay lại đăng nhập
+                Back to Sign In
               </button>
               
               <button
                 onClick={() => navigate('/register')}
-                className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className="min-h-12 px-5 rounded-xl bg-white border border-gray-300 text-gray-700 text-lg hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors w-full"
               >
-                Tạo tài khoản mới
+                Create New Account
               </button>
             </div>
           </div>
-        </div>
-        
-        <div className="text-center text-xs text-gray-500">
-          Cần hỗ trợ ngay?{' '}
-          <button className="text-blue-600 hover:text-blue-800">
-            Liên hệ với chúng tôi
-          </button>
         </div>
       </div>
     </div>

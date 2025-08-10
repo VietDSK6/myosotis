@@ -1,10 +1,10 @@
-// app/router.tsx
 import { createBrowserRouter } from 'react-router-dom';
 import { LoginPage, RegisterPage } from '../features/auth';
 import DashboardPage from '../pages/DashboardPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import WelcomePage from '../pages/WelcomePage';
 import CaregiverGuidePage from '../pages/CaregiverGuidePage';
+import { PersonalInfoPage } from '../pages/PersonalInfoPage';
 
 export const router = createBrowserRouter([
   {
@@ -36,12 +36,16 @@ export const router = createBrowserRouter([
     element: <DashboardPage />,
   },
   {
+    path: '/personal-info',
+    element: <PersonalInfoPage />,
+  },
+  {
     path: '*',
     element: (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen bg-cyan-50 antialiased text-[18px] flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-          <p className="text-gray-600">Trang không tìm thấy</p>
+          <h1 className="text-4xl font-semibold text-gray-900 mb-4">404</h1>
+          <p className="text-lg text-gray-600">Page not found</p>
         </div>
       </div>
     ),

@@ -1,4 +1,3 @@
-// app/AppWithAuth.tsx
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
 import { useAuthInitialization } from '../features/auth';

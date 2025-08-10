@@ -1,5 +1,3 @@
-// features/auth/types.ts
-
 export interface LoginPayload {
   email: string;
   password: string;
@@ -10,7 +8,7 @@ export interface RegisterPayload {
   password: string;
   phone?: string;
   full_name: string;
-  date_of_birth?: string; // yyyy-mm-dd
+  date_of_birth?: string;
   gender?: 'male' | 'female';
   address?: string;
   avatar_url?: string;

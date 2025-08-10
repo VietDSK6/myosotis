@@ -1,261 +1,102 @@
-# React + TypeScript + Vite
+# Myosotis 🌸
+### Alzheimer Support Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, accessible web application designed to support people with Alzheimer's disease and their caregivers with daily care management, memory aids, and family communication tools.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
 
-# Myosotis - Alzheimer Support System
+### Installation
 
-Myosotis is a web application designed to support Alzheimer's patients and their families with care management, memory aids, and communication tools.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/VietDSK6/myosotis.git
+   cd myosotis
+   ```
 
-## Features
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### Authentication System ✅
-- **User Registration** - Create new accounts with email/password
-- **User Login** - Secure authentication with JWT tokens
-- **Protected Routes** - Route protection for authenticated users
-- **Session Management** - Automatic token refresh and logout
-- **Form Validation** - Client-side validation with Zod schemas
+3. **Set up environment**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Update `.env.local` with your API URL:
+   ```env
+   VITE_API_URL=http://your-backend-url:8777
+   ```
 
-### Core Technologies
-- **React 19** - Modern React with latest features
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first styling
-- **React Router v7** - Client-side routing
-- **Zustand** - State management
-- **React Hook Form** - Form handling with validation
-- **Zod** - Schema validation
-- **Axios** - HTTP client with interceptors
-- **React Query** - Server state management
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-## Project Structure
+   Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## 🏗️ Technology Stack
+
+- **Frontend**: React 18 + TypeScript + Vite
+- **Styling**: Tailwind CSS + Custom accessibility classes
+- **Routing**: React Router v6
+- **State**: Zustand with persistence
+- **Forms**: React Hook Form + Zod validation
+- **HTTP**: Axios with interceptors
+- **UI**: Headless components with focus management
+
+## 📁 Project Structure
 
 ```
 src/
-├── app/                    # Application core
-│   ├── main.tsx           # App entry point
-│   ├── router.tsx         # Route configuration
-│   └── AppWithAuth.tsx    # Auth-wrapped app component
-├── features/              # Feature-based modules
-│   └── auth/              # Authentication feature
-│       ├── types.ts       # TypeScript interfaces
-│       ├── validation.ts  # Zod schemas
-│       ├── api.ts         # API functions
-│       ├── store.ts       # Zustand store
-│       ├── hooks.ts       # Custom hooks
-│       ├── LoginForm.tsx  # Login form component
-│       ├── RegisterForm.tsx # Register form component
-│       ├── LoginPage.tsx  # Login page
-│       ├── RegisterPage.tsx # Register page
-│       ├── components/    # Shared auth components
-│       │   └── ProtectedRoute.tsx
-│       └── index.ts       # Export barrel
-├── pages/                 # Page components
-│   ├── DashboardPage.tsx  # Protected dashboard
-│   └── ForgotPasswordPage.tsx
-└── assets/               # Static assets
+├── app/                    # Core application setup
+│   ├── main.tsx           # Entry point
+│   ├── router.tsx         # Route definitions
+│   └── AppWithAuth.tsx    # Auth wrapper
+├── features/auth/          # Authentication module
+│   ├── api.ts             # Auth API calls
+│   ├── store.ts           # Auth state management
+│   ├── types.ts           # TypeScript interfaces
+│   ├── validation.ts      # Form validation schemas
+│   ├── hooks.ts           # Auth-related hooks
+│   ├── LoginForm.tsx      # Login form component
+│   ├── RegisterForm.tsx   # Multi-step registration
+│   └── components/        # Shared auth components
+├── pages/                  # Page components
+│   ├── WelcomePage.tsx    # Landing page
+│   ├── DashboardPage.tsx  # Main user dashboard
+│   ├── CaregiverGuidePage.tsx  # Caregiver resources
+│   └── ForgotPasswordPage.tsx  # Password recovery
+├── hooks/                  # Custom hooks
+│   └── useSessionTimeout.ts   # 24-hour session management
+└── accessibility.css      # Custom accessibility styles
 ```
 
-## Setup Instructions
-
-### 1. Install Dependencies
+### Available Scripts
 ```bash
-npm install
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript checks
 ```
 
-### 2. Environment Configuration
-Copy the environment template and configure your API URL:
-```bash
-cp .env.example .env.local
+### Environment Variables
+```env
+VITE_API_URL=http://localhost:8777    # Backend API URL
+VITE_APP_NAME=Myosotis               # Application name
+VITE_APP_VERSION=1.0.0               # Version number
 ```
 
-Update `.env.local` with your backend API URL:
-```
-VITE_API_URL=http://localhost:8080
-```
+## 🤝 Contributing
 
-### 3. Development Server
-```bash
-npm run dev
-```
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-The app will be available at `http://localhost:5173`
-
-## Authentication API Integration
-
-The auth system expects these backend endpoints (currently without JWT tokens for PoC):
-
-### Register User
-```
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "password123",
-  "phone": "0123456789", // optional
-  "full_name": "Full Name",
-  "date_of_birth": "2025-08-08", // optional, yyyy-mm-dd
-  "gender": "male", // optional, "male" or "female"
-  "address": "Address", // optional
-  "avatar_url": "url", // optional
-  "emergency_contact": "Emergency contact" // optional
-}
-
-Response:
-{
-  "http_code": 201,
-  "success": true,
-  "message": null,
-  "metadata": null,
-  "data": {
-    "id": 38,
-    "email": "user@example.com",
-    "phone": "0123456789",
-    "created_at": "2025-08-08 07:29:17.690494",
-    "updated_at": null,
-    "profile": {
-      "full_name": "Full Name",
-      "date_of_birth": "2025-08-08",
-      "gender": "male",
-      "phone": "0123456789",
-      "address": "Address",
-      "avatar_url": "url",
-      "emergency_contact": "Emergency contact",
-      "id": 38,
-      "user_id": 38,
-      "created_at": "2025-08-08 07:29:17.690494"
-    },
-    "emergency_contacts": null
-  }
-}
-```
-
-### Login User
-```
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-
-Response:
-{
-  "http_code": 200,
-  "success": true,
-  "message": null,
-  "metadata": null,
-  "data": {
-    "user_id": 36,
-    "email": "user@example.com",
-    "full_name": "Full Name",
-    "message": "Login successful"
-  }
-}
-```
-
-**Note:** Currently no JWT tokens are implemented for PoC. User authentication state is maintained in frontend state management only.
-
-## Available Routes
-
-- `/` - Redirects to dashboard
-- `/login` - Login page
-- `/register` - Registration page
-- `/forgot-password` - Password recovery (placeholder)
-- `/dashboard` - Protected dashboard (requires auth)
-
-## Development Features
-
-### Form Validation
-- Email format validation
-- Password minimum length (8 characters)
-- Required fields: email, password, full_name for registration
-- Optional fields: phone, date_of_birth, gender, address, avatar_url, emergency_contact
-- Real-time error messages in Vietnamese
-- Accessible form controls with ARIA labels
-
-### State Management
-- Persistent auth state with Zustand persist middleware
-- No token management (for PoC - will be added later)
-- Loading states and error handling
-- User profile data storage
-- Optimistic UI updates
-
-### Security Features
-- Form validation on frontend (backend validation required)
-- No sensitive data logging
-- User state persistence without tokens (PoC only)
-- Protected routes with redirect
-
-### User Experience
-- Loading spinners during async operations
-- Error messages in Vietnamese
-- Responsive design with Tailwind CSS
-- Smooth transitions and hover effects
-
-## Next Steps
-
-The authentication system is complete and ready for integration. Future development should focus on:
-
-1. **Dashboard Features** - Patient profiles, medication tracking, appointment scheduling
-2. **Memory Aids** - Photo albums, reminders, daily routines
-3. **Family Communication** - Messaging, updates, care coordination
-4. **Healthcare Integration** - Doctor notes, medical records, prescriptions
-
-## Development Commands
-
-```bash
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Run TypeScript check
-npm run lint
-```
-
-## Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VITE_API_URL` | Backend API base URL | `http://localhost:8080` |
-| `VITE_APP_NAME` | Application name | `Myosotis` |
-| `VITE_APP_VERSION` | Application version | `1.0.0` |
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```

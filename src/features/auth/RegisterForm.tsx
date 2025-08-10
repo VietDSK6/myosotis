@@ -1,4 +1,3 @@
-// features/auth/RegisterForm.tsx
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, type RegisterFormData } from "./validation";
@@ -32,7 +31,7 @@ export default function RegisterForm() {
       navigate('/dashboard');
     } catch (error) {
       console.error('Registration failed:', error);
-      setSubmitError('Đăng ký thất bại. Vui lòng thử lại.');
+      setSubmitError('Registration failed. Please try again.');
     }
   };
 
@@ -40,111 +39,108 @@ export default function RegisterForm() {
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* Back Button */}
       <button
         type="button"
         onClick={() => navigate('/')}
-        className="mb-6 flex items-center gap-2 text-extra-large text-blue-600 hover:text-blue-800 font-medium focus-accessible"
+        className="mb-6 flex items-center gap-2 text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-lg p-2"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        Quay lại trang chủ
+        Back to Home
       </button>
 
-      {/* Progress indicator */}
       <div className="mb-8">
         <div className="flex items-center justify-center mb-4 space-x-4">
-          <div className={`step-indicator ${currentSection === 'basic' ? 'active' : isBasicComplete ? 'completed' : 'inactive'}`}>
+          <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-lg font-semibold ${currentSection === 'basic' ? 'bg-cyan-600 text-white' : isBasicComplete ? 'bg-cyan-100 text-cyan-700' : 'bg-gray-200 text-gray-500'}`}>
             1
           </div>
-          <div className={`h-2 w-16 ${isBasicComplete ? 'bg-green-500' : 'bg-gray-300'} rounded`} />
-          <div className={`step-indicator ${currentSection === 'details' ? 'active' : 'inactive'}`}>
+          <div className={`h-2 w-16 ${isBasicComplete ? 'bg-cyan-600' : 'bg-gray-300'} rounded`} />
+          <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-lg font-semibold ${currentSection === 'details' ? 'bg-cyan-600 text-white' : 'bg-gray-200 text-gray-500'}`}>
             2
           </div>
           <div className="h-2 w-16 bg-gray-300 rounded" />
-          <div className={`step-indicator ${currentSection === 'optional' ? 'active' : 'inactive'}`}>
+          <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-lg font-semibold ${currentSection === 'optional' ? 'bg-cyan-600 text-white' : 'bg-gray-200 text-gray-500'}`}>
             3
           </div>
         </div>
         <div className="text-center">
-          <h2 className="text-huge font-bold text-gray-900 mb-2">
-            {currentSection === 'basic' && 'Thông tin cơ bản'}
-            {currentSection === 'details' && 'Thông tin liên hệ'}
-            {currentSection === 'optional' && 'Thông tin bổ sung'}
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+            {currentSection === 'basic' && 'Basic Information'}
+            {currentSection === 'details' && 'Contact Information'}
+            {currentSection === 'optional' && 'Additional Information'}
           </h2>
-          <p className="text-extra-large text-gray-600">
-            {currentSection === 'basic' && 'Email, mật khẩu và họ tên'}
-            {currentSection === 'details' && 'Số điện thoại và ngày sinh'}
-            {currentSection === 'optional' && 'Địa chỉ và liên hệ khẩn cấp'}
+          <p className="text-lg text-gray-600">
+            {currentSection === 'basic' && 'Email, password and full name'}
+            {currentSection === 'details' && 'Phone number and date of birth'}
+            {currentSection === 'optional' && 'Address and emergency contact'}
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Basic Information Section */}
         <div className={`space-y-6 ${currentSection !== 'basic' ? 'hidden' : ''}`}>
           <div>
-            <label htmlFor="email" className="label-accessible">
+            <label htmlFor="email" className="block text-lg font-medium text-gray-900 mb-2">
               Email *
             </label>
             <input
               id="email"
               type="email"
               {...register("email")}
-              placeholder="Nhập email của bạn"
-              className="input-accessible"
+              placeholder="Enter your email"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.email ? 'true' : 'false'}
               aria-describedby={errors.email ? 'email-error' : 'email-help'}
             />
             <p id="email-help" className="text-lg text-gray-600 mt-1">
-              Email sẽ dùng để đăng nhập
+              Email will be used for login
             </p>
             {errors.email && (
-              <span id="email-error" className="error-accessible" role="alert">
+              <span id="email-error" className="block text-lg text-red-600 mt-1" role="alert">
                 {errors.email.message}
               </span>
             )}
           </div>
 
           <div>
-            <label htmlFor="full_name" className="label-accessible">
-              Họ và tên *
+            <label htmlFor="full_name" className="block text-lg font-medium text-gray-900 mb-2">
+              Full Name *
             </label>
             <input
               id="full_name"
               type="text"
               {...register("full_name")}
-              placeholder="Nhập họ và tên đầy đủ"
-              className="input-accessible"
+              placeholder="Enter your full name"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.full_name ? 'true' : 'false'}
               aria-describedby={errors.full_name ? 'full_name-error' : undefined}
             />
             {errors.full_name && (
-              <span id="full_name-error" className="error-accessible" role="alert">
+              <span id="full_name-error" className="block text-lg text-red-600 mt-1" role="alert">
                 {errors.full_name.message}
               </span>
             )}
           </div>
 
           <div>
-            <label htmlFor="password" className="label-accessible">
-              Mật khẩu *
+            <label htmlFor="password" className="block text-lg font-medium text-gray-900 mb-2">
+              Password *
             </label>
             <input
               id="password"
               type="password"
               {...register("password")}
-              placeholder="Nhập mật khẩu (ít nhất 8 ký tự)"
-              className="input-accessible"
+              placeholder="Enter password (at least 8 characters)"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.password ? 'true' : 'false'}
               aria-describedby={errors.password ? 'password-error' : 'password-help'}
             />
             <p id="password-help" className="text-lg text-gray-600 mt-1">
-              Mật khẩu phải có ít nhất 8 ký tự
+              Password must be at least 8 characters
             </p>
             {errors.password && (
-              <span id="password-error" className="error-accessible" role="alert">
+              <span id="password-error" className="block text-lg text-red-600 mt-1" role="alert">
                 {errors.password.message}
               </span>
             )}
@@ -154,83 +150,82 @@ export default function RegisterForm() {
             <button
               type="button"
               onClick={() => setCurrentSection('details')}
-              className="btn-primary-accessible w-full"
+              className="min-h-12 w-full px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
             >
-             Tiếp tục
+              Continue
             </button>
           )}
         </div>
 
-        {/* Details Section */}
         <div className={`space-y-6 ${currentSection !== 'details' ? 'hidden' : ''}`}>
           <button
             type="button"
             onClick={() => setCurrentSection('basic')}
-            className="mb-4 flex items-center gap-2 text-extra-large text-blue-600 hover:text-blue-800 font-medium focus-accessible"
+            className="mb-4 flex items-center gap-2 text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-lg p-2"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Quay lại
+            Back
           </button>
 
           <div>
-            <label htmlFor="phone" className="label-accessible">
-              Số điện thoại (tùy chọn)
+            <label htmlFor="phone" className="block text-lg font-medium text-gray-900 mb-2">
+              Phone Number (optional)
             </label>
             <input
               id="phone"
               type="tel"
               {...register("phone")}
-              placeholder="Nhập số điện thoại"
-              className="input-accessible"
+              placeholder="Enter phone number"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.phone ? 'true' : 'false'}
               aria-describedby={errors.phone ? 'phone-error' : undefined}
             />
             {errors.phone && (
-              <span id="phone-error" className="error-accessible" role="alert">
+              <span id="phone-error" className="block text-lg text-red-600 mt-1" role="alert">
                 {errors.phone.message}
               </span>
             )}
           </div>
 
           <div>
-            <label htmlFor="date_of_birth" className="label-accessible">
-              Ngày sinh (tùy chọn)
+            <label htmlFor="date_of_birth" className="block text-lg font-medium text-gray-900 mb-2">
+              Date of Birth (optional)
             </label>
             <input
               id="date_of_birth"
               type="date"
               {...register("date_of_birth")}
-              className="input-accessible"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.date_of_birth ? 'true' : 'false'}
               aria-describedby={errors.date_of_birth ? 'date_of_birth-error' : undefined}
             />
             {errors.date_of_birth && (
-              <span id="date_of_birth-error" className="error-accessible" role="alert">
-                 {errors.date_of_birth.message}
+              <span id="date_of_birth-error" className="block text-lg text-red-600 mt-1" role="alert">
+                {errors.date_of_birth.message}
               </span>
             )}
           </div>
 
           <div>
-            <label htmlFor="gender" className="label-accessible">
-               Giới tính (tùy chọn)
+            <label htmlFor="gender" className="block text-lg font-medium text-gray-900 mb-2">
+              Gender (optional)
             </label>
             <select
               id="gender"
               {...register("gender")}
-              className="input-accessible"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.gender ? 'true' : 'false'}
               aria-describedby={errors.gender ? 'gender-error' : undefined}
             >
-              <option value="">Chọn giới tính</option>
-              <option value="male">Nam</option>
-              <option value="female">Nữ</option>
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
             {errors.gender && (
-              <span id="gender-error" className="error-accessible" role="alert">
-                 {errors.gender.message}
+              <span id="gender-error" className="block text-lg text-red-600 mt-1" role="alert">
+                {errors.gender.message}
               </span>
             )}
           </div>
@@ -239,72 +234,71 @@ export default function RegisterForm() {
             <button
               type="button"
               onClick={() => setCurrentSection('optional')}
-              className="btn-primary-accessible flex-1"
+              className="min-h-12 flex-1 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
             >
-             Tiếp tục
+              Continue
             </button>
             <button
               type="submit"
               disabled={isSubmitting || isLoading}
-              className="btn-secondary-accessible flex-1"
+              className="min-h-12 flex-1 px-5 rounded-xl bg-white border border-gray-300 text-gray-700 text-lg font-semibold hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting || isLoading ? 'Đang xử lý...' : 'Đăng ký ngay'}
+              {isSubmitting || isLoading ? 'Processing...' : 'Register Now'}
             </button>
           </div>
         </div>
 
-        {/* Optional Section */}
         <div className={`space-y-6 ${currentSection !== 'optional' ? 'hidden' : ''}`}>
           <button
             type="button"
             onClick={() => setCurrentSection('details')}
-            className="mb-4 flex items-center gap-2 text-extra-large text-blue-600 hover:text-blue-800 font-medium focus-accessible"
+            className="mb-4 flex items-center gap-2 text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-lg p-2"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            Quay lại
+            Back
           </button>
 
           <div>
-            <label htmlFor="address" className="label-accessible">
-               Địa chỉ (tùy chọn)
+            <label htmlFor="address" className="block text-lg font-medium text-gray-900 mb-2">
+              Address (optional)
             </label>
             <textarea
               id="address"
               {...register("address")}
-              placeholder="Nhập địa chỉ của bạn"
+              placeholder="Enter your address"
               rows={3}
-              className="input-accessible"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.address ? 'true' : 'false'}
               aria-describedby={errors.address ? 'address-error' : undefined}
             />
             {errors.address && (
-              <span id="address-error" className="error-accessible" role="alert">
-                 {errors.address.message}
+              <span id="address-error" className="block text-lg text-red-600 mt-1" role="alert">
+                {errors.address.message}
               </span>
             )}
           </div>
 
           <div>
-            <label htmlFor="emergency_contact" className="label-accessible">
-               Liên hệ khẩn cấp (tùy chọn)
+            <label htmlFor="emergency_contact" className="block text-lg font-medium text-gray-900 mb-2">
+              Emergency Contact (optional)
             </label>
             <input
               id="emergency_contact"
               type="text"
               {...register("emergency_contact")}
-              placeholder="Tên và số điện thoại người thân"
-              className="input-accessible"
+              placeholder="Family member name and phone number"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
               aria-invalid={errors.emergency_contact ? 'true' : 'false'}
               aria-describedby={errors.emergency_contact ? 'emergency_contact-error' : 'emergency-help'}
             />
             <p id="emergency-help" className="text-lg text-gray-600 mt-1">
-              Ví dụ: Nguyễn Văn A - 0123456789
+              Example: John Smith - 0123456789
             </p>
             {errors.emergency_contact && (
-              <span id="emergency_contact-error" className="error-accessible" role="alert">
-                 {errors.emergency_contact.message}
+              <span id="emergency_contact-error" className="block text-lg text-red-600 mt-1" role="alert">
+                {errors.emergency_contact.message}
               </span>
             )}
           </div>
@@ -312,7 +306,7 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={isSubmitting || isLoading}
-            className="btn-primary-accessible w-full"
+            className="min-h-12 w-full px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting || isLoading ? (
               <span className="flex items-center justify-center gap-3">
@@ -320,28 +314,28 @@ export default function RegisterForm() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Đang đăng ký...
+                Registering...
               </span>
             ) : (
-              'Hoàn thành đăng ký'
+              'Complete Registration'
             )}
           </button>
         </div>
 
         {displayError && (
-          <div className="bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-lg text-extra-large font-medium" role="alert">
-             {displayError}
+          <div className="bg-red-50 border-2 border-red-200 text-red-700 px-6 py-4 rounded-xl text-lg font-medium" role="alert">
+            {displayError}
           </div>
         )}
 
-        <div className="text-center text-extra-large text-gray-600">
-          Đã có tài khoản?{' '}
+        <div className="text-center text-lg text-gray-600">
+          Already have an account?{' '}
           <button 
             type="button"
             onClick={() => navigate('/login')}
-            className="text-blue-600 hover:text-blue-800 font-medium focus-accessible"
+            className="text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-lg p-1"
           >
-            Đăng nhập ngay
+            Sign in now
           </button>
         </div>
       </form>

@@ -1,11 +1,9 @@
-// features/auth/validation.ts
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  email: z.string().email("Email không hợp lệ"),
-  password: z.string().min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
-  full_name: z.string().min(1, "Họ tên là bắt buộc"),
-  // Optional fields - simplified for accessibility
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  full_name: z.string().min(1, "Full name is required"),
   phone: z.string().optional(),
   date_of_birth: z.string().optional(),
   gender: z.enum(['male', 'female']).optional(),
@@ -15,8 +13,8 @@ export const registerSchema = z.object({
 });
 
 export const loginSchema = z.object({
-  email: z.string().email("Email không hợp lệ"),
-  password: z.string().min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters")
 });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
