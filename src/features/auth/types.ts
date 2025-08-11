@@ -76,4 +76,5 @@ export interface AuthActions {
   logout: () => void;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
+  updateUser: (user: User) => void;
 }

@@ -2,15 +2,58 @@ import { ProtectedRoute } from '../features/auth';
 import { useAuthStore } from '../features/auth/store';
 import { useSessionTimeout } from '../hooks/useSessionTimeout';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { getEmergencyContacts } from '../api/user';
+import { getMMSEHistory, type MMSEHistoryItem } from '../api/mmse';
+import type { EmergencyContact } from '../types/user';
 
 export default function DashboardPage() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
+  const [isLoadingContacts, setIsLoadingContacts] = useState(false);
+  const [mmseHistory, setMmseHistory] = useState<MMSEHistoryItem[]>([]);
+  const [isLoadingMmse, setIsLoadingMmse] = useState(false);
 
   useSessionTimeout({
     timeoutMinutes: 1440,
     warningMinutes: 30,
   });
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchEmergencyContacts();
+      fetchMmseHistory();
+    }
+  }, [user?.id]);
+
+  const fetchEmergencyContacts = async () => {
+    if (!user?.id) return;
+
+    setIsLoadingContacts(true);
+    try {
+      const response = await getEmergencyContacts(user.id);
+      setEmergencyContacts(response.data || []);
+    } catch (err) {
+      console.error('Failed to fetch emergency contacts:', err);
+    } finally {
+      setIsLoadingContacts(false);
+    }
+  };
+
+  const fetchMmseHistory = async () => {
+    if (!user?.id) return;
+
+    setIsLoadingMmse(true);
+    try {
+      const response = await getMMSEHistory(user.id);
+      setMmseHistory(response.data || []);
+    } catch (err) {
+      console.error('Failed to fetch MMSE history:', err);
+    } finally {
+      setIsLoadingMmse(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -24,8 +67,12 @@ export default function DashboardPage() {
     navigate('/emergency-contacts');
   };
 
+  const handleMMSETest = () => {
+    navigate('/mmse-test');
+  };
+
   const firstName = user?.email?.split('@')[0] || 'User';
-  const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  const displayName = user?.profile?.full_name || firstName.charAt(0).toUpperCase() + firstName.slice(1);
 
   return (
     <ProtectedRoute>
@@ -70,18 +117,21 @@ export default function DashboardPage() {
         <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
           <div className="text-left mb-12">
             <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-2">
-              Welcome back, {displayName}
+              Hello, {displayName}
             </h1>
             <p className="text-lg text-gray-600 mb-6">
               Your plan for today
             </p>
-            <button className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors">
+            <button 
+              onClick={handleMMSETest}
+              className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
+            >
               Start Memory Exercise
             </button>
           </div>
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer">
                 <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
                   <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,6 +154,19 @@ export default function DashboardPage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Emergency Contacts</h3>
                 <p className="text-lg text-gray-600">Important people and their information</p>
               </div>
+
+              <div 
+                onClick={() => navigate('/mmse-history')}
+                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
+              >
+                <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
+                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Test History</h3>
+                <p className="text-lg text-gray-600">View your MMSE test results and progress</p>
+              </div>
             </div>
             <div className="mt-4">
               <a href="#" className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md">
@@ -115,73 +178,112 @@ export default function DashboardPage() {
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Progress</h2>
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
-                    <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                    </svg>
+              {isLoadingMmse ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
+                  <span className="ml-3 text-gray-600">Loading progress...</span>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
+                      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-semibold text-gray-900">{mmseHistory.length} Tests</div>
+                      <div className="text-lg text-gray-600">MMSE completed</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-2xl font-semibold text-gray-900">5 Games</div>
-                    <div className="text-lg text-gray-600">Completed this week</div>
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
+                      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-semibold text-gray-900">
+                        {mmseHistory.length > 0 
+                          ? `${Math.round(mmseHistory.reduce((sum, test) => sum + test.total_score, 0) / mmseHistory.length)}/27`
+                          : 'N/A'
+                        }
+                      </div>
+                      <div className="text-lg text-gray-600">Average score</div>
+                    </div>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
-                    <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-semibold text-gray-900">85%</div>
-                    <div className="text-lg text-gray-600">Average score</div>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </section>
 
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Important Contact</h2>
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center">
+              {isLoadingContacts ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
+                  <span className="ml-3 text-gray-600">Loading contacts...</span>
+                </div>
+              ) : emergencyContacts.length > 0 ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center">
+                      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-lg font-semibold text-gray-900">{emergencyContacts[0].contact_name}</div>
+                      <div className="text-lg text-gray-600">{emergencyContacts[0].relation}</div>
+                      <div className="text-lg text-gray-600">{emergencyContacts[0].phone}</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => window.open(`tel:${emergencyContacts[0].phone}`, '_self')}
+                      className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
+                      aria-label={`Call ${emergencyContacts[0].contact_name}`}
+                    >
+                      Call
+                    </button>
+                    {emergencyContacts[0].email && (
+                      <button 
+                        onClick={() => window.open(`mailto:${emergencyContacts[0].email}`, '_self')}
+                        className="min-h-12 px-5 rounded-xl bg-white border border-gray-300 text-gray-700 text-lg hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors"
+                        aria-label={`Email ${emergencyContacts[0].contact_name}`}
+                      >
+                        Email
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="h-12 w-12 bg-gray-100 text-gray-400 rounded-xl flex items-center justify-center mx-auto mb-3">
                     <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <div>
-                    <div className="text-lg font-semibold text-gray-900">Dr. Sarah Johnson</div>
-                    <div className="text-lg text-gray-600">Your Doctor</div>
-                    <div className="text-lg text-gray-600">(555) 123-4567</div>
-                  </div>
-                </div>
-                <div className="flex gap-3">
+                  <p className="text-gray-600 mb-4">No emergency contacts added yet</p>
                   <button 
-                    className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
-                    aria-label="Call Dr. Sarah Johnson"
+                    onClick={handleEmergencyContacts}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-cyan-600 bg-cyan-50 hover:bg-cyan-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                   >
-                    Call
-                  </button>
-                  <button 
-                    className="min-h-12 px-5 rounded-xl bg-white border border-gray-300 text-gray-700 text-lg hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors"
-                    aria-label="Message Dr. Sarah Johnson"
-                  >
-                    Message
+                    Add Emergency Contact
                   </button>
                 </div>
-              </div>
-              <div className="mt-4">
-                <button 
-                  onClick={handleEmergencyContacts}
-                  className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
-                >
-                  All contacts →
-                </button>
-              </div>
+              )}
+              {emergencyContacts.length > 0 && (
+                <div className="mt-4">
+                  <button 
+                    onClick={handleEmergencyContacts}
+                    className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
+                  >
+                    All contacts →
+                  </button>
+                </div>
+              )}
             </div>
           </section>
         </main>

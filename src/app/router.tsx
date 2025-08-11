@@ -6,6 +6,8 @@ import WelcomePage from '../pages/WelcomePage';
 import CaregiverGuidePage from '../pages/CaregiverGuidePage';
 import { PersonalInfoPage } from '../pages/PersonalInfoPage';
 import { EmergencyContactsPage } from '../pages/EmergencyContactsPage';
+import MMSETestPage from '../pages/MMSETestPage';
+import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +45,14 @@ export const router = createBrowserRouter([
   {
     path: '/emergency-contacts',
     element: <EmergencyContactsPage />,
+  },
+  {
+    path: '/mmse-test',
+    element: <MMSETestPage />,
+  },
+  {
+    path: '/mmse-history',
+    element: <MMSEHistoryPage />,
   },
   {
     path: '*',

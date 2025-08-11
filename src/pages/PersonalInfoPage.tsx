@@ -5,7 +5,7 @@ import { getUserInfo, updateUserInfo } from '../api/user';
 import type { UserData } from '../types/user';
 
 export const PersonalInfoPage: React.FC = () => {
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +88,29 @@ export const PersonalInfoPage: React.FC = () => {
       await updateUserInfo(user.id, payload);
       
       
-      await fetchUserData();
+      const freshUserData = await getUserInfo(user.id);
+      setUserData(freshUserData.data);
+      
+      
+      const updatedUser = {
+        ...user,
+        email: freshUserData.data.email,
+        phone: freshUserData.data.phone,
+        profile: {
+          ...user.profile,
+          id: freshUserData.data.profile?.id || user.profile?.id || user.id,
+          user_id: user.id,
+          full_name: freshUserData.data.profile?.full_name || '',
+          date_of_birth: freshUserData.data.profile?.date_of_birth,
+          gender: freshUserData.data.profile?.gender as 'male' | 'female' | undefined,
+          phone: freshUserData.data.profile?.phone,
+          address: freshUserData.data.profile?.address,
+          avatar_url: freshUserData.data.profile?.avatar_url,
+          created_at: user.profile?.created_at || new Date().toISOString(),
+        }
+      };
+      updateUser(updatedUser);
+      
       setIsEditing(false);
       setSuccessMessage('Personal information updated successfully!');
       
