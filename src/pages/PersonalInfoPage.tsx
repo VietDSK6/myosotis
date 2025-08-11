@@ -76,13 +76,15 @@ export const PersonalInfoPage: React.FC = () => {
       const payload = {
         phone: formData.phone,
         email: formData.email,
-        full_name: formData.fullName,
-        date_of_birth: formData.dateOfBirth,
-        gender: formData.gender,
-        address: formData.address,
+        profile: {
+          full_name: formData.fullName,
+          date_of_birth: formData.dateOfBirth,
+          gender: formData.gender,
+          address: formData.address,
+        }
       };
 
-      
+      console.log('Sending payload:', payload);
       await updateUserInfo(user.id, payload);
       
       
@@ -336,26 +338,6 @@ export const PersonalInfoPage: React.FC = () => {
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
                   {formData.address || 'Not provided'}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-lg font-medium text-gray-700 mb-2">
-                Medical Notes
-              </label>
-              {isEditing ? (
-                <textarea
-                  name="medicalNotes"
-                  value={formData.medicalNotes}
-                  onChange={handleInputChange}
-                  rows={4}
-                  className="w-full px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-4 focus:ring-cyan-200 outline-none transition-all resize-none"
-                  placeholder="Any important medical information, allergies, or notes..."
-                />
-              ) : (
-                <div className="w-full px-4 py-3 text-lg bg-gray-50 rounded-xl min-h-24 flex items-start">
-                  {formData.medicalNotes || 'No medical notes provided'}
                 </div>
               )}
             </div>

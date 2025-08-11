@@ -29,8 +29,16 @@ export function getUserInfo(userId: number): Promise<UserApiResponse> {
 }
 
 export function updateUserInfo(userId: number, payload: Partial<UserUpdatePayload>): Promise<UserApiResponse> {
-  return userAPI.post(`/api/v1/users/${userId}`, payload)
-    .then(res => res.data);
+  console.log('Updating user info with payload:', payload);
+  return userAPI.put(`/api/v1/users/${userId}`, payload)
+    .then(res => {
+      console.log('Update response:', res.data);
+      return res.data;
+    })
+    .catch(err => {
+      console.error('Update error:', err.response?.data || err.message);
+      throw err;
+    });
 }
 
 export function getEmergencyContacts(userId: number): Promise<{ data: EmergencyContact[] }> {

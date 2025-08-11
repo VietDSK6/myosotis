@@ -58,4 +58,11 @@ export interface UserUpdatePayload {
   gender?: string;
   address?: string;
   avatar_url?: string;
+  profile?: {
+    full_name?: string;
+    date_of_birth?: string;
+    gender?: string;
+    address?: string;
+    avatar_url?: string;
+  };
 }
