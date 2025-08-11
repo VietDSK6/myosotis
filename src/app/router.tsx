@@ -5,6 +5,7 @@ import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import WelcomePage from '../pages/WelcomePage';
 import CaregiverGuidePage from '../pages/CaregiverGuidePage';
 import { PersonalInfoPage } from '../pages/PersonalInfoPage';
+import { EmergencyContactsPage } from '../pages/EmergencyContactsPage';
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
   {
     path: '/personal-info',
     element: <PersonalInfoPage />,
+  },
+  {
+    path: '/emergency-contacts',
+    element: <EmergencyContactsPage />,
   },
   {
     path: '*',

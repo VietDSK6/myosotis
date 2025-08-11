@@ -9,7 +9,6 @@ export const registerSchema = z.object({
   gender: z.enum(['male', 'female']).optional(),
   address: z.string().optional(),
   avatar_url: z.string().optional(),
-  emergency_contact: z.string().optional(),
 });
 
 export const loginSchema = z.object({

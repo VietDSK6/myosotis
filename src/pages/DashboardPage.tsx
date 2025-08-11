@@ -20,6 +20,10 @@ export default function DashboardPage() {
     navigate('/personal-info');
   };
 
+  const handleEmergencyContacts = () => {
+    navigate('/emergency-contacts');
+  };
+
   const firstName = user?.email?.split('@')[0] || 'User';
   const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
 
@@ -40,6 +44,12 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
+                <button
+                  onClick={handleEmergencyContacts}
+                  className="min-h-12 px-6 py-2 text-lg font-medium text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
+                >
+                  Emergency Contacts
+                </button>
                 <button
                   onClick={handlePersonalInfo}
                   className="min-h-12 px-6 py-2 text-lg font-medium text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
@@ -82,13 +92,16 @@ export default function DashboardPage() {
                 <p className="text-lg text-gray-600">View your cherished memories and photos</p>
               </div>
 
-              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer">
+              <div 
+                onClick={handleEmergencyContacts}
+                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
+              >
                 <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
                   <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Family & Contacts</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Emergency Contacts</h3>
                 <p className="text-lg text-gray-600">Important people and their information</p>
               </div>
             </div>
@@ -162,9 +175,12 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="mt-4">
-                <a href="#" className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md">
+                <button 
+                  onClick={handleEmergencyContacts}
+                  className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
+                >
                   All contacts →
-                </a>
+                </button>
               </div>
             </div>
           </section>

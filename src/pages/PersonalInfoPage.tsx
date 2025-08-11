@@ -1,21 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
+import { getUserInfo, updateUserInfo } from '../api/user';
+import type { UserData } from '../types/user';
 
 export const PersonalInfoPage: React.FC = () => {
   const { user } = useAuthStore();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: user?.profile?.full_name || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    dateOfBirth: user?.profile?.date_of_birth || '',
-    gender: user?.profile?.gender || '',
-    address: user?.profile?.address || '',
-    emergencyContact: user?.profile?.emergency_contact || '',
-    emergencyPhone: '',
+    fullName: '',
+    email: '',
+    phone: '',
+    dateOfBirth: '',
+    gender: '',
+    address: '',
     medicalNotes: ''
   });
+
+  useEffect(() => {
+    fetchUserData();
+  }, [user?.id]);
+
+  const fetchUserData = async () => {
+    if (!user?.id) {
+      setError('User ID not found');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await getUserInfo(user.id);
+      setUserData(response.data);
+      
+      
+      setFormData({
+        fullName: response.data.profile?.full_name || '',
+        email: response.data.email || '',
+        phone: response.data.phone || '',
+        dateOfBirth: response.data.profile?.date_of_birth || '',
+        gender: response.data.profile?.gender || '',
+        address: response.data.profile?.address || '',
+        medicalNotes: ''
+      });
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch user information');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -25,24 +64,66 @@ export const PersonalInfoPage: React.FC = () => {
     }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
+  const handleSave = async () => {
+    if (!user?.id) return;
+
+    setIsSaving(true);
+    setError(null);
+    setSuccessMessage(null);
+    
+    try {
+      
+      const payload = {
+        phone: formData.phone,
+        email: formData.email,
+        full_name: formData.fullName,
+        date_of_birth: formData.dateOfBirth,
+        gender: formData.gender,
+        address: formData.address,
+      };
+
+      
+      await updateUserInfo(user.id, payload);
+      
+      
+      await fetchUserData();
+      setIsEditing(false);
+      setSuccessMessage('Personal information updated successfully!');
+      
+      
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save personal information');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleCancel = () => {
-    setFormData({
-      fullName: user?.profile?.full_name || '',
-      email: user?.email || '',
-      phone: user?.phone || '',
-      dateOfBirth: user?.profile?.date_of_birth || '',
-      gender: user?.profile?.gender || '',
-      address: user?.profile?.address || '',
-      emergencyContact: user?.profile?.emergency_contact || '',
-      emergencyPhone: '',
-      medicalNotes: ''
-    });
+    if (userData) {
+      setFormData({
+        fullName: userData.profile?.full_name || '',
+        email: userData.email || '',
+        phone: userData.phone || '',
+        dateOfBirth: userData.profile?.date_of_birth || '',
+        gender: userData.profile?.gender || '',
+        address: userData.profile?.address || '',
+        medicalNotes: ''
+      });
+    }
     setIsEditing(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-cyan-50 antialiased text-[18px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-cyan-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg text-gray-600">Loading personal information...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cyan-50 antialiased text-[18px]">
@@ -79,7 +160,11 @@ export const PersonalInfoPage: React.FC = () => {
             </h1>
             {!isEditing ? (
               <button
-                onClick={() => setIsEditing(true)}
+                onClick={() => {
+                  setIsEditing(true);
+                  setError(null);
+                  setSuccessMessage(null);
+                }}
                 className="min-h-12 px-6 py-2 bg-cyan-600 text-white text-lg font-medium rounded-xl hover:bg-cyan-700 transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
               >
                 Edit Information
@@ -88,19 +173,50 @@ export const PersonalInfoPage: React.FC = () => {
               <div className="flex gap-3">
                 <button
                   onClick={handleCancel}
-                  className="min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300"
+                  disabled={isSaving}
+                  className="min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300 disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSave}
-                  className="min-h-12 px-6 py-2 bg-cyan-600 text-white text-lg font-medium rounded-xl hover:bg-cyan-700 transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
+                  disabled={isSaving}
+                  className="min-h-12 px-6 py-2 bg-cyan-600 text-white text-lg font-medium rounded-xl hover:bg-cyan-700 transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                  Save Changes
+                  {isSaving ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    'Save Changes'
+                  )}
                 </button>
               </div>
             )}
           </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-lg text-red-800">{error}</p>
+              </div>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
+              <div className="flex items-center gap-3">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-lg text-green-800">{successMessage}</p>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-8">
             <div>
@@ -220,44 +336,6 @@ export const PersonalInfoPage: React.FC = () => {
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
                   {formData.address || 'Not provided'}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-lg font-medium text-gray-700 mb-2">
-                Emergency Contact
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="emergencyContact"
-                  value={formData.emergencyContact}
-                  onChange={handleInputChange}
-                  className="w-full min-h-12 px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-4 focus:ring-cyan-200 outline-none transition-all"
-                />
-              ) : (
-                <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.emergencyContact || 'Not provided'}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-lg font-medium text-gray-700 mb-2">
-                Emergency Contact Phone
-              </label>
-              {isEditing ? (
-                <input
-                  type="tel"
-                  name="emergencyPhone"
-                  value={formData.emergencyPhone}
-                  onChange={handleInputChange}
-                  className="w-full min-h-12 px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-4 focus:ring-cyan-200 outline-none transition-all"
-                />
-              ) : (
-                <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.emergencyPhone || 'Not provided'}
                 </div>
               )}
             </div>

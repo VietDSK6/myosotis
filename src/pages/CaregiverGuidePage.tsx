@@ -46,7 +46,7 @@ export default function CaregiverGuidePage() {
                 <li>Patient's full name</li>
                 <li>Contact phone number</li>
                 <li>Patient's date of birth (if available)</li>
-                <li>Home address (optional)</li>
+                <li>Home address</li>
                 <li>Emergency contact information</li>
               </ul>
             </div>

@@ -171,7 +171,7 @@ export default function RegisterForm() {
 
           <div>
             <label htmlFor="phone" className="block text-lg font-medium text-gray-900 mb-2">
-              Phone Number (optional)
+              Phone Number
             </label>
             <input
               id="phone"
@@ -191,7 +191,7 @@ export default function RegisterForm() {
 
           <div>
             <label htmlFor="date_of_birth" className="block text-lg font-medium text-gray-900 mb-2">
-              Date of Birth (optional)
+              Date of Birth 
             </label>
             <input
               id="date_of_birth"
@@ -210,7 +210,7 @@ export default function RegisterForm() {
 
           <div>
             <label htmlFor="gender" className="block text-lg font-medium text-gray-900 mb-2">
-              Gender (optional)
+              Gender 
             </label>
             <select
               id="gender"
@@ -262,7 +262,7 @@ export default function RegisterForm() {
 
           <div>
             <label htmlFor="address" className="block text-lg font-medium text-gray-900 mb-2">
-              Address (optional)
+              Address
             </label>
             <textarea
               id="address"
@@ -276,29 +276,6 @@ export default function RegisterForm() {
             {errors.address && (
               <span id="address-error" className="block text-lg text-red-600 mt-1" role="alert">
                 {errors.address.message}
-              </span>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="emergency_contact" className="block text-lg font-medium text-gray-900 mb-2">
-              Emergency Contact (optional)
-            </label>
-            <input
-              id="emergency_contact"
-              type="text"
-              {...register("emergency_contact")}
-              placeholder="Family member name and phone number"
-              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
-              aria-invalid={errors.emergency_contact ? 'true' : 'false'}
-              aria-describedby={errors.emergency_contact ? 'emergency_contact-error' : 'emergency-help'}
-            />
-            <p id="emergency-help" className="text-lg text-gray-600 mt-1">
-              Example: John Smith - 0123456789
-            </p>
-            {errors.emergency_contact && (
-              <span id="emergency_contact-error" className="block text-lg text-red-600 mt-1" role="alert">
-                {errors.emergency_contact.message}
               </span>
             )}
           </div>
