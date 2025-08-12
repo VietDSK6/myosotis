@@ -12,6 +12,9 @@ export interface RegisterPayload {
   gender?: 'male' | 'female';
   address?: string;
   avatar_url?: string;
+  city?: string;
+  hometown?: string;
+  country?: string;
 }
 
 export interface Profile {
@@ -24,6 +27,9 @@ export interface Profile {
   address?: string;
   avatar_url?: string;
   emergency_contact?: string;
+  city?: string;
+  hometown?: string;
+  country?: string;
   created_at: string;
 }
 

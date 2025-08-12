@@ -364,6 +364,34 @@ export default function MMSETestPage() {
               {section.instruction && (
                 <p className="text-cyan-600 mt-2 font-medium">{section.instruction}</p>
               )}
+              
+              {section.media && section.media.length > 0 && (
+                <div className="mt-4">
+                  {section.media.map((media, index: number) => (
+                    <div key={index} className="mb-4">
+                      {media.type === 'audio' && (
+                        <div>
+                          <p className="text-sm text-gray-600 mb-2">{media.description}</p>
+                          <audio controls className="w-full">
+                            <source src={getMediaUrl(media.url)} type="audio/mpeg" />
+                            Your browser does not support the audio element.
+                          </audio>
+                        </div>
+                      )}
+                      {media.type === 'image' && (
+                        <div>
+                          <p className="text-sm text-gray-600 mb-2">{media.description}</p>
+                          <img 
+                            src={getMediaUrl(media.url)} 
+                            alt={media.description}
+                            className="max-w-md mx-auto rounded-lg shadow-md"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

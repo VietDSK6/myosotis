@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { getUserInfo, updateUserInfo } from '../api/user';
@@ -19,14 +19,13 @@ export const PersonalInfoPage: React.FC = () => {
     dateOfBirth: '',
     gender: '',
     address: '',
+    city: '',
+    hometown: '',
+    country: '',
     medicalNotes: ''
   });
 
-  useEffect(() => {
-    fetchUserData();
-  }, [user?.id]);
-
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     if (!user?.id) {
       setError('User ID not found');
       setIsLoading(false);
@@ -46,6 +45,9 @@ export const PersonalInfoPage: React.FC = () => {
         dateOfBirth: response.data.profile?.date_of_birth || '',
         gender: response.data.profile?.gender || '',
         address: response.data.profile?.address || '',
+        city: response.data.profile?.city || '',
+        hometown: response.data.profile?.hometown || '',
+        country: response.data.profile?.country || '',
         medicalNotes: ''
       });
       setError(null);
@@ -54,7 +56,11 @@ export const PersonalInfoPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user?.id]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -81,6 +87,9 @@ export const PersonalInfoPage: React.FC = () => {
           date_of_birth: formData.dateOfBirth,
           gender: formData.gender,
           address: formData.address,
+          city: formData.city,
+          hometown: formData.hometown,
+          country: formData.country,
         }
       };
 
@@ -105,6 +114,9 @@ export const PersonalInfoPage: React.FC = () => {
           gender: freshUserData.data.profile?.gender as 'male' | 'female' | undefined,
           phone: freshUserData.data.profile?.phone,
           address: freshUserData.data.profile?.address,
+          city: freshUserData.data.profile?.city,
+          hometown: freshUserData.data.profile?.hometown,
+          country: freshUserData.data.profile?.country,
           avatar_url: freshUserData.data.profile?.avatar_url,
           created_at: user.profile?.created_at || new Date().toISOString(),
         }
@@ -132,6 +144,9 @@ export const PersonalInfoPage: React.FC = () => {
         dateOfBirth: userData.profile?.date_of_birth || '',
         gender: userData.profile?.gender || '',
         address: userData.profile?.address || '',
+        city: userData.profile?.city || '',
+        hometown: userData.profile?.hometown || '',
+        country: userData.profile?.country || '',
         medicalNotes: ''
       });
     }
@@ -362,6 +377,65 @@ export const PersonalInfoPage: React.FC = () => {
                   {formData.address || 'Not provided'}
                 </div>
               )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Current City
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className="w-full min-h-12 px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-4 focus:ring-cyan-200 outline-none transition-all"
+                  />
+                ) : (
+                  <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
+                    {formData.city || 'Not provided'}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Hometown
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="hometown"
+                    value={formData.hometown}
+                    onChange={handleInputChange}
+                    className="w-full min-h-12 px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-4 focus:ring-cyan-200 outline-none transition-all"
+                  />
+                ) : (
+                  <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
+                    {formData.hometown || 'Not provided'}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Country
+                </label>
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full min-h-12 px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-4 focus:ring-cyan-200 outline-none transition-all"
+                  />
+                ) : (
+                  <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
+                    {formData.country || 'Not provided'}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

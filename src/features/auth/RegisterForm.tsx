@@ -73,7 +73,7 @@ export default function RegisterForm() {
           <p className="text-lg text-gray-600">
             {currentSection === 'basic' && 'Email, password and full name'}
             {currentSection === 'details' && 'Phone number and date of birth'}
-            {currentSection === 'optional' && 'Address and emergency contact'}
+            {currentSection === 'optional' && 'Address and location information'}
           </p>
         </div>
       </div>
@@ -276,6 +276,68 @@ export default function RegisterForm() {
             {errors.address && (
               <span id="address-error" className="block text-lg text-red-600 mt-1" role="alert">
                 {errors.address.message}
+              </span>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="city" className="block text-lg font-medium text-gray-900 mb-2">
+                Current City
+              </label>
+              <input
+                id="city"
+                type="text"
+                {...register("city")}
+                placeholder="Enter your current city"
+                className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
+                aria-invalid={errors.city ? 'true' : 'false'}
+                aria-describedby={errors.city ? 'city-error' : undefined}
+              />
+              {errors.city && (
+                <span id="city-error" className="block text-lg text-red-600 mt-1" role="alert">
+                  {errors.city.message}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="hometown" className="block text-lg font-medium text-gray-900 mb-2">
+                Hometown
+              </label>
+              <input
+                id="hometown"
+                type="text"
+                {...register("hometown")}
+                placeholder="Enter your hometown"
+                className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
+                aria-invalid={errors.hometown ? 'true' : 'false'}
+                aria-describedby={errors.hometown ? 'hometown-error' : undefined}
+              />
+              {errors.hometown && (
+                <span id="hometown-error" className="block text-lg text-red-600 mt-1" role="alert">
+                  {errors.hometown.message}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="country" className="block text-lg font-medium text-gray-900 mb-2">
+              Country
+            </label>
+            <input
+              id="country"
+              type="text"
+              {...register("country")}
+              placeholder="Enter your country"
+              className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
+              aria-invalid={errors.country ? 'true' : 'false'}
+              aria-describedby={errors.country ? 'country-error' : undefined}
+            />
+            {errors.country && (
+              <span id="country-error" className="block text-lg text-red-600 mt-1" role="alert">
+                {errors.country.message}
               </span>
             )}
           </div>

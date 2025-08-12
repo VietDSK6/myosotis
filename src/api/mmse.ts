@@ -28,7 +28,11 @@ export interface MMSEQuestion {
   options?: {
     value: string;
     label: string;
-    media: any;
+    media?: {
+      type: 'audio' | 'image';
+      url: string;
+      description: string;
+    } | null;
   }[];
   media?: {
     type: 'audio' | 'image';
@@ -46,7 +50,11 @@ export interface MMSESection {
   description: string;
   instruction?: string;
   order: number;
-  media?: any;
+  media?: {
+    type: 'audio' | 'image';
+    url: string;
+    description: string;
+  }[];
   questions: MMSEQuestion[];
   estimated_time_minutes: number;
   section_type: string;
@@ -63,7 +71,7 @@ export interface MMSETestData {
     }[];
     notes: string;
   };
-  ui_config: any;
+  ui_config: Record<string, unknown>;
 }
 
 export interface MMSEAnswer {
@@ -93,7 +101,7 @@ export interface ApiResponse<T> {
   http_code: number;
   success: boolean;
   message: string | null;
-  metadata: any;
+  metadata: Record<string, unknown> | null;
   data: T;
 }
 
@@ -112,7 +120,7 @@ export const getMMSEInfo = async (): Promise<ApiResponse<MMSETestData>> => {
 
 
 
-export const submitMMSETest = async (payload: MMSESubmissionPayload): Promise<ApiResponse<any>> => {
+export const submitMMSETest = async (payload: MMSESubmissionPayload): Promise<ApiResponse<unknown>> => {
   try {
     const response = await mmseAPI.post('/api/v1/assessments/mmse/submit', payload);
     console.log('MMSE submission response:', response.data);

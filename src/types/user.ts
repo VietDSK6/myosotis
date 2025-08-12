@@ -29,6 +29,9 @@ export interface UserProfile {
   address: string;
   avatar_url: string;
   emergency_contact: string;
+  city?: string;
+  hometown?: string;
+  country?: string;
   created_at: string;
 }
 
@@ -58,11 +61,17 @@ export interface UserUpdatePayload {
   gender?: string;
   address?: string;
   avatar_url?: string;
+  city?: string;
+  hometown?: string;
+  country?: string;
   profile?: {
     full_name?: string;
     date_of_birth?: string;
     gender?: string;
     address?: string;
     avatar_url?: string;
+    city?: string;
+    hometown?: string;
+    country?: string;
   };
 }
