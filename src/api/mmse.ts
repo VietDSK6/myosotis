@@ -85,6 +85,24 @@ export interface MMSESubmissionPayload {
   answers: MMSEAnswer[];
 }
 
+export interface MMSETestResult {
+  success: boolean;
+  message: string;
+  data: {
+    assessment_id: number;
+    user_id: number;
+    total_score: number;
+    max_score: number;
+    percentage: number;
+    interpretation: {
+      level: string;
+      score_range: string;
+    };
+    completed_at: string;
+    saved_to_database: boolean;
+  };
+}
+
 export interface MMSEHistoryItem {
   assessment_id: number;
   test_date: string;
@@ -120,7 +138,7 @@ export const getMMSEInfo = async (): Promise<ApiResponse<MMSETestData>> => {
 
 
 
-export const submitMMSETest = async (payload: MMSESubmissionPayload): Promise<ApiResponse<unknown>> => {
+export const submitMMSETest = async (payload: MMSESubmissionPayload): Promise<ApiResponse<MMSETestResult>> => {
   try {
     const response = await mmseAPI.post('/api/v1/assessments/mmse/submit', payload);
     console.log('MMSE submission response:', response.data);

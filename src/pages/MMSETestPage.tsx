@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { ProtectedRoute } from '../features/auth';
-import { getMMSEInfo, submitMMSETest, type MMSETestData, type MMSEAnswer } from '../api/mmse';
+import { getMMSEInfo, submitMMSETest, type MMSETestData, type MMSEAnswer, type MMSETestResult } from '../api/mmse';
 
 
 const getMediaUrl = (url: string): string => {
@@ -25,6 +25,7 @@ export default function MMSETestPage() {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [testComplete, setTestComplete] = useState(false);
+  const [testResult, setTestResult] = useState<MMSETestResult | null>(null);
 
   useEffect(() => {
     fetchTestData();
@@ -175,41 +176,47 @@ export default function MMSETestPage() {
     try {
       setIsSubmitting(true);
       
-      
+      // Save current answer before submitting
       saveCurrentAnswer(); 
 
-      
+      // Small delay to ensure state updates are complete
       setTimeout(async () => {
-        const finalAnswers = [...answers];
-        
-        
-        const currentQuestion = getCurrentQuestion();
-        if (currentQuestion) {
-          const answerValue = currentQuestion.type === 'multi-select' 
-            ? selectedOptions 
-            : currentAnswer;   
+        try {
+          const finalAnswers = [...answers];
+          
+          // Add current answer if it's not already saved
+          const currentQuestion = getCurrentQuestion();
+          if (currentQuestion) {
+            const answerValue = currentQuestion.type === 'multi-select' 
+              ? selectedOptions 
+              : currentAnswer;   
 
-          const currentAnswerExists = finalAnswers.some(
-            a => a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex
-          );
+            const currentAnswerExists = finalAnswers.some(
+              a => a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex
+            );
 
-          if (!currentAnswerExists && ((typeof answerValue === 'string' && answerValue.trim()) || (Array.isArray(answerValue) && answerValue.length > 0))) {
-            finalAnswers.push({
-              section_index: currentSectionIndex,
-              question_index: currentQuestionIndex,
-              answer: answerValue
-            });
+            if (!currentAnswerExists && ((typeof answerValue === 'string' && answerValue.trim()) || (Array.isArray(answerValue) && answerValue.length > 0))) {
+              finalAnswers.push({
+                section_index: currentSectionIndex,
+                question_index: currentQuestionIndex,
+                answer: answerValue
+              });
+            }
           }
+
+          const payload = {
+            user_id: user.id,
+            answers: finalAnswers
+          };
+
+          console.log('Submitting MMSE test with payload:', payload);
+          const result = await submitMMSETest(payload);
+          setTestResult(result.data);
+          setTestComplete(true);
+        } catch (error) {
+          console.error('Failed to submit test:', error);
+          setIsSubmitting(false);
         }
-
-        const payload = {
-          user_id: user.id,
-          answers: finalAnswers
-        };
-
-        console.log('Submitting MMSE test with payload:', payload);
-        await submitMMSETest(payload);
-        setTestComplete(true);
       }, 100);
       
     } catch (error) {
@@ -318,33 +325,143 @@ export default function MMSETestPage() {
     );
   }
 
-  if (testComplete) {
+  if (testComplete && testResult) {
+    const { data: result } = testResult;
+    const scorePercentage = Math.round(result.percentage);
+    const completedDate = new Date(result.completed_at).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    // Determine color scheme based on score
+    const getScoreColor = (percentage: number) => {
+      if (percentage >= 89) return 'text-green-600 bg-green-100';
+      if (percentage >= 70) return 'text-yellow-600 bg-yellow-100';
+      return 'text-red-600 bg-red-100';
+    };
+
+    const scoreColorClass = getScoreColor(scorePercentage);
+
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-cyan-50 flex items-center justify-center">
-          <div className="max-w-md mx-auto text-center bg-white rounded-xl p-8 shadow-lg">
-            <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+        <div className="min-h-screen bg-cyan-50">
+          <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+            <div className="max-w-4xl mx-auto px-6 lg:px-8">
+              <div className="flex justify-between items-center h-16">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h1 className="text-xl font-semibold text-gray-900">MMSE Test Results</h1>
+                </div>
+              </div>
             </div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">Test Complete!</h2>
-            <p className="text-gray-600 mb-6">Your MMSE test has been submitted successfully.</p>
-            <div className="space-y-3">
-              <button
-                onClick={() => navigate('/mmse-history')}
-                className="w-full px-6 py-3 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 transition-colors"
-              >
-                View Test Results
-              </button>
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-              >
-                Return to Dashboard
-              </button>
+          </header>
+
+          <main className="max-w-4xl mx-auto px-6 py-8 lg:px-8">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              {/* Header Section */}
+              <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-8 py-6 text-white">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold mb-2">Test Completed Successfully!</h2>
+                    <p className="text-cyan-100">Completed on {completedDate}</p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold">{result.total_score}/{result.max_score}</div>
+                    <div className="text-cyan-100">Total Score</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Score Section */}
+              <div className="p-8">
+                <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  {/* Score Card */}
+                  <div className="text-center">
+                    <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full ${scoreColorClass} mb-4`}>
+                      <span className="text-2xl font-bold">{scorePercentage}%</span>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Score Percentage</h3>
+                    <p className="text-gray-600">Your performance on this assessment</p>
+                  </div>
+
+                  {/* Interpretation Card */}
+                  <div className="text-center">
+                    <div className="bg-blue-100 text-blue-800 px-6 py-4 rounded-lg mb-4">
+                      <div className="text-xl font-semibold">{result.interpretation.level}</div>
+                      <div className="text-sm text-blue-600 mt-1">Score Range: {result.interpretation.score_range}</div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Assessment Result</h3>
+                    <p className="text-gray-600">Based on your responses</p>
+                  </div>
+                </div>
+
+                {/* Detailed Breakdown */}
+                <div className="border-t border-gray-200 pt-8">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-6">Test Details</h3>
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="text-sm text-gray-600 mb-1">Assessment ID</div>
+                      <div className="font-semibold text-gray-900">#{result.assessment_id}</div>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="text-sm text-gray-600 mb-1">Questions Answered</div>
+                      <div className="font-semibold text-gray-900">{getTotalQuestions()} questions</div>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="text-sm text-gray-600 mb-1">Maximum Possible Score</div>
+                      <div className="font-semibold text-gray-900">{result.max_score} points</div>
+                    </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <div className="text-sm text-gray-600 mb-1">Data Status</div>
+                      <div className="font-semibold text-green-600">
+                        {result.saved_to_database ? 'Successfully Saved' : 'Not Saved'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="border-t border-gray-200 pt-8 mt-8">
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={() => navigate('/mmse-history')}
+                      className="px-8 py-3 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                      View Test History
+                    </button>
+                    <button
+                      onClick={() => navigate('/dashboard')}
+                      className="px-8 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                      Return to Dashboard
+                    </button>
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
+                      Take Test Again
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          </main>
         </div>
       </ProtectedRoute>
     );

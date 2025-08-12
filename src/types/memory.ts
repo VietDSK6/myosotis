@@ -1,17 +1,34 @@
 export interface LifeEvent {
   id: number;
   user_id: number;
-  event_title: string;
-  event_date: string; 
+  title: string;
+  type: 'image' | 'text' | 'video' | 'audio';
   description: string;
-  image_url?: string;
-  image_caption?: string;
+  file_path?: string;
+  start_time: string;
+  end_time?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface LifeEventInput {
-  event_title: string;
-  event_date: string;
+  title: string;
+  type: 'image' | 'text' | 'video' | 'audio';
   description: string;
-  image_url?: string;
-  image_caption?: string;
+  file_path?: string;
+  start_time: string;
+  end_time?: string;
+}
+
+export interface StoriesApiResponse {
+  http_code: number;
+  success: boolean;
+  message: string;
+  metadata: {
+    total: number;
+    skip: number;
+    limit: number;
+    user_id: number;
+  };
+  data: LifeEvent[];
 }

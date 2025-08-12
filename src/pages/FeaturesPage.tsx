@@ -18,7 +18,7 @@ export default function FeaturesPage() {
       textColor: "text-blue-700"
     },
     {
-      title: "Memory Book",
+      title: "Memory Films",
       description: "Create and view your life timeline with photos and memories",
       icon: (
         <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
