@@ -30,6 +30,34 @@ export default function MMSETestPage() {
     fetchTestData();
   }, []);
 
+  
+  useEffect(() => {
+    const existingAnswer = answers.find(
+      a => a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex
+    );
+    
+    if (existingAnswer) {
+      const question = getCurrentQuestion();
+      if (question?.type === 'multi-select') {
+        
+        if (Array.isArray(existingAnswer.answer)) {
+          setSelectedOptions(existingAnswer.answer);
+        } else {
+          
+          setSelectedOptions(existingAnswer.answer.split(',').filter(v => v.length > 0));
+        }
+        setCurrentAnswer('');
+      } else {
+        
+        setCurrentAnswer(Array.isArray(existingAnswer.answer) ? existingAnswer.answer[0] || '' : existingAnswer.answer);
+        setSelectedOptions([]);
+      }
+    } else {
+      setCurrentAnswer('');
+      setSelectedOptions([]);
+    }
+  }, [currentSectionIndex, currentQuestionIndex, answers, testData]);
+
   const fetchTestData = async () => {
     try {
       setIsLoading(true);
@@ -86,8 +114,8 @@ export default function MMSETestPage() {
     if (!question) return;
 
     const answerValue = question.type === 'multi-select' 
-      ? selectedOptions.join(',') 
-      : currentAnswer;
+      ? selectedOptions 
+      : currentAnswer;   
 
     const newAnswer: MMSEAnswer = {
       section_index: currentSectionIndex,
@@ -111,15 +139,13 @@ export default function MMSETestPage() {
     const currentSection = testData.sections[currentSectionIndex];
     
     if (currentQuestionIndex < currentSection.questions.length - 1) {
-      
       setCurrentQuestionIndex(prev => prev + 1);
     } else if (currentSectionIndex < testData.sections.length - 1) {
-      
       setCurrentSectionIndex(prev => prev + 1);
       setCurrentQuestionIndex(0);
     } else {
-      
       handleSubmitTest();
+      return;
     }
 
     
@@ -137,20 +163,10 @@ export default function MMSETestPage() {
         setCurrentQuestionIndex(prevSection.questions.length - 1);
       }
     }
-
     
-    const prevAnswer = answers.find(
-      a => a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex
-    );
     
-    if (prevAnswer) {
-      const question = getCurrentQuestion();
-      if (question?.type === 'multi-select') {
-        setSelectedOptions(prevAnswer.answer.split(','));
-      } else {
-        setCurrentAnswer(prevAnswer.answer);
-      }
-    }
+    setCurrentAnswer('');
+    setSelectedOptions([]);
   };
 
   const handleSubmitTest = async () => {
@@ -158,18 +174,46 @@ export default function MMSETestPage() {
 
     try {
       setIsSubmitting(true);
+      
+      
       saveCurrentAnswer(); 
 
-      const payload = {
-        user_id: user.id,
-        answers: answers
-      };
+      
+      setTimeout(async () => {
+        const finalAnswers = [...answers];
+        
+        
+        const currentQuestion = getCurrentQuestion();
+        if (currentQuestion) {
+          const answerValue = currentQuestion.type === 'multi-select' 
+            ? selectedOptions 
+            : currentAnswer;   
 
-      await submitMMSETest(payload);
-      setTestComplete(true);
+          const currentAnswerExists = finalAnswers.some(
+            a => a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex
+          );
+
+          if (!currentAnswerExists && ((typeof answerValue === 'string' && answerValue.trim()) || (Array.isArray(answerValue) && answerValue.length > 0))) {
+            finalAnswers.push({
+              section_index: currentSectionIndex,
+              question_index: currentQuestionIndex,
+              answer: answerValue
+            });
+          }
+        }
+
+        const payload = {
+          user_id: user.id,
+          answers: finalAnswers
+        };
+
+        console.log('Submitting MMSE test with payload:', payload);
+        await submitMMSETest(payload);
+        setTestComplete(true);
+      }, 100);
+      
     } catch (error) {
       console.error('Failed to submit test:', error);
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -230,7 +274,7 @@ export default function MMSETestPage() {
             type="number"
             value={currentAnswer}
             onChange={(e) => handleAnswerChange(e.target.value)}
-            placeholder={question.placeholder}
+            placeholder={question.placeholder || ''}
             className={commonInputClass}
           />
         );
@@ -241,7 +285,7 @@ export default function MMSETestPage() {
             type="text"
             value={currentAnswer}
             onChange={(e) => handleAnswerChange(e.target.value)}
-            placeholder={question.placeholder}
+            placeholder={question.placeholder || ''}
             className={commonInputClass}
           />
         );
@@ -286,12 +330,20 @@ export default function MMSETestPage() {
             </div>
             <h2 className="text-2xl font-semibold text-gray-900 mb-2">Test Complete!</h2>
             <p className="text-gray-600 mb-6">Your MMSE test has been submitted successfully.</p>
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="w-full px-6 py-3 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 transition-colors"
-            >
-              Return to Dashboard
-            </button>
+            <div className="space-y-3">
+              <button
+                onClick={() => navigate('/mmse-history')}
+                className="w-full px-6 py-3 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 transition-colors"
+              >
+                View Test Results
+              </button>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+              >
+                Return to Dashboard
+              </button>
+            </div>
           </div>
         </div>
       </ProtectedRoute>

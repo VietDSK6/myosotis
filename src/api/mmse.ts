@@ -33,28 +33,28 @@ export interface MMSEQuestion {
       url: string;
       description: string;
     } | null;
-  }[];
+  }[] | null;
   media?: {
     type: 'audio' | 'image';
     url: string;
     description: string;
-  }[];
-  time_limit_seconds?: number;
-  placeholder?: string;
-  validation_rule?: string;
+  }[] | null;
+  time_limit_seconds?: number | null;
+  placeholder?: string | null;
+  validation_rule?: string | null;
 }
 
 export interface MMSESection {
   id: string;
   title: string;
   description: string;
-  instruction?: string;
+  instruction?: string | null;
   order: number;
   media?: {
     type: 'audio' | 'image';
     url: string;
     description: string;
-  }[];
+  }[] | null;
   questions: MMSEQuestion[];
   estimated_time_minutes: number;
   section_type: string;
@@ -77,7 +77,7 @@ export interface MMSETestData {
 export interface MMSEAnswer {
   section_index: number;
   question_index: number;
-  answer: string;
+  answer: string | string[]; 
 }
 
 export interface MMSESubmissionPayload {

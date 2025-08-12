@@ -59,7 +59,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
       [name]: type === 'checkbox' ? checked : value
     }));
 
-    // Clear error when user starts typing
+    
     if (errors[name as keyof EmergencyContactPayload]) {
       setErrors(prev => ({
         ...prev,

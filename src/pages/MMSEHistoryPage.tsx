@@ -40,23 +40,35 @@ export default function MMSEHistoryPage() {
     });
   };
 
-  const getScoreColor = (percentage: number) => {
-    if (percentage >= 89) return 'text-green-600 bg-green-50'; 
-    if (percentage >= 74) return 'text-yellow-600 bg-yellow-50'; 
-    if (percentage >= 52) return 'text-orange-600 bg-orange-50'; 
+  const getScoreColor = (score: number) => {
+    
+    if (score >= 24) return 'text-green-600 bg-green-50'; 
+    if (score >= 20) return 'text-yellow-600 bg-yellow-50'; 
+    if (score >= 14) return 'text-orange-600 bg-orange-50'; 
     return 'text-red-600 bg-red-50'; 
   };
 
+  const getProgressBarColor = (score: number) => {
+    
+    if (score >= 24) return 'bg-green-500'; 
+    if (score >= 20) return 'bg-yellow-500'; 
+    if (score >= 14) return 'bg-orange-500'; 
+    return 'bg-red-500'; 
+  };
+
   const getInterpretationBadge = (interpretationLevel: string) => {
-    // Map Vietnamese interpretation to English and colors
-    const levelMap: { [key: string]: { text: string; color: string } } = {
-      'Không suy giảm nhận thức': { text: 'Normal', color: 'bg-green-100 text-green-800' },
-      'Suy giảm nhận thức nhẹ': { text: 'Mild Decline', color: 'bg-yellow-100 text-yellow-800' },
-      'Suy giảm nhận thức trung bình': { text: 'Moderate Decline', color: 'bg-orange-100 text-orange-800' },
-      'Suy giảm nhận thức nặng': { text: 'Severe Decline', color: 'bg-red-100 text-red-800' },
+    
+    const levelColorMap: { [key: string]: string } = {
+      'No cognitive impairment': 'bg-green-100 text-green-800',
+      'Mild cognitive impairment': 'bg-yellow-100 text-yellow-800',
+      'Moderate cognitive impairment': 'bg-orange-100 text-orange-800',
+      'Severe cognitive impairment': 'bg-red-100 text-red-800',
     };
     
-    return levelMap[interpretationLevel] || { text: 'Unknown', color: 'bg-gray-100 text-gray-800' };
+    return {
+      text: interpretationLevel,
+      color: levelColorMap[interpretationLevel] || 'bg-gray-100 text-gray-800'
+    };
   };
 
   if (isLoading) {
@@ -155,7 +167,7 @@ export default function MMSEHistoryPage() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <div className={`text-2xl font-bold ${getScoreColor(test.percentage).split(' ')[0]}`}>
+                          <div className={`text-2xl font-bold ${getScoreColor(test.total_score).split(' ')[0]}`}>
                             {test.total_score}/{test.max_score}
                           </div>
                           <div className="text-sm text-gray-600">
@@ -174,9 +186,9 @@ export default function MMSEHistoryPage() {
                           </span>
                         </div>
                         
-                        <div className="text-sm text-gray-600">
+                        {/* <div className="text-sm text-gray-600">
                           {test.interpretation.level}
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className="mt-4 pt-4 border-t border-gray-200">
@@ -186,11 +198,7 @@ export default function MMSEHistoryPage() {
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${
-                              test.percentage >= 89 ? 'bg-green-500' :
-                              test.percentage >= 74 ? 'bg-yellow-500' :
-                              test.percentage >= 52 ? 'bg-orange-500' : 'bg-red-500'
-                            }`}
+                            className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(test.total_score)}`}
                             style={{ width: `${test.percentage}%` }}
                           ></div>
                         </div>

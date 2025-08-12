@@ -92,10 +92,10 @@ export default function DashboardPage() {
               </div>
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={handleEmergencyContacts}
+                  onClick={() => navigate('/features')}
                   className="min-h-12 px-6 py-2 text-lg font-medium text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
                 >
-                  Emergency Contacts
+                  Features
                 </button>
                 <button
                   onClick={handlePersonalInfo}
@@ -132,7 +132,10 @@ export default function DashboardPage() {
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer">
+              <div 
+                onClick={() => navigate('/memory-book')}
+                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
+              >
                 <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
                   <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -169,9 +172,12 @@ export default function DashboardPage() {
               </div>
             </div>
             <div className="mt-4">
-              <a href="#" className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md">
-                More actions →
-              </a>
+              <button 
+                onClick={() => navigate('/features')}
+                className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
+              >
+                More features →
+              </button>
             </div>
           </section>
 
@@ -291,7 +297,12 @@ export default function DashboardPage() {
         <footer className="py-6 text-center text-lg text-gray-500">
           <div className="mb-2">Need help? Call support at (555) 000-0000</div>
           <div className="flex justify-center gap-6">
-            <a href="#" className="hover:text-gray-700 underline-none focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md">Help</a>
+            <button 
+              onClick={() => navigate('/features')}
+              className="hover:text-gray-700 underline-none focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
+            >
+              All Features
+            </button>
             <a href="#" className="hover:text-gray-700 underline-none focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md">Settings</a>
           </div>
         </footer>   
