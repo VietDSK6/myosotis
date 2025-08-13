@@ -292,7 +292,7 @@ export default function MemoryFilmPage() {
               </div>
             </div>
           ) : (
-            <div className="h-full px-20 md:px-28 lg:px-36 xl:px-44" key={`timeline-${lifeEvents.length}-${lifeEvents.map(e => e.id).join('-')}`}>
+            <div className="h-full px-38 md:px-46 lg:px-54 xl:px-62" key={`timeline-${lifeEvents.length}-${lifeEvents.map(e => e.id).join('-')}`}>
               <Timeline
                 target={<div className="timeline_line" style={{ height: 'calc(100vh - 80px)' }} />}
                 events={timelineData}

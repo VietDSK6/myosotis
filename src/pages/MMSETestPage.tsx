@@ -365,7 +365,6 @@ export default function MMSETestPage() {
 
           <main className="max-w-4xl mx-auto px-6 py-8 lg:px-8">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              {/* Header Section */}
               <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-8 py-6 text-white">
                 <div className="flex items-center justify-between">
                   <div>
@@ -379,10 +378,9 @@ export default function MMSETestPage() {
                 </div>
               </div>
 
-              {/* Score Section */}
+
               <div className="p-8">
                 <div className="grid md:grid-cols-2 gap-8 mb-8">
-                  {/* Score Card */}
                   <div className="text-center">
                     <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full ${scoreColorClass} mb-4`}>
                       <span className="text-2xl font-bold">{scorePercentage}%</span>
@@ -391,7 +389,6 @@ export default function MMSETestPage() {
                     <p className="text-gray-600">Your performance on this assessment</p>
                   </div>
 
-                  {/* Interpretation Card */}
                   <div className="text-center">
                     <div className="bg-blue-100 text-blue-800 px-6 py-4 rounded-lg mb-4">
                       <div className="text-xl font-semibold">{result.interpretation.level}</div>
@@ -402,7 +399,6 @@ export default function MMSETestPage() {
                   </div>
                 </div>
 
-                {/* Detailed Breakdown */}
                 <div className="border-t border-gray-200 pt-8">
                   <h3 className="text-xl font-semibold text-gray-900 mb-6">Test Details</h3>
                   <div className="grid sm:grid-cols-2 gap-6">

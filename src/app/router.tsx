@@ -3,6 +3,7 @@ import { LoginPage, RegisterPage } from '../features/auth';
 import DashboardPage from '../pages/DashboardPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import WelcomePage from '../pages/WelcomePage';
+import LandingPage from '../pages/LandingPage';
 import CaregiverGuidePage from '../pages/CaregiverGuidePage';
 import { PersonalInfoPage } from '../pages/PersonalInfoPage';
 import { EmergencyContactsPage } from '../pages/EmergencyContactsPage';
@@ -14,7 +15,11 @@ import FeaturesPage from '../pages/FeaturesPage';
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <WelcomePage />,
+    element: <LandingPage />,
+  },
+  {
+    path: '/landing',
+    element: <LandingPage />,
   },
   {
     path: '/welcome',
