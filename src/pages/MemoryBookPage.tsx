@@ -4,10 +4,9 @@ import Timeline from 'timelinejs-react';
 import { ProtectedRoute } from '../features/auth';
 import { useAuthStore } from '../features/auth/store';
 import LifeEventModal from '../components/LifeEventModal';
-import { getStoriesByUserId, createStory, updateStory, deleteStory, getMediaUrl } from '../api/stories';
+import { getStoriesByUserId, createStory, updateStory, updateStoryFile, deleteStory, getMediaUrl } from '../api/stories';
 import type { LifeEvent, LifeEventInput } from '../types/memory';
 
-// TimelineJS types
 interface Slide {
   start_date: {
     year: number;
@@ -34,7 +33,6 @@ interface Slide {
   background?: object;
 }
 
-// Function to transform our LifeEvent data to TimelineJS Slide format
 const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
   return events.map((event) => {
     const startDate = new Date(event.start_time);
@@ -43,7 +41,7 @@ const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
     const slide: Slide = {
       start_date: {
         year: startDate.getFullYear(),
-        month: startDate.getMonth() + 1, // TimelineJS uses 1-12, JS uses 0-11
+        month: startDate.getMonth() + 1,
         day: startDate.getDate(),
       },
       unique_id: event.id.toString(),
@@ -55,7 +53,6 @@ const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
       background: {},
     };
 
-    // Add end date if available
     if (endDate) {
       slide.end_date = {
         year: endDate.getFullYear(),
@@ -64,7 +61,6 @@ const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
       };
     }
 
-    // Add media if available
     if (event.file_path) {
       slide.media = {
         url: getMediaUrl(event.file_path),
@@ -78,7 +74,7 @@ const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
   });
 };
 
-export default function MemoryBookPage() {
+export default function MemoryFilmPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([]);
@@ -88,7 +84,6 @@ export default function MemoryBookPage() {
   const [error, setError] = useState<string | null>(null);
   const [showManagePanel, setShowManagePanel] = useState(false);
 
-  // Memoize the timeline data to ensure proper re-rendering
   const timelineData = useMemo(() => transformToTimelineData(lifeEvents), [lifeEvents]);
 
   useEffect(() => {
@@ -127,14 +122,21 @@ export default function MemoryBookPage() {
     }
   };
 
-  const handleEditEvent = async (eventData: LifeEventInput) => {
+  const handleEditEvent = async (eventData: LifeEventInput, file?: File) => {
     if (!editingEvent) return;
     
     try {
       const response = await updateStory(editingEvent.id, eventData);
+      let updatedEvent = response.data;
+      
+      if (file) {
+        const fileResponse = await updateStoryFile(editingEvent.id, file);
+        updatedEvent = fileResponse.data;
+      }
+      
       setLifeEvents(prev => prev.map(event => 
         event.id === editingEvent.id 
-          ? response.data
+          ? updatedEvent
           : event
       ).sort((a, b) => 
         new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
@@ -187,8 +189,8 @@ export default function MemoryBookPage() {
                   </svg>
                 </button>
                 <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
                   </svg>
                 </div>
                 <div className="text-xl font-semibold text-gray-900">
@@ -275,8 +277,8 @@ export default function MemoryBookPage() {
             <div className="flex-1 flex items-center justify-center h-96">
               <div className="text-center py-12 max-w-md">
                 <div className="h-16 w-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
                   </svg>
                 </div>
                 <h3 className="text-2xl font-semibold text-gray-900 mb-2">No memories yet</h3>
@@ -301,7 +303,7 @@ export default function MemoryBookPage() {
                   scale_factor: 1,
                   debug: false,
                   default_bg_color: { r: 255, g: 255, b: 255 },
-                  timenav_height: 150,
+                  timenav_height: 200,
                   timenav_height_percentage: 25,
                 }}
               />

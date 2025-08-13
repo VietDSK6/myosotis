@@ -8,7 +8,7 @@ import { PersonalInfoPage } from '../pages/PersonalInfoPage';
 import { EmergencyContactsPage } from '../pages/EmergencyContactsPage';
 import MMSETestPage from '../pages/MMSETestPage';
 import MMSEHistoryPage from '../pages/MMSEHistoryPage';
-import MemoryBookPage from '../pages/MemoryBookPage';
+import MemoryFilmPage from '../pages/MemoryBookPage';
 import FeaturesPage from '../pages/FeaturesPage';
 
 export const router = createBrowserRouter([
@@ -57,8 +57,8 @@ export const router = createBrowserRouter([
     element: <MMSEHistoryPage />,
   },
   {
-    path: '/memory-book',
-    element: <MemoryBookPage />,
+    path: '/memory-film',
+    element: <MemoryFilmPage />,
   },
   {
     path: '/features',
