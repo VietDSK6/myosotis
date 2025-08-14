@@ -177,7 +177,7 @@ export default function MemoryFilmPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-cyan-50">
         <PageHeader 
           title="Memory Films"
           showBackButton={true}

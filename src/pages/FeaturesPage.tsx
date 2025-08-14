@@ -7,8 +7,20 @@ export default function FeaturesPage() {
 
   const features = [
     {
-      title: "Memory Exercise (MMSE)",
-      description: "Take cognitive assessment tests to monitor your mental health",
+      title: "Living Memories",
+      description: "Create AI avatars with your loved one's voice",
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+      ),
+      onClick: () => navigate('/ai-clone'),
+      bgColor: "bg-purple-100",
+      textColor: "text-purple-700"
+    },
+    {
+      title: "Memory Test (MMSE)",
+      description: "Take cognitive assessment tests",
       icon: (
         <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -20,15 +32,15 @@ export default function FeaturesPage() {
     },
     {
       title: "Memory Films",
-      description: "Create and view your life timeline with photos and memories",
+      description: "View your photos and memories",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
           <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
         </svg>
       ),
       onClick: () => navigate('/memory-film'),
-      bgColor: "bg-purple-100",
-      textColor: "text-purple-700"
+      bgColor: "bg-indigo-100",
+      textColor: "text-indigo-700"
     },
     {
       title: "Emergency Contacts",
@@ -41,6 +53,18 @@ export default function FeaturesPage() {
       onClick: () => navigate('/emergency-contacts'),
       bgColor: "bg-red-100",
       textColor: "text-red-700"
+    },
+    {
+      title: "Memory History",
+      description: "View your AI clone video history",
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      onClick: () => navigate('/ai-clone/history'),
+      bgColor: "bg-purple-100",
+      textColor: "text-purple-700"
     },
     {
       title: "Test History",

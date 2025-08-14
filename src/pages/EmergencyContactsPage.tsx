@@ -124,12 +124,6 @@ export const EmergencyContactsPage: React.FC = () => {
       />
 
       <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
-        <div className="mb-8">
-          <p className="text-lg text-gray-600">
-            Important people you can reach out to in case of emergency
-          </p>
-        </div>
-
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
             <div className="flex items-center gap-3">

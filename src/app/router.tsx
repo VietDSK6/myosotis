@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { LoginPage, RegisterPage } from '../features/auth';
+import { AICloneHistoryPage } from '../features/ai-clone';
 import DashboardPage from '../pages/DashboardPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import WelcomePage from '../pages/WelcomePage';
@@ -11,6 +12,7 @@ import MMSETestPage from '../pages/MMSETestPage';
 import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
 import FeaturesPage from '../pages/FeaturesPage';
+import AIClonePage from '../pages/AIClonePage';
 import RootRedirect from '../components/RootRedirect';
 
 export const router = createBrowserRouter([
@@ -69,6 +71,14 @@ export const router = createBrowserRouter([
   {
     path: '/features',
     element: <FeaturesPage />,
+  },
+  {
+    path: '/ai-clone',
+    element: <AIClonePage />,
+  },
+  {
+    path: '/ai-clone/history',
+    element: <AICloneHistoryPage />,
   },
   {
     path: '*',

@@ -22,39 +22,30 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    if (user?.id) {
-      fetchEmergencyContacts();
-      fetchMmseHistory();
-    }
+    const fetchData = async () => {
+      if (!user?.id) return;
+
+      setIsLoadingContacts(true);
+      setIsLoadingMmse(true);
+
+      try {
+        const [contactsResponse, mmseResponse] = await Promise.all([
+          getEmergencyContacts(user.id),
+          getMMSEHistory(user.id)
+        ]);
+        
+        setEmergencyContacts(contactsResponse.data || []);
+        setMmseHistory(mmseResponse.data || []);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+      } finally {
+        setIsLoadingContacts(false);
+        setIsLoadingMmse(false);
+      }
+    };
+
+    fetchData();
   }, [user?.id]);
-
-  const fetchEmergencyContacts = async () => {
-    if (!user?.id) return;
-
-    setIsLoadingContacts(true);
-    try {
-      const response = await getEmergencyContacts(user.id);
-      setEmergencyContacts(response.data || []);
-    } catch (err) {
-      console.error('Failed to fetch emergency contacts:', err);
-    } finally {
-      setIsLoadingContacts(false);
-    }
-  };
-
-  const fetchMmseHistory = async () => {
-    if (!user?.id) return;
-
-    setIsLoadingMmse(true);
-    try {
-      const response = await getMMSEHistory(user.id);
-      setMmseHistory(response.data || []);
-    } catch (err) {
-      console.error('Failed to fetch MMSE history:', err);
-    } finally {
-      setIsLoadingMmse(false);
-    }
-  };
 
   const handleLogout = () => {
     logout();
@@ -120,8 +111,65 @@ export default function DashboardPage() {
             </button>
           </div>
           <section className="mb-8">
+            {/* <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white mb-8">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                    <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
+                      New Feature
+                    </span>
+                  </div>
+                  <h2 className="text-3xl font-bold mb-3">
+                    Create Living Memories
+                  </h2>
+                  <p className="text-lg text-purple-100 mb-6 max-w-2xl">
+                    Transform photos and voice recordings into AI-powered talking avatars. 
+                    Let your loved ones share stories, memories, and messages that last forever.
+                  </p>
+                  <button
+                    onClick={() => navigate('/ai-clone')}
+                    className="inline-flex items-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                    </svg>
+                    Start Creating
+                  </button>
+                </div>
+                <div className="hidden lg:block flex-shrink-0 ml-8">
+                  <div className="w-48 h-48 bg-white/10 rounded-2xl flex items-center justify-center">
+                    <svg className="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div> */}
+
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* AI Clone Feature Card - First and most prominent */}
+              <div 
+                onClick={() => navigate('/ai-clone')}
+                className="rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-6 shadow-sm hover:shadow-md transition-all cursor-pointer ring-2 ring-purple-300 ring-opacity-20"
+              >
+                <div className="h-12 w-12 rounded-xl bg-purple-600 text-white flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-900">Living Memories</h3>
+                  <svg className="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                  </svg>
+                </div>
+                <p className="text-lg text-gray-700">Create AI avatars that speak with your loved one's voice</p>
+              </div>
+
               <FeatureCard
                 title="Memory Films"
                 description="View your cherished memories and photos"
@@ -145,21 +193,6 @@ export default function DashboardPage() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Emergency Contacts</h3>
                 <p className="text-lg text-gray-600">Important people and their information</p>
               </div>
-
-              <div 
-                onClick={() => navigate('/mmse-history')}
-                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
-              >
-                <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022zm2.004.45a7 7 0 0 0-.985-.299l.219-.976q.576.129 1.126.342zm1.37.71a7 7 0 0 0-.439-.27l.493-.87a8 8 0 0 1 .979.654l-.615.789a7 7 0 0 0-.418-.302zm1.834 1.79a7 7 0 0 0-.653-.796l.724-.69q.406.429.747.91zm.744 1.352a7 7 0 0 0-.214-.468l.893-.45a8 8 0 0 1 .45 1.088l-.95.313a7 7 0 0 0-.179-.483m.53 2.507a7 7 0 0 0-.1-1.025l.985-.17q.1.58.116 1.17zm-.131 1.538q.05-.254.081-.51l.993.123a8 8 0 0 1-.23 1.155l-.964-.267q.069-.247.12-.501m-.952 2.379q.276-.436.486-.908l.914.405q-.24.54-.555 1.038zm-.964 1.205q.183-.183.35-.378l.758.653a8 8 0 0 1-.401.432z"/>
-                    <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0z"/>
-                    <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Test History</h3>
-                <p className="text-lg text-gray-600">View your MMSE test results and progress</p>
-              </div>
             </div>
             <div className="mt-4">
               <button 
@@ -177,13 +210,13 @@ export default function DashboardPage() {
               {isLoadingMmse ? (
                 <LoadingSpinner />
               ) : (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <StatCard
                     value={`${mmseHistory.length} Tests`}
                     label="MMSE completed"
                     icon={
-                      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 714.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 713.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 410 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 41-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 41-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 41-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 410-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 413.138-3.138z" />
+                      <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
                       </svg>
                     }
                   />
@@ -271,20 +304,47 @@ export default function DashboardPage() {
               )}
             </div>
           </section>
-        </main>
 
-        <footer className="py-6 text-center text-lg text-gray-500">
-          <div className="mb-2">Need help? Call support at (555) 000-0000</div>
-          <div className="flex justify-center gap-6">
-            <button 
-              onClick={() => navigate('/features')}
-              className="hover:text-gray-700 underline-none focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
-            >
-              All Features
-            </button>
-            <a href="#" className="hover:text-gray-700 underline-none focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md">Settings</a>
-          </div>
-        </footer>   
+          {/* Recent Activity Section with AI Clone Promotion */}
+          <section className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
+            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="text-center py-12">
+                <div className="h-12 w-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  No recent activity
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Start by creating your first living memory to preserve precious moments forever.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <button
+                    onClick={() => navigate('/ai-clone')}
+                    className="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                    Create Living Memory
+                  </button>
+                  <button
+                    onClick={handleMMSETest}
+                    className="inline-flex items-center gap-2 bg-cyan-600 text-white px-6 py-3 rounded-lg hover:bg-cyan-700 transition-colors font-semibold"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Take Memory Test
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>  
       </div>
     </ProtectedRoute>
   );
