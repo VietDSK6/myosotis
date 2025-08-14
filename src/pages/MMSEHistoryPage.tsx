@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { ProtectedRoute } from '../features/auth';
 import { getMMSEHistory, type MMSEHistoryItem } from '../api/mmse';
+import { PageHeader, HeaderButton, LoadingSpinner, EmptyState } from '../components';
 
 export default function MMSEHistoryPage() {
   const { user } = useAuthStore();
@@ -75,10 +76,7 @@ export default function MMSEHistoryPage() {
     return (
       <ProtectedRoute>
         <div className="min-h-screen bg-cyan-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600">Loading test history...</p>
-          </div>
+          <LoadingSpinner text="Loading test history..." />
         </div>
       </ProtectedRoute>
     );
@@ -87,47 +85,33 @@ export default function MMSEHistoryPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-cyan-50">
-        <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-          <div className="max-w-5xl mx-auto px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <h1 className="text-xl font-semibold text-gray-900">MMSE Test History</h1>
-              </div>
-              <button
-                onClick={() => navigate('/mmse-test')}
-                className="px-4 py-2 bg-cyan-600 text-white rounded-lg font-medium hover:bg-cyan-700 transition-colors"
-              >
-                Take New Test
-              </button>
-            </div>
-          </div>
-        </header>
+        <PageHeader 
+          title="MMSE Test History"
+          showBackButton={true}
+          backTo="/dashboard"
+          rightActions={
+            <HeaderButton 
+              onClick={() => navigate('/mmse-test')}
+              variant="mmse-test"
+            >
+              Take New Test
+            </HeaderButton>
+          }
+        />
 
         <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8">
           {history.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
+            <EmptyState
+              title="No Test History"
+              description="You haven't taken any MMSE tests yet."
+              actionText="Take Your First Test"
+              onAction={() => navigate('/mmse-test')}
+              icon={
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-              </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">No Test History</h2>
-              <p className="text-gray-600 mb-6">You haven't taken any MMSE tests yet.</p>
-              <button
-                onClick={() => navigate('/mmse-test')}
-                className="px-6 py-3 bg-cyan-600 text-white rounded-lg font-semibold hover:bg-cyan-700 transition-colors"
-              >
-                Take Your First Test
-              </button>
-            </div>
+              }
+            />
           ) : (
             <div className="space-y-6">
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">

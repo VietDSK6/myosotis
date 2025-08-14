@@ -69,7 +69,12 @@ export const useAuthStore = create<AuthStore>()(
             phone: response.phone,
             created_at: response.created_at,
             updated_at: response.updated_at,
-            profile: response.profile,
+            profile: response.profile || {
+              id: response.id,
+              user_id: response.id,
+              full_name: payload.profile.full_name,
+              created_at: response.created_at,
+            },
             emergency_contacts: response.emergency_contacts,
           };
           

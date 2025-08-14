@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '../features/auth';
+import { PageHeader, FeatureCard } from '../components';
 
 export default function FeaturesPage() {
   const navigate = useNavigate();
@@ -54,50 +55,17 @@ export default function FeaturesPage() {
       onClick: () => navigate('/mmse-history'),
       bgColor: "bg-green-100",
       textColor: "text-green-700"
-    },
-    {
-      title: "Caregiver Guide",
-      description: "Information and resources for caregivers and family members",
-      icon: (
-        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
-      onClick: () => navigate('/caregiver-guide'),
-      bgColor: "bg-yellow-100",
-      textColor: "text-yellow-700"
     }
   ];
 
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-cyan-50 antialiased text-[18px]">
-        <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-          <div className="max-w-5xl mx-auto px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <img 
-                    src="/favicon-32x32.png" 
-                    alt="Myosotis Logo" 
-                    className="w-8 h-8"
-                  />
-                </div>
-                <div className="text-xl font-semibold text-gray-900">
-                  All Features
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
+        <PageHeader 
+          title="All Features"
+          showBackButton={true}
+          backTo="/dashboard"
+        />
 
         <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
           <div className="text-left mb-12">
@@ -111,27 +79,15 @@ export default function FeaturesPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
-              <div
+              <FeatureCard
                 key={index}
+                title={feature.title}
+                description={feature.description}
                 onClick={feature.onClick}
-                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer group"
-              >
-                <div className={`h-12 w-12 rounded-xl ${feature.bgColor} ${feature.textColor} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  {feature.icon}
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
-                <div className="mt-4 flex items-center text-cyan-600 font-medium group-hover:text-cyan-700">
-                  <span>Open</span>
-                  <svg className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </div>
+                icon={feature.icon}
+                iconBgColor={feature.bgColor}
+                iconTextColor={feature.textColor}
+              />
             ))}
           </div>
 

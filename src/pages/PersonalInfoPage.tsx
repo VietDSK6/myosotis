@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { getUserInfo, updateUserInfo } from '../api/user';
 import type { UserData } from '../types/user';
+import { PageHeader, LoadingSpinner, AlertMessage } from '../components';
 
 export const PersonalInfoPage: React.FC = () => {
   const { user, updateUser } = useAuthStore();
@@ -156,49 +156,22 @@ export const PersonalInfoPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-cyan-50 antialiased text-[18px] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-cyan-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading personal information...</p>
-        </div>
+        <LoadingSpinner text="Loading personal information..." />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-cyan-50 antialiased text-[18px]">
-      <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-        <div className="max-w-5xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <Link to="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <img 
-                    src="/favicon-32x32.png" 
-                    alt="Myosotis Logo" 
-                    className="w-8 h-8"
-                  />
-                </div>
-                <div className="text-xl font-semibold text-gray-900">
-                  Myosotis
-                </div>
-              </Link>
-            </div>
-            <Link 
-              to="/dashboard"
-              className="min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300"
-            >
-              Back to Dashboard
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PageHeader 
+        title="Personal Information"
+        showBackButton={true}
+        backTo="/dashboard"
+      />
 
       <main className="max-w-4xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
         <div className="bg-white rounded-3xl shadow-lg p-8 lg:p-12">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-semibold text-gray-900">
-              Personal Information
-            </h1>
+          <div className="flex justify-end items-center mb-8">
             {!isEditing ? (
               <button
                 onClick={() => {
@@ -238,25 +211,17 @@ export const PersonalInfoPage: React.FC = () => {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
-              <div className="flex items-center gap-3">
-                <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-lg text-red-800">{error}</p>
-              </div>
-            </div>
+            <AlertMessage
+              type="error"
+              message={error}
+            />
           )}
 
           {successMessage && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
-              <div className="flex items-center gap-3">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="text-lg text-green-800">{successMessage}</p>
-              </div>
-            </div>
+            <AlertMessage
+              type="success"
+              message={successMessage}
+            />
           )}
 
           <div className="space-y-8">

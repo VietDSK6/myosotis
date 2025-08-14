@@ -6,15 +6,9 @@ export interface LoginPayload {
 export interface RegisterPayload {
   email: string;
   password: string;
-  phone?: string;
-  full_name: string;
-  date_of_birth?: string;
-  gender?: 'male' | 'female';
-  address?: string;
-  avatar_url?: string;
-  city?: string;
-  hometown?: string;
-  country?: string;
+  profile: {
+    full_name: string;
+  };
 }
 
 export interface Profile {

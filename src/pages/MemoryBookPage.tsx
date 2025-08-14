@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { ProtectedRoute } from '../features/auth';
 import { useAuthStore } from '../features/auth/store';
 import LifeEventModal from '../components/LifeEventModal';
 import { getStoriesByUserId, createStory, updateStory, updateStoryFile, deleteStory, getMediaUrl } from '../api/stories';
 import type { LifeEvent, LifeEventInput } from '../types/memory';
+import { PageHeader, HeaderButton } from '../components/layout';
 
 const Timeline = lazy(() => import('timelinejs-react'));
 
@@ -77,7 +78,7 @@ const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
 
 export default function MemoryFilmPage() {
   const { user } = useAuthStore();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<LifeEvent | null>(null);
@@ -177,44 +178,28 @@ export default function MemoryFilmPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-white">
-        <header className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
-                  </svg>
-                </div>
-                <div className="text-xl font-semibold text-gray-900">
-                  Memory Films
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="min-h-10 px-4 py-2 text-lg font-medium bg-cyan-600 text-white hover:bg-cyan-700 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                >
-                  Add Memory
-                </button>
-                <button
-                  onClick={() => setShowManagePanel(!showManagePanel)}
-                  className="min-h-10 px-4 py-2 text-lg font-medium bg-gray-600 text-white hover:bg-gray-700 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-gray-500"
-                >
-                  Manage Memories
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
+        <PageHeader 
+          title="Memory Films"
+          showBackButton={true}
+          backTo="/dashboard"
+          variant="solid"
+          rightActions={
+            <>
+              <HeaderButton
+                onClick={() => setIsModalOpen(true)}
+                variant="memory-add"
+              >
+                Add Memory
+              </HeaderButton>
+              <HeaderButton
+                onClick={() => setShowManagePanel(!showManagePanel)}
+                variant="memory-manage"
+              >
+                Manage Memories
+              </HeaderButton>
+            </>
+          }
+        />
 
         <div className="timeline-container flex-1 relative">
           {showManagePanel && (

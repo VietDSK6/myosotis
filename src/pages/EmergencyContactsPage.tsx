@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { getEmergencyContacts, createEmergencyContact, updateEmergencyContact, deleteEmergencyContact } from '../api/user';
 import type { EmergencyContact, EmergencyContactPayload } from '../types/user';
 import { EmergencyContactModal } from '../components/EmergencyContactModal';
 import { ConfirmDeleteModal } from '../components/ConfirmDeleteModal';
+import { PageHeader, LoadingSpinner } from '../components';
 
 export const EmergencyContactsPage: React.FC = () => {
   const { user } = useAuthStore();
@@ -110,48 +110,21 @@ export const EmergencyContactsPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-cyan-50 antialiased text-[18px] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-cyan-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading emergency contacts...</p>
-        </div>
+        <LoadingSpinner text="Loading emergency contacts..." />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-cyan-50 antialiased text-[18px]">
-      <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-        <div className="max-w-5xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <Link to="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <img 
-                    src="/favicon-32x32.png" 
-                    alt="Myosotis Logo" 
-                    className="w-8 h-8"
-                  />
-                </div>
-                <div className="text-xl font-semibold text-gray-900">
-                  Myosotis
-                </div>
-              </Link>
-            </div>
-            <Link 
-              to="/dashboard"
-              className="min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300"
-            >
-              Back to Dashboard
-            </Link>
-          </div>
-        </div>
-      </header>
+      <PageHeader 
+        title="Emergency Contacts"
+        showBackButton={true}
+        backTo="/dashboard"
+      />
 
       <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-semibold text-gray-900 mb-2">
-            Emergency Contacts
-          </h1>
           <p className="text-lg text-gray-600">
             Important people you can reach out to in case of emergency
           </p>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { ProtectedRoute } from '../features/auth';
 import { getMMSEInfo, submitMMSETest, type MMSETestData, type MMSEAnswer, type MMSETestResult } from '../api/mmse';
+import { PageHeader } from '../components/layout';
 
 
 const getMediaUrl = (url: string): string => {
@@ -176,15 +177,15 @@ export default function MMSETestPage() {
     try {
       setIsSubmitting(true);
       
-      // Save current answer before submitting
+      
       saveCurrentAnswer(); 
 
-      // Small delay to ensure state updates are complete
+      
       setTimeout(async () => {
         try {
           const finalAnswers = [...answers];
           
-          // Add current answer if it's not already saved
+          
           const currentQuestion = getCurrentQuestion();
           if (currentQuestion) {
             const answerValue = currentQuestion.type === 'multi-select' 
@@ -335,8 +336,7 @@ export default function MMSETestPage() {
       hour: '2-digit',
       minute: '2-digit'
     });
-
-    // Determine color scheme based on score
+    
     const getScoreColor = (percentage: number) => {
       if (percentage >= 89) return 'text-green-600 bg-green-100';
       if (percentage >= 70) return 'text-yellow-600 bg-yellow-100';
@@ -348,20 +348,11 @@ export default function MMSETestPage() {
     return (
       <ProtectedRoute>
         <div className="min-h-screen bg-cyan-50">
-          <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-            <div className="max-w-4xl mx-auto px-6 lg:px-8">
-              <div className="flex justify-between items-center h-16">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <h1 className="text-xl font-semibold text-gray-900">MMSE Test Results</h1>
-                </div>
-              </div>
-            </div>
-          </header>
+          <PageHeader 
+            title="MMSE Test Results"
+            showBackButton={true}
+            backTo="/dashboard"
+          />
 
           <main className="max-w-4xl mx-auto px-6 py-8 lg:px-8">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -494,10 +485,12 @@ export default function MMSETestPage() {
           <div className="max-w-4xl mx-auto px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                  <img 
+                    src="/favicon-32x32.png" 
+                    alt="Myosotis Logo" 
+                    className="w-8 h-8"
+                  />
                 </div>
                 <h1 className="text-xl font-semibold text-gray-900">MMSE Test</h1>
               </div>

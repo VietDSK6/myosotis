@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { getEmergencyContacts } from '../api/user';
 import { getMMSEHistory, type MMSEHistoryItem } from '../api/mmse';
 import type { EmergencyContact } from '../types/user';
+import { PageHeader, HeaderButton, FeatureCard, LoadingSpinner, StatCard } from '../components';
 
 export default function DashboardPage() {
   const { user, logout } = useAuthStore();
@@ -77,44 +78,31 @@ export default function DashboardPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-cyan-50 antialiased text-[18px]">
-        <header className="bg-white/90 backdrop-blur-sm border-b border-gray-200 shadow-sm">
-          <div className="max-w-5xl mx-auto px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                  <img 
-                    src="/favicon-32x32.png" 
-                    alt="Myosotis Logo" 
-                    className="w-8 h-8"
-                  />
-                </div>
-                <div className="text-xl font-semibold text-gray-900">
-                  Myosotis
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => navigate('/features')}
-                  className="min-h-12 px-6 py-2 text-lg font-medium text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
-                >
-                  Features
-                </button>
-                <button
-                  onClick={handlePersonalInfo}
-                  className="min-h-12 px-6 py-2 text-lg font-medium text-cyan-600 hover:text-cyan-700 hover:bg-cyan-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
-                >
-                  Personal Info
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300"
-                >
-                  Log Out
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
+        <PageHeader 
+          title="Myosotis"
+          rightActions={
+            <>
+              <HeaderButton
+                onClick={() => navigate('/features')}
+                variant="primary"
+              >
+                Features
+              </HeaderButton>
+              <HeaderButton
+                onClick={handlePersonalInfo}
+                variant="primary"
+              >
+                Personal Info
+              </HeaderButton>
+              <HeaderButton
+                onClick={handleLogout}
+                variant="secondary"
+              >
+                Log Out
+              </HeaderButton>
+            </>
+          }
+        />
 
         <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
           <div className="text-left mb-12">
@@ -134,18 +122,16 @@ export default function DashboardPage() {
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div 
+              <FeatureCard
+                title="Memory Films"
+                description="View your cherished memories and photos"
                 onClick={() => navigate('/memory-film')}
-                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
-              >
-                <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
+                icon={
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
                   </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Memory Films</h3>
-                <p className="text-lg text-gray-600">View your cherished memories and photos</p>
-              </div>
+                }
+              />
 
               <div 
                 onClick={handleEmergencyContacts}
@@ -189,39 +175,31 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Progress</h2>
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
               {isLoadingMmse ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
-                  <span className="ml-3 text-gray-600">Loading progress...</span>
-                </div>
+                <LoadingSpinner />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <StatCard
+                    value={`${mmseHistory.length} Tests`}
+                    label="MMSE completed"
+                    icon={
                       <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 714.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 713.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 410 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 41-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 41-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 41-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 410-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 413.138-3.138z" />
                       </svg>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-semibold text-gray-900">{mmseHistory.length} Tests</div>
-                      <div className="text-lg text-gray-600">MMSE completed</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center">
+                    }
+                  />
+                  <StatCard
+                    value={
+                      mmseHistory.length > 0 
+                        ? `${Math.round(mmseHistory.reduce((sum, test) => sum + test.total_score, 0) / mmseHistory.length)}/27`
+                        : 'N/A'
+                    }
+                    label="Average score"
+                    icon={
                       <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-semibold text-gray-900">
-                        {mmseHistory.length > 0 
-                          ? `${Math.round(mmseHistory.reduce((sum, test) => sum + test.total_score, 0) / mmseHistory.length)}/27`
-                          : 'N/A'
-                        }
-                      </div>
-                      <div className="text-lg text-gray-600">Average score</div>
-                    </div>
-                  </div>
+                    }
+                  />
                 </div>
               )}
             </div>
@@ -231,10 +209,7 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Important Contact</h2>
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
               {isLoadingContacts ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
-                  <span className="ml-3 text-gray-600">Loading contacts...</span>
-                </div>
+                <LoadingSpinner />
               ) : emergencyContacts.length > 0 ? (
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
