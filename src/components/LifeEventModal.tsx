@@ -11,7 +11,7 @@ interface LifeEventModalProps {
 export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeEventModalProps) {
   const [formData, setFormData] = useState<LifeEventInput>({
     title: '',
-    type: 'text',
+    type: 'image',
     description: '',
     file_path: '',
     start_time: '',
@@ -36,7 +36,7 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
     } else {
       setFormData({
         title: '',
-        type: 'text',
+        type: 'image',
         description: '',
         file_path: '',
         start_time: '',
@@ -128,11 +128,10 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
                       <select
                         id="type"
                         value={formData.type}
-                        onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as 'image' | 'text' | 'video' | 'audio' }))}
+                        onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value as 'image' | 'video' | 'audio' }))}
                         className="w-full rounded-lg border-2 border-gray-300 px-4 py-3 text-lg focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200"
                         required
                       >
-                        <option value="text">Text</option>
                         <option value="image">Image</option>
                         <option value="video">Video</option>
                         <option value="audio">Audio</option>

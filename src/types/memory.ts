@@ -2,7 +2,7 @@ export interface LifeEvent {
   id: number;
   user_id: number;
   title: string;
-  type: 'image' | 'text' | 'video' | 'audio';
+  type: 'image' | 'video' | 'audio';
   description: string;
   file_path?: string;
   start_time: string;
@@ -13,7 +13,7 @@ export interface LifeEvent {
 
 export interface LifeEventInput {
   title: string;
-  type: 'image' | 'text' | 'video' | 'audio';
+  type: 'image' | 'video' | 'audio';
   description: string;
   file_path?: string;
   start_time: string;

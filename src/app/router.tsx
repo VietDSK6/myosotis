@@ -11,11 +11,12 @@ import MMSETestPage from '../pages/MMSETestPage';
 import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
 import FeaturesPage from '../pages/FeaturesPage';
+import RootRedirect from '../components/RootRedirect';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <LandingPage />,
+    element: <RootRedirect />,
   },
   {
     path: '/landing',

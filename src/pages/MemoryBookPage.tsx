@@ -1,11 +1,12 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Timeline from 'timelinejs-react';
 import { ProtectedRoute } from '../features/auth';
 import { useAuthStore } from '../features/auth/store';
 import LifeEventModal from '../components/LifeEventModal';
 import { getStoriesByUserId, createStory, updateStory, updateStoryFile, deleteStory, getMediaUrl } from '../api/stories';
 import type { LifeEvent, LifeEventInput } from '../types/memory';
+
+const Timeline = lazy(() => import('timelinejs-react'));
 
 interface Slide {
   start_date: {
@@ -293,20 +294,22 @@ export default function MemoryFilmPage() {
             </div>
           ) : (
             <div className="h-full px-38 md:px-46 lg:px-54 xl:px-62" key={`timeline-${lifeEvents.length}-${lifeEvents.map(e => e.id).join('-')}`}>
-              <Timeline
-                target={<div className="timeline_line" style={{ height: 'calc(100vh - 80px)' }} />}
-                events={timelineData}
-                options={{
-                  timenav_position: "bottom",
-                  hash_bookmark: true,
-                  initial_zoom: 1,
-                  scale_factor: 1,
-                  debug: false,
-                  default_bg_color: { r: 255, g: 255, b: 255 },
-                  timenav_height: 200,
-                  timenav_height_percentage: 25,
-                }}
-              />
+              <Suspense fallback={<div className="flex items-center justify-center h-64"><div className="text-lg text-gray-600">Loading timeline...</div></div>}>
+                <Timeline
+                  target={<div className="timeline_line" style={{ height: 'calc(100vh - 80px)' }} />}
+                  events={timelineData}
+                  options={{
+                    timenav_position: "bottom",
+                    hash_bookmark: true,
+                    initial_zoom: 1,
+                    scale_factor: 1,
+                    debug: false,
+                    default_bg_color: { r: 255, g: 255, b: 255 },
+                    timenav_height: 200,
+                    timenav_height_percentage: 25,
+                  }}
+                />
+              </Suspense>
             </div>
           )}
 
