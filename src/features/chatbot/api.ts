@@ -54,20 +54,12 @@ export function getChatSessionDetails(
   }).then(res => res.data);
 }
 
-/**
- * Get latest session for a user
- * GET /api/v1/chat/latest-session/{user_id}
- */
 export function getLatestSession(userId: number): Promise<ChatSessionDetails> {
   return chatAPI.get<ChatSessionDetails>(`/api/v1/chat/latest-session/${userId}`)
     .then(res => res.data);
 }
 
-/**
- * Delete a chat session
- * DELETE /api/v1/chat/session/{session_id}
- */
-export function deleteChatSession(sessionId: string): Promise<{ success: boolean; message: string }> {
-  return chatAPI.delete<{ success: boolean; message: string }>(`/api/v1/chat/session/${sessionId}`)
-    .then(res => res.data);
+export function deleteChatSession(sessionId: string): Promise<void> {
+  return chatAPI.delete(`/api/v1/chat/session/${sessionId}`)
+    .then(() => void 0);
 }

@@ -78,6 +78,7 @@ export interface ChatbotActions {
   
   loadSessionHistory: (userId: number, limit?: number, offset?: number) => Promise<void>;
   loadSessionDetails: (userId: number, sessionId: string, limit?: number, offset?: number) => Promise<void>;
+  deleteSession: (sessionId: string) => Promise<void>;
   
   
   toggleChat: () => void;

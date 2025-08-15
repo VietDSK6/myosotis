@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type { ChatbotStore } from './types';
-import { sendChatMessage, getChatSessionHistory, getChatSessionDetails, getLatestSession } from './api';
+import { sendChatMessage, getChatSessionHistory, getChatSessionDetails, getLatestSession, deleteChatSession } from './api';
 
 const initialState = {
   
@@ -174,6 +174,28 @@ export const useChatbotStore = create<ChatbotStore>()(
           });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to load session details';
+          set({ error: errorMessage });
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      deleteSession: async (sessionId) => {
+        set({ isLoading: true, error: null });
+        
+        try {
+          await deleteChatSession(sessionId);
+          
+          // Remove the session from session history
+          set(state => ({
+            sessionHistory: state.sessionHistory.filter(session => session.session_id !== sessionId),
+            // If the deleted session was the active session, clear it
+            activeSession: state.activeSession?.session_id === sessionId ? null : state.activeSession,
+            // If the deleted session was the active session, clear current messages
+            currentMessages: state.activeSession?.session_id === sessionId ? [] : state.currentMessages,
+          }));
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Failed to delete session';
           set({ error: errorMessage });
         } finally {
           set({ isLoading: false });
