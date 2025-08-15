@@ -1,8 +1,22 @@
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
-import { useAuthInitialization } from '../features/auth';
+import { useAuthInitialization, useAuthStore } from '../features/auth';
+import { ChatFloatingActionButton, ChatInterface } from '../features/chatbot';
 
 export default function AppWithAuth() {
   useAuthInitialization();
-  return <RouterProvider router={router} />;
+  const { isAuthenticated } = useAuthStore();
+  
+  return (
+    <>
+      <RouterProvider router={router} />
+      {/* Only show chatbot FAB and interface when user is authenticated */}
+      {isAuthenticated && (
+        <>
+          <ChatFloatingActionButton />
+          <ChatInterface />
+        </>
+      )}
+    </>
+  );
 }

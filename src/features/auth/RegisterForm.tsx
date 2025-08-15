@@ -57,7 +57,7 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
           <label htmlFor="email" className="block text-lg font-medium text-gray-900 mb-2">
-            Email *
+            Email <span className="text-red-500">*</span>
           </label>
           <input
             id="email"
@@ -80,7 +80,7 @@ export default function RegisterForm() {
 
         <div>
           <label htmlFor="full_name" className="block text-lg font-medium text-gray-900 mb-2">
-            Full Name *
+            Full Name <span className="text-red-500">*</span>
           </label>
           <input
             id="full_name"
@@ -100,7 +100,7 @@ export default function RegisterForm() {
 
         <div>
           <label htmlFor="password" className="block text-lg font-medium text-gray-900 mb-2">
-            Password *
+            Password <span className="text-red-500">*</span>
           </label>
           <input
             id="password"
@@ -111,9 +111,6 @@ export default function RegisterForm() {
             aria-invalid={errors.password ? 'true' : 'false'}
             aria-describedby={errors.password ? 'password-error' : 'password-help'}
           />
-          <p id="password-help" className="text-lg text-gray-600 mt-1">
-            Password must be at least 8 characters
-          </p>
           {errors.password && (
             <span id="password-error" className="block text-lg text-red-600 mt-1" role="alert">
               {errors.password.message}

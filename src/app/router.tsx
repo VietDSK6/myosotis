@@ -13,6 +13,7 @@ import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
 import FeaturesPage from '../pages/FeaturesPage';
 import AIClonePage from '../pages/AIClonePage';
+import ChatbotPage from '../pages/ChatbotPage';
 import RootRedirect from '../components/RootRedirect';
 
 export const router = createBrowserRouter([
@@ -79,6 +80,14 @@ export const router = createBrowserRouter([
   {
     path: '/ai-clone/history',
     element: <AICloneHistoryPage />,
+  },
+  {
+    path: '/chatbot',
+    element: <ChatbotPage />,
+  },
+  {
+    path: '/chatbot',
+    element: <ChatbotPage />,
   },
   {
     path: '*',

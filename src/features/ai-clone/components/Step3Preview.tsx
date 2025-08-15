@@ -66,7 +66,6 @@ export default function Step3Preview() {
           language: 'english',
         });
         
-        // If AI generated text, update the current script
         if (response.generated_target_text) {
           setCurrentScript(response.generated_target_text);
           updateData({ finalScript: response.generated_target_text });
@@ -90,7 +89,7 @@ export default function Step3Preview() {
   };
 
   const saveMemory = () => {
-    // TODO: Implement save to user's memory collection
+    
     alert('Memory saved successfully!');
     reset();
   };

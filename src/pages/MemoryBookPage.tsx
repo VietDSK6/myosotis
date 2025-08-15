@@ -177,7 +177,7 @@ export default function MemoryFilmPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-cyan-50">
+      <div className="min-h-screen bg-white">
         <PageHeader 
           title="Memory Films"
           showBackButton={true}
@@ -285,11 +285,11 @@ export default function MemoryFilmPage() {
                   events={timelineData}
                   options={{
                     timenav_position: "bottom",
-                    hash_bookmark: true,
+                    hash_bookmark: true, 
                     initial_zoom: 1,
                     scale_factor: 1,
                     debug: false,
-                    default_bg_color: { r: 255, g: 255, b: 255 },
+                    default_bg_color: { r: 236, g: 254, b: 255 },
                     timenav_height: 200,
                     timenav_height_percentage: 25,
                   }}

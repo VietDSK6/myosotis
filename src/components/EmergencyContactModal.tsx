@@ -148,7 +148,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Contact Name *
+                Contact Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -169,7 +169,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Relationship *
+                Relationship <span className="text-red-500">*</span>
               </label>
               <select
                 name="relation"
@@ -199,7 +199,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Phone Number *
+                  Phone Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
@@ -220,7 +220,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
 
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Email Address *
+                  Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -242,7 +242,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Address *
+                Address <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"

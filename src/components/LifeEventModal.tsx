@@ -96,19 +96,19 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
       <div className="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" onClick={onClose} />
         
-        <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+        <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-4 sm:w-full sm:max-w-2xl">
           <form onSubmit={handleSubmit}>
-            <div className="bg-white px-6 pb-6 pt-8 sm:p-8 sm:pb-6">
+            <div className="bg-white px-6 pb-6 pt-8 sm:p-8">
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-                  <h3 className="text-2xl font-bold leading-8 text-gray-900 mb-6">
+                  <h3 className="text-2xl font-bold leading-8 text-gray-900 mb-2">
                     {event ? 'Edit Memory' : 'Add New Memory'}
                   </h3>
                   
-                  <div className="space-y-6">
+                  <div className="space-y-3">
                     <div>
                       <label htmlFor="title" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Title *
+                        Title <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
@@ -123,7 +123,7 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
 
                     <div>
                       <label htmlFor="type" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Type *
+                        Type <span className="text-red-500">*</span>
                       </label>
                       <select
                         id="type"
@@ -140,7 +140,7 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
 
                     <div>
                       <label htmlFor="start_time" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Start Date *
+                        Start Date <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="date"
@@ -167,7 +167,7 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
 
                     <div>
                       <label htmlFor="description" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Description *
+                        Description <span className="text-red-500">*</span>
                       </label>
                       <textarea
                         id="description"
