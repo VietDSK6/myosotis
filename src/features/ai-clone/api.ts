@@ -86,11 +86,11 @@ export async function getUserVideos(userId: number): Promise<UserVideosResponse>
   return response.data;
 }
 
-export function getVideoUrl(videoPath: string): string {
-  if (videoPath.startsWith('http')) {
-    return videoPath;
+export function getVideoUrl(videoFilename: string): string {
+  if (videoFilename.startsWith('http')) {
+    return videoFilename;
   }
   
-  const filename = videoPath.split('/').pop() || videoPath;
+  const filename = videoFilename.split('/').pop() || videoFilename;
   return `${API_BASE_URL}/api/v1/ai-clone/human-clone/view/${filename}`;
 }

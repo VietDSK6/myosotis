@@ -101,22 +101,31 @@ export const useChatbotStore = create<ChatbotStore>()(
           const response = await sendChatMessage(messagePayload);
           
           
+          const newActiveSession = state.activeSession || {
+            session_id: response.session_id,
+            session_number: sessionNumber || parseInt(response.session_id), 
+            session_name: `Chat Session ${sessionNumber || response.session_id}`,
+            total_messages: 1,
+            last_message_preview: payload.message,
+            created_at: response.timestamp,
+            last_active: response.timestamp,
+          };
+          
           set(state => ({
             currentMessages: state.currentMessages.map(msg => 
               msg.id === userMessage.id 
                 ? { ...msg, bot_response: response.response }
                 : msg
             ),
+            activeSession: newActiveSession,
             
-            activeSession: state.activeSession || {
-              session_id: response.session_id,
-              session_number: sessionNumber || parseInt(response.session_id), 
-              session_name: `Chat Session ${sessionNumber || response.session_id}`,
-              total_messages: 1,
-              last_message_preview: payload.message,
-              created_at: response.timestamp,
-              last_active: response.timestamp,
-            }
+            sessionHistory: state.activeSession 
+              ? state.sessionHistory.map(session => 
+                  session.session_id === newActiveSession.session_id
+                    ? { ...session, total_messages: session.total_messages + 1, last_message_preview: payload.message, last_active: response.timestamp }
+                    : session
+                )
+              : [newActiveSession, ...state.sessionHistory]
           }));
           
         } catch (error) {
@@ -186,12 +195,12 @@ export const useChatbotStore = create<ChatbotStore>()(
         try {
           await deleteChatSession(sessionId);
           
-          // Remove the session from session history
+          
           set(state => ({
             sessionHistory: state.sessionHistory.filter(session => session.session_id !== sessionId),
-            // If the deleted session was the active session, clear it
+            
             activeSession: state.activeSession?.session_id === sessionId ? null : state.activeSession,
-            // If the deleted session was the active session, clear current messages
+            
             currentMessages: state.activeSession?.session_id === sessionId ? [] : state.currentMessages,
           }));
         } catch (error) {

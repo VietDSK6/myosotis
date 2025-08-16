@@ -72,9 +72,13 @@ export default function Step3Preview() {
         }
       }
 
-      if (response.success && response.video_url) {
+      if (response.success && (response.video_filename || response.video_url)) {
+        const videoUrl = response.video_filename 
+          ? getVideoUrl(response.video_filename)
+          : response.video_url;
+        
         updateData({
-          generatedVideoUrl: getVideoUrl(response.video_url),
+          generatedVideoUrl: videoUrl,
           finalScript: currentScript,
         });
       } else {

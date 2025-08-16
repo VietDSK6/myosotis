@@ -274,7 +274,7 @@ export default function MemoryFilmPage() {
           title="Memory Films"
           showBackButton={true}
           backTo="/dashboard"
-          variant="solid"
+          variant="solid" 
           rightActions={
             <>
               <HeaderButton

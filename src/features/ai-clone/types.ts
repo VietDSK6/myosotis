@@ -38,6 +38,7 @@ export interface CreateVideoResponse {
   success: boolean;
   video_id: number;
   video_url?: string;
+  video_filename?: string;
   status: 'completed' | 'failed' | 'processing';
   message: string;
   generated_target_text?: string;

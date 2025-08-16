@@ -136,12 +136,12 @@ export default function AICloneHistoryPage() {
                         </span>
                       </div>
 
-                      {video.status === 'completed' && video.video_url && (
+                      {video.status === 'completed' && (video.video_filename || video.video_url) && (
                         <div className="mb-6">
                           <video 
                             className="w-full h-64 object-cover rounded-lg bg-gray-100"
                             controls
-                            src={getVideoUrl(video.video_url)}
+                            src={video.video_filename ? getVideoUrl(video.video_filename) : getVideoUrl(video.video_url!)}
                           >
                             Your browser does not support the video tag.
                           </video>
@@ -187,10 +187,10 @@ export default function AICloneHistoryPage() {
                         )}
                       </div>
 
-                      {video.status === 'completed' && video.video_url && (
+                      {video.status === 'completed' && (video.video_filename || video.video_url) && (
                         <div className="mt-6 pt-4 border-t border-gray-200">
                           <a
-                            href={getVideoUrl(video.video_url)}
+                            href={video.video_filename ? getVideoUrl(video.video_filename) : getVideoUrl(video.video_url!)}
                             download={video.video_filename || `living-memory-${video.id}.mp4`}
                             className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
                           >
