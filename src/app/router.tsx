@@ -13,6 +13,7 @@ import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
 import FeaturesPage from '../pages/FeaturesPage';
 import AIClonePage from '../pages/AIClonePage';
+import AICloneCreatePage from '../pages/AICloneCreatePage';
 import ChatbotPage from '../pages/ChatbotPage';
 import RootRedirect from '../components/RootRedirect';
 
@@ -76,6 +77,10 @@ export const router = createBrowserRouter([
   {
     path: '/ai-clone',
     element: <AIClonePage />,
+  },
+  {
+    path: '/ai-clone/create',
+    element: <AICloneCreatePage />,
   },
   {
     path: '/ai-clone/history',

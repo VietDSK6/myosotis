@@ -7,7 +7,6 @@ interface PageHeaderProps {
   backTo?: string;
   backText?: string;
   rightActions?: React.ReactNode;
-  logoClickable?: boolean;
   variant?: 'default' | 'solid';
   useHistory?: boolean;
 }
@@ -18,7 +17,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   backTo = '/dashboard',
   backText = 'Back',
   rightActions,
-  logoClickable = false,
   variant = 'default',
   useHistory = true,
 }) => {
@@ -33,9 +31,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   };
 
   const handleLogoClick = () => {
-    if (logoClickable) {
-      navigate('/dashboard');
-    }
+    navigate('/dashboard');
   };
 
   const headerClasses = variant === 'solid' 
@@ -60,7 +56,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             )}
             
             <div 
-              className={`flex items-center gap-3 ${logoClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={handleLogoClick}
             >
               <div className="w-8 h-8 rounded-full flex items-center justify-center">
