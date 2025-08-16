@@ -125,7 +125,6 @@ export default function MemoryFilmPage() {
     fetchStories();
   }, [user?.id]);
 
-  // Force black text on timeline elements after render
   useEffect(() => {
     const forceBlackText = () => {
       const timelineElements = document.querySelectorAll('.tl-timeline *');
@@ -135,7 +134,6 @@ export default function MemoryFilmPage() {
         htmlElement.style.setProperty('text-shadow', 'none', 'important');
       });
 
-      // Specifically target headline elements
       const headlines = document.querySelectorAll('.tl-headline, .tl-headline-date');
       headlines.forEach(element => {
         const htmlElement = element as HTMLElement;
@@ -144,10 +142,8 @@ export default function MemoryFilmPage() {
       });
     };
 
-    // Run immediately and on timeline updates
     const timer = setInterval(forceBlackText, 500);
     
-    // Cleanup
     return () => clearInterval(timer);
   }, [timelineData]);
 
