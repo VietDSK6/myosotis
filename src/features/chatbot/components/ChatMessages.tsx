@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { useChatbotStore } from '../store';
 import { LoadingSpinner } from '../../../components';
+import { chatMarkdownComponents } from '../utils/markdownComponents';
 
 export const ChatMessages: React.FC = () => {
   const { currentMessages, isLoading, isSending } = useChatbotStore();
@@ -56,9 +58,11 @@ export const ChatMessages: React.FC = () => {
                   
                   <div className="flex-1">
                     <div className="bg-[#92d7e7] text-white rounded-2xl px-6 py-4">
-                      <p className="text-lg leading-relaxed">
-                        {message.bot_response}
-                      </p>
+                      <div className="text-lg leading-relaxed prose prose-invert max-w-none">
+                        <ReactMarkdown components={chatMarkdownComponents}>
+                          {message.bot_response}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                     <div className="mt-2">
                       <span className="text-sm text-gray-500">

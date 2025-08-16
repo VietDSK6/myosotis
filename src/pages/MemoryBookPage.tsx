@@ -40,6 +40,20 @@ const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
     const startDate = new Date(event.start_time);
     const endDate = event.end_time ? new Date(event.end_time) : undefined;
     
+    const formattedDescription = event.description
+      ? `<div style="font-size: 24px; line-height: 1.5; padding: 24px; color: #000000; font-family: system-ui, -apple-system, sans-serif; text-shadow: none;">
+           <p style="margin-bottom: 20px; font-weight: 500; font-size: 24px; color: #000000; text-shadow: none;">${event.description}</p>
+           <p style="font-size: 20px; color: #000000; font-weight: 500; text-shadow: none;">
+              ${startDate.toLocaleDateString('en-US', {
+               weekday: 'long',
+               year: 'numeric',
+               month: 'long',
+               day: 'numeric'
+             })}
+           </p>
+         </div>`
+      : event.description;
+    
     const slide: Slide = {
       start_date: {
         year: startDate.getFullYear(),
@@ -49,10 +63,13 @@ const transformToTimelineData = (events: LifeEvent[]): Slide[] => {
       unique_id: event.id.toString(),
       text: {
         headline: event.title,
-        text: event.description,
+        text: formattedDescription,
       },
       group: event.type,
-      background: {},
+      background: {
+        color: "#ffffff",
+        opacity: 95
+      },
     };
 
     if (endDate) {
@@ -89,24 +106,50 @@ export default function MemoryFilmPage() {
   const timelineData = useMemo(() => transformToTimelineData(lifeEvents), [lifeEvents]);
 
   useEffect(() => {
-    fetchStories();
-  }, [user]);
+    const fetchStories = async () => {
+      if (!user?.id) return;
+      
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await getStoriesByUserId(user.id);
+        setLifeEvents(response.data);
+      } catch (error) {
+        console.error('Failed to fetch stories:', error);
+        setError('Failed to load your memories. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const fetchStories = async () => {
-    if (!user?.id) return;
+    fetchStories();
+  }, [user?.id]);
+
+  // Force black text on timeline elements after render
+  useEffect(() => {
+    const forceBlackText = () => {
+      const timelineElements = document.querySelectorAll('.tl-timeline *');
+      timelineElements.forEach(element => {
+        const htmlElement = element as HTMLElement;
+        htmlElement.style.setProperty('color', '#000000', 'important');
+        htmlElement.style.setProperty('text-shadow', 'none', 'important');
+      });
+
+      // Specifically target headline elements
+      const headlines = document.querySelectorAll('.tl-headline, .tl-headline-date');
+      headlines.forEach(element => {
+        const htmlElement = element as HTMLElement;
+        htmlElement.style.setProperty('color', '#000000', 'important');
+        htmlElement.style.setProperty('text-shadow', 'none', 'important');
+      });
+    };
+
+    // Run immediately and on timeline updates
+    const timer = setInterval(forceBlackText, 500);
     
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await getStoriesByUserId(user.id);
-      setLifeEvents(response.data);
-    } catch (error) {
-      console.error('Failed to fetch stories:', error);
-      setError('Failed to load your memories. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    // Cleanup
+    return () => clearInterval(timer);
+  }, [timelineData]);
 
   const handleAddEvent = async (eventData: LifeEventInput, file?: File) => {
     if (!user?.id) return;
@@ -178,6 +221,55 @@ export default function MemoryFilmPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-white">
+        <style>{`
+          .tl-timeline * {
+            color: #000000 !important;
+            text-shadow: none !important;
+          }
+          
+          .tl-timeline .tl-headline-date {
+            font-size: 32px !important;
+            color: #000000 !important;
+            text-shadow: none !important;
+            font-weight: 600 !important;
+          }
+          
+          .tl-timeline .tl-headline {
+            font-size: 32px !important;
+            color: #000000 !important;
+            text-shadow: none !important;
+            font-weight: 700 !important;
+            line-height: 1.3 !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .tl-timeline p[style] {
+            font-size: 24px !important;
+            color: #000000 !important;
+            text-shadow: none !important;
+            font-weight: 500 !important;
+            line-height: 1.5 !important;
+          }
+          
+          .tl-slide {
+            padding: 32px !important;
+            background: #ffffff !important;
+          }
+          
+          .tl-media {
+            border-radius: 12px !important;
+          }
+          
+          @media (max-width: 768px) {
+            .tl-timeline .tl-headline {
+              font-size: 28px !important;
+            }
+            .tl-timeline p[style] {
+              font-size: 22px !important;
+            }
+          }
+        `}</style>
+        
         <PageHeader 
           title="Memory Films"
           showBackButton={true}
@@ -219,16 +311,17 @@ export default function MemoryFilmPage() {
               </div>
               <div className="p-6 space-y-6">
                 {lifeEvents.map((event) => (
-                  <div key={event.id} className="border-2 border-gray-200 rounded-lg p-5 hover:border-cyan-300 transition-colors">
-                    <div className="flex items-start justify-between mb-3">
-                      <h4 className="font-bold text-lg text-gray-900 flex-1 leading-tight">{event.title}</h4>
-                      <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full font-medium ml-3">
+                  <div key={event.id} className="border-2 border-gray-200 rounded-xl p-6 hover:border-cyan-300 transition-colors bg-white shadow-sm">
+                    <div className="flex items-start justify-between mb-4">
+                      <h4 className="font-bold text-xl text-gray-900 flex-1 leading-tight">{event.title}</h4>
+                      <span className="text-base text-gray-600 bg-gray-100 px-4 py-2 rounded-full font-medium ml-4 whitespace-nowrap">
                         {event.type}
                       </span>
                     </div>
-                    <p className="text-base text-gray-600 mb-4 leading-relaxed">{event.description}</p>
-                    <p className="text-sm text-gray-500 mb-4 font-medium">
-                      {new Date(event.start_time).toLocaleDateString('en-US', {
+                    <p className="text-lg text-gray-700 mb-5 leading-relaxed">{event.description}</p>
+                    <p className="text-base text-gray-600 mb-5 font-medium bg-gray-50 p-3 rounded-lg">
+                      📅 {new Date(event.start_time).toLocaleDateString('en-US', {
+                        weekday: 'long',
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
@@ -237,15 +330,15 @@ export default function MemoryFilmPage() {
                     <div className="flex gap-3">
                       <button
                         onClick={() => openEditModal(event)}
-                        className="px-4 py-2 text-base font-bold text-cyan-600 bg-cyan-50 hover:bg-cyan-100 rounded-lg transition-colors"
+                        className="px-6 py-3 text-lg font-bold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition-colors border-2 border-cyan-200 hover:border-cyan-300"
                       >
-                        Edit
+                        ✏️ Edit Memory
                       </button>
                       <button
                         onClick={() => handleDeleteEvent(event.id)}
-                        className="px-4 py-2 text-base font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+                        className="px-6 py-3 text-lg font-bold text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-colors border-2 border-red-200 hover:border-red-300"
                       >
-                        Delete
+                        🗑️ Delete
                       </button>
                     </div>
                   </div>
@@ -260,25 +353,28 @@ export default function MemoryFilmPage() {
               <span className="ml-3 text-gray-600">Loading your memories...</span>
             </div>
           ) : lifeEvents.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center h-96">
-              <div className="text-center py-12 max-w-md">
-                <div className="h-16 w-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
+            <div className="flex-1 flex items-center justify-center h-96 p-8">
+              <div className="text-center py-12 max-w-lg">
+                <div className="h-20 w-20 bg-gradient-to-br from-cyan-100 to-blue-100 text-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
                   </svg>
                 </div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-2">No memories yet</h3>
-                <p className="text-lg text-gray-600 mb-6">Start building your timeline by adding your first life event</p>
+                <h3 className="text-3xl font-semibold text-gray-900 mb-4">📖 No memories yet</h3>
+                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                  Start building your personal timeline by adding your first precious life memory. 
+                  Every story matters and helps preserve your journey. 💙
+                </p>
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="min-h-12 px-6 py-3 text-lg font-medium bg-cyan-600 text-white hover:bg-cyan-700 rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                  className="min-h-14 px-8 py-4 text-xl font-semibold bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:from-cyan-700 hover:to-blue-700 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
-                  Add Your First Memory
+                  ✨ Add Your First Memory
                 </button>
               </div>
             </div>
           ) : (
-            <div className="h-full px-38 md:px-46 lg:px-54 xl:px-62" key={`timeline-${lifeEvents.length}-${lifeEvents.map(e => e.id).join('-')}`}>
+            <div className="h-full px-4 md:px-8 lg:px-12 xl:px-16" key={`timeline-${lifeEvents.length}-${lifeEvents.map(e => e.id).join('-')}`}>
               <Suspense fallback={<div className="flex items-center justify-center h-64"><div className="text-lg text-gray-600">Loading timeline...</div></div>}>
                 <Timeline
                   target={<div className="timeline_line" style={{ height: 'calc(100vh - 80px)' }} />}
@@ -286,12 +382,22 @@ export default function MemoryFilmPage() {
                   options={{
                     timenav_position: "bottom",
                     hash_bookmark: true, 
-                    initial_zoom: 1,
-                    scale_factor: 1,
+                    initial_zoom: 2,
+                    scale_factor: 2,
                     debug: false,
                     default_bg_color: { r: 236, g: 254, b: 255 },
-                    timenav_height: 200,
-                    timenav_height_percentage: 25,
+                    timenav_height: 250,
+                    timenav_height_percentage: 30,
+                    slide_padding_lr: 100,
+                    slide_default_fade: "0%",
+                    duration: 1000,
+                    ease: "easeInOutQuint",
+                    width: "100%",
+                    height: "100%",
+                    font_size: "18",
+                    optimal_tick_width: 200,
+                    base_class: "",
+                    timenav_mobile_height_percentage: 40,
                   }}
                 />
               </Suspense>

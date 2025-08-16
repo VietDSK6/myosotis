@@ -23,7 +23,7 @@ export default function RegisterForm() {
       setSubmitError(null);
       clearError();
       await registerUser(data);
-      navigate('/personal-info');
+      navigate('/personal-info?edit=true');
     } catch (error) {
       console.error('Registration failed:', error);
       setSubmitError('Registration failed. Please try again.');

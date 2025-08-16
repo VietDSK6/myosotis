@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuthStore } from '../features/auth/store';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getUserInfo, updateUserInfo } from '../api/user';
 import type { UserData } from '../types/user';
 import { PageHeader, LoadingSpinner, AlertMessage } from '../components';
 
 export const PersonalInfoPage: React.FC = () => {
   const { user, updateUser } = useAuthStore();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(searchParams.get('edit') === 'true');
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -127,6 +130,12 @@ export const PersonalInfoPage: React.FC = () => {
       setSuccessMessage('Personal information updated successfully!');
       
       
+      
+      if (searchParams.get('edit')) {
+        navigate('/personal-info', { replace: true });
+      }
+      
+      
       setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save personal information');
@@ -151,6 +160,12 @@ export const PersonalInfoPage: React.FC = () => {
       });
     }
     setIsEditing(false);
+    
+    // Replace the current URL to remove the edit query parameter
+    // This prevents the back button from going back to edit mode
+    if (searchParams.get('edit')) {
+      navigate('/personal-info', { replace: true });
+    }
   };
 
   if (isLoading) {
@@ -170,6 +185,24 @@ export const PersonalInfoPage: React.FC = () => {
       />
 
       <main className="max-w-4xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
+        {searchParams.get('edit') === 'true' && (
+          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-blue-900 mb-2">Welcome to Myosotis!</h3>
+                <p className="text-blue-800 leading-relaxed">
+                  Please take a moment to complete your personal information. This helps us provide better personalized care and support.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-3xl shadow-lg p-8 lg:p-12">
           <div className="flex justify-end items-center mb-8">
             {!isEditing ? (
