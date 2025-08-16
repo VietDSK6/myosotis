@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAICloneStore } from '../store';
 import FileUploadZone from './FileUploadZone';
 
@@ -29,6 +29,28 @@ export default function Step1Character() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  
+  useEffect(() => {
+    if (!characterPhoto && !characterPhotoPreview && !referenceAudio) {
+      setIsRecording(false);
+      setRecordingTime(0);
+      setRecordedBlob(null);
+      setIsPlaying(false);
+      setActiveTab('record');
+      
+      
+      if (mediaRecorderRef.current && isRecording) {
+        mediaRecorderRef.current.stop();
+      }
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    }
+  }, [characterPhoto, characterPhotoPreview, referenceAudio, isRecording]);
 
   const handlePhotoSelect = (file: File) => {
     const preview = URL.createObjectURL(file);

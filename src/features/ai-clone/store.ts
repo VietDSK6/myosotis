@@ -19,8 +19,23 @@ interface AICloneStore extends WizardStepData {
 }
 
 const initialState: WizardStepData = {
+  
+  characterPhoto: undefined,
+  characterPhotoPreview: undefined,
+  referenceAudio: undefined,
   referenceText: '',
+  
+  
   scriptMode: 'manual',
+  manualScript: undefined,
+  topic: undefined,
+  keywords: undefined,
+  description: undefined,
+  
+  
+  finalScript: undefined,
+  generatedVideoUrl: undefined,
+  isGenerating: false,
 };
 
 export const useAICloneStore = create<AICloneStore>((set, get) => ({
@@ -31,7 +46,19 @@ export const useAICloneStore = create<AICloneStore>((set, get) => ({
   
   updateData: (data) => set((state) => ({ ...state, ...data })),
   
-  reset: () => set({ ...initialState, currentStep: 1 }),
+  reset: () => {
+    
+    const state = get();
+    if (state.characterPhotoPreview && state.characterPhotoPreview.startsWith('blob:')) {
+      URL.revokeObjectURL(state.characterPhotoPreview);
+    }
+    if (state.generatedVideoUrl && state.generatedVideoUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(state.generatedVideoUrl);
+    }
+    
+    
+    set({ ...initialState, currentStep: 1 });
+  },
   
   nextStep: () => {
     const { currentStep } = get();

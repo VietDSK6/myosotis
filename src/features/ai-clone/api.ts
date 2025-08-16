@@ -34,7 +34,7 @@ export async function createVideoWithFullText(
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      timeout: 300000, 
+      timeout: 600000, 
     }
   );
 
@@ -71,7 +71,7 @@ export async function createVideoFromTopic(
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-      timeout: 300000,
+      timeout: 600000,
     }
   );
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAICloneStore } from '../store';
 
 export default function Step2Script() {
@@ -15,6 +15,11 @@ export default function Step2Script() {
   } = useAICloneStore();
 
   const [selectedMode, setSelectedMode] = useState<'manual' | 'ai-generated'>(scriptMode);
+
+  
+  useEffect(() => {
+    setSelectedMode(scriptMode);
+  }, [scriptMode]);
 
   const handleModeSelect = (mode: 'manual' | 'ai-generated') => {
     setSelectedMode(mode);

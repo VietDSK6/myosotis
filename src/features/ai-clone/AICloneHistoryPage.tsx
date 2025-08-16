@@ -80,6 +80,17 @@ export default function AICloneHistoryPage() {
           title="Living Memories History"
           showBackButton={true}
           backTo="/ai-clone"
+          rightActions={
+            <button
+              onClick={() => navigate('/ai-clone')}
+              className="flex items-center gap-2 px-4 py-2 bg-[#92d7e7] hover:bg-[#7bc7d9] text-white rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Create New
+            </button>
+          }
         />
 
         <main className="max-w-6xl mx-auto px-4 py-8">

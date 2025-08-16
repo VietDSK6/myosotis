@@ -1,10 +1,17 @@
 import { useNavigate } from 'react-router-dom';
-import { AICloneWizard } from '../features/ai-clone';
+import { useEffect } from 'react';
+import { AICloneWizard, useAICloneStore } from '../features/ai-clone';
 import { ProtectedRoute } from '../features/auth';
 import { PageHeader, } from '../components';
 
 export default function AIClonePage() {
   const navigate = useNavigate();
+  const { reset } = useAICloneStore();
+
+  
+  useEffect(() => {
+    reset();
+  }, [reset]);
 
   return (
     <ProtectedRoute>
