@@ -249,42 +249,46 @@ export default function DashboardPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Important Contact</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Emergency Contacts</h2>
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
               {isLoadingContacts ? (
                 <LoadingSpinner />
               ) : emergencyContacts.length > 0 ? (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center">
-                      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
+                <div className="space-y-4">
+                  {emergencyContacts.map((contact, index) => (
+                    <div key={contact.id || index} className={`flex items-center justify-between ${index > 0 ? 'pt-4 border-t border-gray-100' : ''}`}>
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center">
+                          <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <div className="text-lg font-semibold text-gray-900">{contact.contact_name}</div>
+                          <div className="text-lg text-gray-600">{contact.relation}</div>
+                          <div className="text-lg text-gray-600">{contact.phone}</div>
+                        </div>
+                      </div>
+                      <div className="flex gap-3">
+                        <button 
+                          onClick={() => window.open(`tel:${contact.phone}`, '_self')}
+                          className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
+                          aria-label={`Call ${contact.contact_name}`}
+                        >
+                          Call
+                        </button>
+                        {contact.email && (
+                          <button 
+                            onClick={() => window.open(`mailto:${contact.email}`, '_self')}
+                            className="min-h-12 px-5 rounded-xl bg-white border border-gray-300 text-gray-700 text-lg hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors"
+                            aria-label={`Email ${contact.contact_name}`}
+                          >
+                            Email
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-lg font-semibold text-gray-900">{emergencyContacts[0].contact_name}</div>
-                      <div className="text-lg text-gray-600">{emergencyContacts[0].relation}</div>
-                      <div className="text-lg text-gray-600">{emergencyContacts[0].phone}</div>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <button 
-                      onClick={() => window.open(`tel:${emergencyContacts[0].phone}`, '_self')}
-                      className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
-                      aria-label={`Call ${emergencyContacts[0].contact_name}`}
-                    >
-                      Call
-                    </button>
-                    {emergencyContacts[0].email && (
-                      <button 
-                        onClick={() => window.open(`mailto:${emergencyContacts[0].email}`, '_self')}
-                        className="min-h-12 px-5 rounded-xl bg-white border border-gray-300 text-gray-700 text-lg hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors"
-                        aria-label={`Email ${emergencyContacts[0].contact_name}`}
-                      >
-                        Email
-                      </button>
-                    )}
-                  </div>
+                  ))}
                 </div>
               ) : (
                 <div className="text-center py-8">
@@ -303,12 +307,12 @@ export default function DashboardPage() {
                 </div>
               )}
               {emergencyContacts.length > 0 && (
-                <div className="mt-4">
+                <div className="mt-6 pt-4 border-t border-gray-100">
                   <button 
                     onClick={handleEmergencyContacts}
                     className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
                   >
-                    All contacts →
+                    Manage contacts →
                   </button>
                 </div>
               )}

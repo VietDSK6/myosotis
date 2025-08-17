@@ -28,26 +28,29 @@ export const ChatbotPage: React.FC = () => {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-cyan-50 antialiased text-base sm:text-lg">
+      <div className="min-h-screen bg-cyan-50 antialiased text-base sm:text-lg flex flex-col">
         <PageHeader 
           title="Intelligent Care Assistant"
           showBackButton={true}
           useHistory={true}
         />
         
-        <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden" style={{ height: 'calc(100vh - 160px)' }}>
+        <div className="flex-1 overflow-hidden" style={{ height: 'calc(100vh - 80px)' }}>
+          <div className="h-full bg-white shadow-lg overflow-hidden">
             <div className="h-full flex relative">
+                            {/* Mobile sidebar overlay */}
               {isSidebarOpen && (
                 <div 
                   className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
                   onClick={() => setIsSidebarOpen(false)}
+                  style={{ top: '0' }}
                 />
               )}
               
+              {/* Sidebar */}
               <div className={`
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-                lg:translate-x-0 lg:static fixed left-0 top-0 h-full w-80 sm:w-96 lg:w-[30%] xl:w-[25%] 
+                lg:translate-x-0 lg:static fixed left-0 top-0 h-full w-80 sm:w-96 lg:w-[320px] xl:w-[350px] 
                 bg-gray-50 border-r border-gray-200 flex flex-col z-50 transition-transform duration-300 ease-in-out
               `}>
                 <div className="lg:hidden flex justify-between items-center p-4 border-b border-gray-200">
@@ -64,8 +67,10 @@ export const ChatbotPage: React.FC = () => {
                 <ChatSessionHistory />
               </div>
 
+              {/* Main chat area */}
               <div className="flex-1 flex flex-col min-w-0">
-                <div className="flex items-center justify-between p-3 sm:p-6 border-b border-gray-200 bg-white">
+                {/* Chat header */}
+                <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-white">
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <button
                       onClick={() => setIsSidebarOpen(true)}

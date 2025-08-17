@@ -44,8 +44,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 
   return (
     <header className={headerClasses}>
-      <div className="max-w-5xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-start items-center h-16">
           <div className="flex items-center gap-3">
             {showBackButton && (
               <button
@@ -77,7 +77,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           </div>
           
           {rightActions && (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 ml-auto">
               {rightActions}
             </div>
           )}
