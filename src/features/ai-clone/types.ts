@@ -43,6 +43,7 @@ export interface CreateVideoResponse {
   message: string;
   generated_target_text?: string;
   error?: string;
+  timeout?: boolean; // Added to handle 504 timeout responses
 }
 
 export interface UserVideosResponse {

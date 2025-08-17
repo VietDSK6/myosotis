@@ -27,18 +27,33 @@ export async function createVideoWithFullText(
     formData.append('dynamic_scale', payload.dynamic_scale.toString());
   }
 
-  const response = await axios.post(
-    `${API_BASE_URL}/api/v1/ai-clone/create-video-full-text-form`,
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      timeout: 600000, 
-    }
-  );
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/v1/ai-clone/create-video-full-text-form`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 600000, 
+      }
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error: unknown) {
+    
+    const axiosError = error as { response?: { status?: number }; code?: string };
+    if (axiosError.response?.status === 504 || axiosError.code === 'ECONNABORTED') {
+      return {
+        success: true,
+        video_id: Date.now(), 
+        status: 'processing',
+        message: 'Video generation started successfully. It will be available in your history soon.',
+        timeout: true
+      } as CreateVideoResponse & { timeout: boolean };
+    }
+    throw error;
+  }
 }
 
 export async function createVideoFromTopic(
@@ -64,18 +79,33 @@ export async function createVideoFromTopic(
     formData.append('language', payload.language);
   }
 
-  const response = await axios.post(
-    `${API_BASE_URL}/api/v1/ai-clone/create-video-from-topic-form`,
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      timeout: 600000,
-    }
-  );
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/api/v1/ai-clone/create-video-from-topic-form`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 600000,
+      }
+    );
 
-  return response.data;
+    return response.data;
+  } catch (error: unknown) {
+    
+    const axiosError = error as { response?: { status?: number }; code?: string };
+    if (axiosError.response?.status === 504 || axiosError.code === 'ECONNABORTED') {
+      return {
+        success: true,
+        video_id: Date.now(), 
+        status: 'processing',
+        message: 'Video generation started successfully. It will be available in your history soon.',
+        timeout: true
+      } as CreateVideoResponse & { timeout: boolean };
+    }
+    throw error;
+  }
 }
 
 export async function getUserVideos(userId: number): Promise<UserVideosResponse> {

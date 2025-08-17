@@ -213,25 +213,23 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              <div>
-                <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl p-8">
-                  <div className="bg-gray-700 rounded-xl aspect-video flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <div className="w-16 h-16 bg-[#92d7e7] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <p className="text-lg font-medium">AI Avatar Demo</p>
-                      <p className="text-sm text-gray-300 mt-2">Watch a photo come to life</p>
-                    </div>
+              <div className="flex justify-center">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl max-w-fit">
+                  <div className="bg-gray-700 rounded-xl overflow-hidden" style={{width: '512px', height: '512px'}}>
+                    <video 
+                      className="w-full h-full object-cover rounded-xl"
+                      controls
+                      preload="metadata"
+                    >
+                      <source src="/demo.mp4" type="video/mp4" />
+                      Your browser does not support the video tag. Please use a modern browser to view the AI Avatar demonstration.
+                    </video>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Feature 2: AI Chatbot Companion */}
           <div id="ai-companion" className="mb-24">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div className="order-2 lg:order-1">

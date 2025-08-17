@@ -7,6 +7,7 @@ interface PageHeaderProps {
   backTo?: string;
   backText?: string;
   rightActions?: React.ReactNode;
+  logoClickable?: boolean;
   variant?: 'default' | 'solid';
   useHistory?: boolean;
 }
@@ -17,6 +18,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   backTo = '/dashboard',
   backText = 'Back',
   rightActions,
+  logoClickable = true,
   variant = 'default',
   useHistory = true,
 }) => {
@@ -31,7 +33,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   };
 
   const handleLogoClick = () => {
-    navigate('/dashboard');
+    if (logoClickable) {
+      navigate('/dashboard');
+    }
   };
 
   const headerClasses = variant === 'solid' 
@@ -40,8 +44,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
 
   return (
     <header className={headerClasses}>
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-start items-center h-16">
+      <div className="max-w-5xl mx-auto px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-3">
             {showBackButton && (
               <button
@@ -56,7 +60,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             )}
             
             <div 
-              className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+              className={`flex items-center gap-3 ${logoClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
               onClick={handleLogoClick}
             >
               <div className="w-8 h-8 rounded-full flex items-center justify-center">
@@ -73,7 +77,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           </div>
           
           {rightActions && (
-            <div className="flex items-center space-x-4 ml-auto">
+            <div className="flex items-center space-x-4">
               {rightActions}
             </div>
           )}

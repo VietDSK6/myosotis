@@ -1,9 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAICloneStore } from '../store';
 import { useAuthStore } from '../../auth/store';
 import { createVideoWithFullText, createVideoFromTopic, getVideoUrl } from '../api';
+import GenerationNotificationModal from './GenerationNotificationModal';
 
 export default function Step3Preview() {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
   const {
     characterPhoto,
@@ -24,6 +27,8 @@ export default function Step3Preview() {
   } = useAICloneStore();
 
   const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [currentScript, setCurrentScript] = useState<string>(
     finalScript || (scriptMode === 'manual' ? manualScript || '' : '')
   );
@@ -58,6 +63,7 @@ export default function Step3Preview() {
     }
 
     setError('');
+    setSuccessMessage('');
     updateData({ isGenerating: true });
 
     try {
@@ -99,6 +105,11 @@ export default function Step3Preview() {
           generatedVideoUrl: videoUrl,
           finalScript: currentScript,
         });
+      } else if (response.timeout) {
+        
+        setSuccessMessage('Video generation started successfully! It will appear in your history once ready.');
+        setShowNotificationModal(true);
+        updateData({ finalScript: currentScript });
       } else {
         setError(response.error || 'Failed to generate video. Please try again.');
       }
@@ -126,6 +137,17 @@ export default function Step3Preview() {
   const handleScriptEdit = (text: string) => {
     setCurrentScript(text);
     updateData({ finalScript: text });
+  };
+
+  const handleGoToGallery = () => {
+    setShowNotificationModal(false);
+    navigate('/ai-clone-history');
+  };
+
+  const handleWaitOnPage = () => {
+    setShowNotificationModal(false);
+    updateData({ isGenerating: false }); // Stop showing loading state
+    // Continue waiting - the user can manually check history later or refresh
   };
 
   return (
@@ -292,6 +314,21 @@ export default function Step3Preview() {
         </div>
       )}
 
+      {successMessage && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-green-800">{successMessage}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Action Buttons */}
       <div className="flex justify-between">
         <button
@@ -347,6 +384,13 @@ export default function Step3Preview() {
           </div>
         </div>
       )}
+
+      {/* Generation Notification Modal */}
+      <GenerationNotificationModal
+        isOpen={showNotificationModal}
+        onGoToGallery={handleGoToGallery}
+        onWaitOnPage={handleWaitOnPage}
+      />
     </div>
   );
 }

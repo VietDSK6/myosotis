@@ -63,7 +63,7 @@ export const ChatSessionHistory: React.FC = () => {
   };
 
   const handleDeleteClick = (sessionId: string, event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent session selection when clicking delete
+    event.stopPropagation(); 
     setSessionToDelete(sessionId);
   };
 
@@ -88,7 +88,6 @@ export const ChatSessionHistory: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
       <div className="p-3 sm:p-4 border-b border-gray-200">
         <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Conversations</h2>
         <button

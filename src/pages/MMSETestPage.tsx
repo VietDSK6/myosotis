@@ -34,12 +34,14 @@ export default function MMSETestPage() {
 
   
   useEffect(() => {
+    if (!testData) return;
+    
     const existingAnswer = answers.find(
       a => a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex
     );
     
     if (existingAnswer) {
-      const question = getCurrentQuestion();
+      const question = testData.sections[currentSectionIndex]?.questions[currentQuestionIndex];
       if (question?.type === 'multi-select') {
         
         if (Array.isArray(existingAnswer.answer)) {
@@ -59,6 +61,32 @@ export default function MMSETestPage() {
       setSelectedOptions([]);
     }
   }, [currentSectionIndex, currentQuestionIndex, answers, testData]);
+
+  
+  useEffect(() => {
+    if (!testData || !currentAnswer.trim()) return;
+    
+    const question = testData.sections[currentSectionIndex]?.questions[currentQuestionIndex];
+    if (!question) return;
+    if (question.type !== 'text' && question.type !== 'number') return;
+
+    const timeoutId = setTimeout(() => {
+      const newAnswer: MMSEAnswer = {
+        section_index: currentSectionIndex,
+        question_index: currentQuestionIndex,
+        answer: currentAnswer
+      };
+
+      setAnswers(prev => {
+        const filtered = prev.filter(
+          a => !(a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex)
+        );
+        return [...filtered, newAnswer];
+      });
+    }, 500); 
+
+    return () => clearTimeout(timeoutId);
+  }, [currentAnswer, currentSectionIndex, currentQuestionIndex, testData]);
 
   const fetchTestData = async () => {
     try {
@@ -99,16 +127,52 @@ export default function MMSETestPage() {
   const handleAnswerChange = (value: string) => {
     setCurrentAnswer(value);
     setSelectedOptions([value]);
+    
+    
+    setTimeout(() => {
+      const question = getCurrentQuestion();
+      if (!question) return;
+
+      const newAnswer: MMSEAnswer = {
+        section_index: currentSectionIndex,
+        question_index: currentQuestionIndex,
+        answer: value
+      };
+
+      setAnswers(prev => {
+        const filtered = prev.filter(
+          a => !(a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex)
+        );
+        return [...filtered, newAnswer];
+      });
+    }, 0);
   };
 
   const handleMultiSelectChange = (value: string) => {
-    setSelectedOptions(prev => {
-      if (prev.includes(value)) {
-        return prev.filter(v => v !== value);
-      } else {
-        return [...prev, value];
-      }
-    });
+    const newSelectedOptions = selectedOptions.includes(value)
+      ? selectedOptions.filter(v => v !== value)
+      : [...selectedOptions, value];
+    
+    setSelectedOptions(newSelectedOptions);
+    
+    
+    setTimeout(() => {
+      const question = getCurrentQuestion();
+      if (!question) return;
+
+      const newAnswer: MMSEAnswer = {
+        section_index: currentSectionIndex,
+        question_index: currentQuestionIndex,
+        answer: newSelectedOptions
+      };
+
+      setAnswers(prev => {
+        const filtered = prev.filter(
+          a => !(a.section_index === currentSectionIndex && a.question_index === currentQuestionIndex)
+        );
+        return [...filtered, newAnswer];
+      });
+    }, 0);
   };
 
   const saveCurrentAnswer = () => {
@@ -156,6 +220,9 @@ export default function MMSETestPage() {
   };
 
   const handlePrevious = () => {
+    
+    saveCurrentAnswer();
+    
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
     } else if (currentSectionIndex > 0) {

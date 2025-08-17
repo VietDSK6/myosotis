@@ -1,2 +1,7 @@
 @import "tailwindcss";
 @import "./accessibility.css";
+
+html {
+  scroll-padding-top: 4rem; /* This should match your header's height (h-16) */
+  scroll-behavior: smooth;
+}

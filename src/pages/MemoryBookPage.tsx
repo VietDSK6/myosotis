@@ -316,7 +316,7 @@ export default function MemoryFilmPage() {
                     </div>
                     <p className="text-lg text-gray-700 mb-5 leading-relaxed">{event.description}</p>
                     <p className="text-base text-gray-600 mb-5 font-medium bg-gray-50 p-3 rounded-lg">
-                      📅 {new Date(event.start_time).toLocaleDateString('en-US', {
+                      {new Date(event.start_time).toLocaleDateString('en-US', {
                         weekday: 'long',
                         year: 'numeric',
                         month: 'long',
@@ -328,13 +328,13 @@ export default function MemoryFilmPage() {
                         onClick={() => openEditModal(event)}
                         className="px-6 py-3 text-lg font-bold text-cyan-700 bg-cyan-50 hover:bg-cyan-100 rounded-xl transition-colors border-2 border-cyan-200 hover:border-cyan-300"
                       >
-                        ✏️ Edit Memory
+                        Edit Memory
                       </button>
                       <button
                         onClick={() => handleDeleteEvent(event.id)}
                         className="px-6 py-3 text-lg font-bold text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-colors border-2 border-red-200 hover:border-red-300"
                       >
-                        🗑️ Delete
+                        Delete
                       </button>
                     </div>
                   </div>
