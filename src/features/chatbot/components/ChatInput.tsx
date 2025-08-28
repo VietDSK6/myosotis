@@ -79,12 +79,6 @@ export const ChatInput: React.FC = () => {
           )}
         </button>
       </form>
-      
-      <div className="mt-2 sm:mt-3 text-center">
-        <p className="text-xs sm:text-sm text-gray-500">
-          Press Enter to send, Shift+Enter for new line
-        </p>
-      </div>
     </div>
   );
 };

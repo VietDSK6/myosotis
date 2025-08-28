@@ -26,30 +26,30 @@ export const ChatSessionHistory: React.FC = () => {
     }
   }, [user?.id, sessionHistory.length, loadSessionHistory]);
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const isToday = date.toDateString() === now.toDateString();
+  // const formatDate = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   const now = new Date();
+  //   const isToday = date.toDateString() === now.toDateString();
     
-    if (isToday) {
-      return `${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} Today`;
-    }
+  //   if (isToday) {
+  //     return `${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} Today`;
+  //   }
     
-    const yesterday = new Date(now);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const isYesterday = date.toDateString() === yesterday.toDateString();
+  //   const yesterday = new Date(now);
+  //   yesterday.setDate(yesterday.getDate() - 1);
+  //   const isYesterday = date.toDateString() === yesterday.toDateString();
     
-    if (isYesterday) {
-      return `${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} Yesterday`;
-    }
+  //   if (isYesterday) {
+  //     return `${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} Yesterday`;
+  //   }
     
-    return date.toLocaleDateString([], { 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
-  };
+  //   return date.toLocaleDateString([], { 
+  //     month: 'short', 
+  //     day: 'numeric',
+  //     hour: '2-digit', 
+  //     minute: '2-digit' 
+  //   });
+  // };
 
   const handleSessionSelect = async (session: typeof sessionHistory[0]) => {
     if (!user?.id) return;
@@ -141,7 +141,7 @@ export const ChatSessionHistory: React.FC = () => {
                 key={session.session_id}
                 className={`relative mb-1.5 sm:mb-2 rounded-lg transition-colors duration-200
                   ${activeSession?.session_id === session.session_id 
-                    ? 'bg-[#92d7e7]/20 border-2 border-[#92d7e7]' 
+                    ? 'bg-gray-100 border-2 border-gray-300' 
                     : 'bg-white hover:bg-gray-50 border border-gray-200'
                   }`}
               >
@@ -150,14 +150,15 @@ export const ChatSessionHistory: React.FC = () => {
                   className="w-full text-left p-3 sm:p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#92d7e7]/50"
                 >
                   <div className="flex flex-col gap-1.5 sm:gap-2 pr-8 sm:pr-10">
-                    <h3 className="font-semibold text-gray-900 text-sm sm:text-lg leading-tight">
-                      {session.session_name}
-                    </h3>
-                    <p className="text-gray-600 text-xs sm:text-base line-clamp-2 leading-relaxed">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-semibold text-gray-900 text-sm sm:text-lg leading-tight">
+                        {session.session_name}
+                      </h3>
+                    </div>
+                    <p className="text-gray-600 text-xs sm:text-base line-clamp-2 leading-relaxed font-normal">
                       {session.last_message_preview}
                     </p>
-                    <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
-                      <span>{formatDate(session.last_active)}</span>
+                    <div className="text-xs sm:text-sm text-gray-500">
                       <span>{session.total_messages} message{session.total_messages !== 1 ? 's' : ''}</span>
                     </div>
                   </div>
