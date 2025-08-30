@@ -1,7 +1,22 @@
 @import "tailwindcss";
 @import "./accessibility.css";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-poppins: 'Poppins', sans-serif;
+  
+}
 
 html {
-  scroll-padding-top: 4rem; /* This should match your header's height (h-16) */
+  scroll-padding-top: 4rem;
   scroll-behavior: smooth;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

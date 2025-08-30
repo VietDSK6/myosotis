@@ -4,321 +4,581 @@ import { useSessionTimeout } from '../hooks/useSessionTimeout';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getEmergencyContacts } from '../api/user';
-import { getMMSEHistory, type MMSEHistoryItem } from '../api/mmse';
 import type { EmergencyContact } from '../types/user';
-import { PageHeader, HeaderButton, FeatureCard, LoadingSpinner, StatCard } from '../components';
+import Lottie from 'lottie-react';
 
 export default function DashboardPage() {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'info' | 'chat' | 'contacts'>('info');
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
   const [isLoadingContacts, setIsLoadingContacts] = useState(false);
-  const [mmseHistory, setMmseHistory] = useState<MMSEHistoryItem[]>([]);
-  const [isLoadingMmse, setIsLoadingMmse] = useState(false);
+  const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const [animationData, setAnimationData] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(true);
 
   useSessionTimeout({
     timeoutMinutes: 1440,
     warningMinutes: 30,
   });
 
+  
+  const features = [
+    {
+      title: "Living Memories",
+      subtitle: "Create AI avatars with your loved one's voice",
+      icon: <img src="/living-memories.png" alt="Living Memories" className="h-12 w-12" />,
+      onClick: () => navigate('/ai-clone')
+    },
+    {
+      title: "Memory Test",
+      subtitle: "Take cognitive assessment",
+      icon: <img src="/test-icon.png" alt="Memory Test" className="h-12 w-12" />,
+      onClick: () => navigate('/mmse-test')
+    },
+    {
+      title: "Care Companion",
+      subtitle: "Chat with your AI companion",
+      icon: <img src="/chat.png" alt="Care Companion" className="h-12 w-12" />,
+      onClick: () => navigate('/chatbot')
+    },
+    {
+      title: "Memory Films",
+      subtitle: "View your cherished memories",
+      icon: <img src="/film.png" alt="Memory Films" className="h-12 w-12" />,
+      onClick: () => navigate('/memory-film')
+    },
+    {
+      title: "Memory History",
+      subtitle: "View your AI clone video history",
+      icon: <img src="/memory-film.png" alt="Memory History" className="h-12 w-12" />,
+      onClick: () => navigate('/ai-clone/history')
+    },
+    {
+      title: "Test History",
+      subtitle: "View your MMSE test results",
+      icon: <img src="/test-history.png" alt="Test History" className="h-12 w-12" />,
+      onClick: () => navigate('/mmse-history')
+    }
+  ];
+
+  const handleCarouselScroll = (direction: 'left' | 'right') => {
+    if (direction === 'left') {
+      setCurrentCarouselIndex((prev) => prev - 1);
+    } else {
+      setCurrentCarouselIndex((prev) => prev + 1);
+    }
+  };
+
+  
   useEffect(() => {
-    const fetchData = async () => {
-      if (!user?.id) return;
+    if (isCarouselPaused) return;
+    
+    const interval = setInterval(() => {
+      setCurrentCarouselIndex((prev) => prev + 1);
+    }, 3000);
 
-      setIsLoadingContacts(true);
-      setIsLoadingMmse(true);
+    return () => clearInterval(interval);
+  }, [isCarouselPaused]);
 
-      try {
-        const [contactsResponse, mmseResponse] = await Promise.all([
-          getEmergencyContacts(user.id),
-          getMMSEHistory(user.id)
-        ]);
+  
+  useEffect(() => {
+    
+    if (currentCarouselIndex >= features.length) {
+      
+      setIsTransitioning(false);
+      const timer = setTimeout(() => {
+        setCurrentCarouselIndex(currentCarouselIndex - features.length);
         
-        setEmergencyContacts(contactsResponse.data || []);
-        setMmseHistory(mmseResponse.data || []);
-      } catch (err) {
-        console.error('Failed to fetch data:', err);
-      } finally {
-        setIsLoadingContacts(false);
-        setIsLoadingMmse(false);
+        setTimeout(() => setIsTransitioning(true), 50);
+      }, 800); 
+      
+      return () => clearTimeout(timer);
+    } else if (currentCarouselIndex < 0) {
+      setIsTransitioning(false);
+      const timer = setTimeout(() => {
+        setCurrentCarouselIndex(currentCarouselIndex + features.length);
+        setTimeout(() => setIsTransitioning(true), 50);
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+  }, [currentCarouselIndex, features.length]);
+
+  
+  useEffect(() => {
+    const loadAnimation = async () => {
+      try {
+        const response = await fetch('/mental-therapy.json');
+        const data = await response.json();
+        setAnimationData(data);
+      } catch (error) {
+        console.error('Failed to load animation:', error);
       }
     };
 
-    fetchData();
-  }, [user?.id]);
+    loadAnimation();
+  }, []);
+
+  
+  useEffect(() => {
+    const fetchEmergencyContacts = async () => {
+      if (!user?.id) return;
+      
+      setIsLoadingContacts(true);
+      try {
+        const response = await getEmergencyContacts(user.id);
+        setEmergencyContacts(response.data || []);
+      } catch (error) {
+        console.error('Failed to fetch emergency contacts:', error);
+      } finally {
+        setIsLoadingContacts(false);
+      }
+    };
+
+    if (activeTab === 'contacts') {
+      fetchEmergencyContacts();
+    }
+  }, [user?.id, activeTab]);
+
+  const getCurrentDate = () => {
+    const now = new Date();
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return {
+      month: months[now.getMonth()],
+      year: now.getFullYear(),
+      day: now.getDate()
+    };
+  };
+
+  const generateCalendarDays = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    
+    let startingDayOfWeek = firstDay.getDay();
+    startingDayOfWeek = startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
+    
+    const days = [];
+    
+    
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(day);
+    }
+    
+    return days;
+  };
 
   const handleLogout = () => {
     logout();
   };
 
-  const handlePersonalInfo = () => {
-    navigate('/personal-info');
-  };
-
-  const handleEmergencyContacts = () => {
-    navigate('/emergency-contacts');
-  };
-
-  const handleMMSETest = () => {
-    navigate('/mmse-test');
-  };
-
   const firstName = user?.email?.split('@')[0] || 'User';
   const displayName = user?.profile?.full_name || firstName.charAt(0).toUpperCase() + firstName.slice(1);
+  const currentDate = getCurrentDate();
+  const calendarDays = generateCalendarDays();
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-cyan-50 antialiased text-[18px]">
-        <PageHeader 
-          title="Myosotis"
-          rightActions={
-            <>
-              <HeaderButton
-                onClick={() => navigate('/features')}
-                variant="primary"
-              >
-                Features
-              </HeaderButton>
-              <HeaderButton
-                onClick={handlePersonalInfo}
-                variant="primary"
-              >
-                Personal Info
-              </HeaderButton>
-              <HeaderButton
-                onClick={handleLogout}
-                variant="secondary"
-              >
-                Log Out
-              </HeaderButton>
-            </>
-          }
-        />
-
-        <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8 lg:py-12">
-          <div className="text-left mb-12">
-            <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-2">
-              Hello, {displayName}
-            </h1>
-            <p className="text-lg text-gray-600 mb-6">
-              Your plan for today
-            </p>
-            <button 
-              onClick={handleMMSETest}
-              className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
-            >
-              Start Memory Exercise
-            </button>
-          </div>
-          <section className="mb-8">
-            {/* <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white mb-8">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                    </svg>
-                    <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
-                      New Feature
-                    </span>
-                  </div>
-                  <h2 className="text-3xl font-bold mb-3">
-                    Create Living Memories
-                  </h2>
-                  <p className="text-lg text-purple-100 mb-6 max-w-2xl">
-                    Transform photos and voice recordings into AI-powered talking avatars. 
-                    Let your loved ones share stories, memories, and messages that last forever.
-                  </p>
-                  <button
-                    onClick={() => navigate('/ai-clone')}
-                    className="inline-flex items-center gap-2 bg-white text-purple-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                  >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                    </svg>
-                    Start Creating
-                  </button>
-                </div>
-                <div className="hidden lg:block flex-shrink-0 ml-8">
-                  <div className="w-48 h-48 bg-white/10 rounded-2xl flex items-center justify-center">
-                    <svg className="w-24 h-24 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div> */}
-
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div 
-                onClick={() => navigate('/ai-clone')}
-                className="rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-6 shadow-sm hover:shadow-md transition-all cursor-pointer ring-2 ring-purple-300 ring-opacity-20"
-              >
-                <div className="h-12 w-12 rounded-xl bg-purple-600 text-white flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-lg font-semibold text-gray-900">Living Memories</h3>
-                  <svg className="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                  </svg>
-                </div>
-                <p className="text-lg text-gray-700">Create AI avatars that speak with your loved one's voice</p>
-              </div>
-
-              <FeatureCard
-                title="Care Companion"
-                description="Chat with your always-available AI companion for support and guidance"
-                onClick={() => navigate('/chatbot')}
-                icon={
-                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                }
-              />
-
-              <FeatureCard
-                title="Memory Films"
-                description="View your cherished memories and photos"
-                onClick={() => navigate('/memory-film')}
-                icon={
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
-                  </svg>
-                }
-              />
-
-              <div 
-                onClick={handleEmergencyContacts}
-                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer"
-              >
-                <div className="h-12 w-12 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center mb-4">
-                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Emergency Contacts</h3>
-                <p className="text-lg text-gray-600">Important people and their information</p>
+      <div className="min-h-screen bg-[#F9F9FB] antialiased font-['Poppins'] text-[#333333]">
+        <header className="bg-white px-4 sm:px-6 lg:px-8 py-4">
+          <div className="w-full flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <img src="/apple-touch-icon.png" alt="Myosotis Logo" className="h-8 w-8" />
+              <div className="text-xl sm:text-2xl font-bold text-[#5A6DD0]">Myosotis</div>
+            </div>
+            
+            <div className="hidden md:flex flex-1 max-w-lg lg:max-w-2xl">
+              <div className="relative w-full">
+                <input 
+                  type="text" 
+                  placeholder="Search everything in our web"
+                  className="w-full px-4 py-3 pl-10 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#5A6DD0] focus:border-transparent"
+                />
+                <svg className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
             </div>
-            <div className="mt-4">
-              <button 
-                onClick={() => navigate('/features')}
-                className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
-              >
-                More features →
+
+            <div className="flex items-center space-x-2">
+              <button className="md:hidden p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+                <svg className="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </button>
+              
+              <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors relative">
+                <img src="/bell.png" alt="Notifications" className="h-5 w-5" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
             </div>
-          </section>
+          </div>
+        </header>
 
-          <section className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Progress</h2>
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              {isLoadingMmse ? (
-                <LoadingSpinner />
-              ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <StatCard
-                    value={`${mmseHistory.length} Tests`}
-                    label="MMSE completed"
-                    icon={
-                      <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+        <div className="md:hidden bg-white px-4 pb-4">
+          <div className="relative">
+            <input 
+              type="text" 
+              placeholder="Search everything in our web"
+              className="w-full px-4 py-3 pl-10 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#5A6DD0] focus:border-transparent text-sm"
+            />
+            <svg className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 bg-white">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
+            <div className="lg:col-span-2">
+              <div className="p-4 lg:p-6 h-full flex flex-col">
+                <button 
+                  onClick={() => navigate('/mmse-test')}
+                  className="w-full bg-[#5A6DD0] text-white rounded-[16px] py-4 mb-6 font-semibold hover:bg-[#5A6DD0]/90 transition-colors flex items-center justify-center space-x-2"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                  <span>Create New Schedule</span>
+                </button>
+
+                <nav className="space-y-2 mb-8">
+                  <button 
+                    onClick={() => navigate('/personal-info')}
+                    className="w-full flex items-center space-x-3 p-3 bg-[#5A6DD0]/10 text-[#5A6DD0] rounded-[12px] hover:bg-[#5A6DD0]/20 transition-colors"
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    <span className="font-medium">My Account</span>
+                  </button>
+                  <button 
+                    onClick={() => navigate('/features')}
+                    className="w-full flex items-center space-x-3 p-3 text-[#888888] hover:bg-gray-50 rounded-[12px] transition-colors"
+                  >
+                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                    <span>Discover</span>
+                  </button>
+                </nav>
+
+                <div className="pt-4 mt-auto">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-[#5A6DD0] rounded-full flex items-center justify-center text-white font-semibold">
+                      {displayName.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="font-medium text-[#333333]">{displayName}</div>
+                      <button 
+                        onClick={handleLogout}
+                        className="text-sm text-[#888888] hover:text-[#5A6DD0]"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7">
+              <div className="p-4 lg:p-6 mb-4 lg:mb-6">
+                <nav className="flex space-x-4 sm:space-x-8 overflow-x-auto">
+                  <button 
+                    onClick={() => setActiveTab('info')}
+                    className={`font-semibold pb-3 border-b-2 transition-color  ${
+                      activeTab === 'info' 
+                        ? 'text-[#5A6DD0] border-[#5A6DD0]' 
+                        : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
+                    }`}
+                  >
+                    Info
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('chat')}
+                    className={`font-semibold pb-3 border-b-2 transition-colors ${
+                      activeTab === 'chat' 
+                        ? 'text-[#5A6DD0] border-[#5A6DD0]' 
+                        : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
+                    }`}
+                  >
+                    Chat
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('contacts')}
+                    className={`font-semibold pb-3 border-b-2 transition-colors ${
+                      activeTab === 'contacts' 
+                        ? 'text-[#5A6DD0] border-[#5A6DD0]' 
+                        : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
+                    }`}
+                  >
+                    Contacts
+                  </button>
+                </nav>
+              </div>
+
+              {activeTab === 'info' && (
+                <>
+                  <div 
+                    className="p-4 lg:p-6 mb-4 lg:mb-6"
+                    onMouseEnter={() => setIsCarouselPaused(true)}
+                    onMouseLeave={() => setIsCarouselPaused(false)}
+                  >
+                    <div className="flex items-center justify-end mb-4">
+                      <div className="flex space-x-2">
+                        <button 
+                          onClick={() => handleCarouselScroll('left')}
+                          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                        <button 
+                          onClick={() => handleCarouselScroll('right')}
+                          className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                        >
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="relative overflow-hidden">
+                      <div 
+                        className={`flex ${isTransitioning ? 'transition-transform duration-[400ms] ease-in-out' : ''}`}
+                        style={{
+                          transform: `translateX(-${currentCarouselIndex * (100/3)}%)`
+                        }}
+                      >
+                        {[...features, ...features].map((feature, index) => {
+                          const originalIndex = index % features.length;
+                          const isActive = originalIndex === (currentCarouselIndex % features.length);
+                          
+                          return (
+                            <div 
+                              key={index}
+                              className="flex-shrink-0 w-1/3 px-2"
+                            >
+                              <div 
+                                onClick={feature.onClick}
+                                className={`w-full border rounded-[16px] p-6 cursor-pointer hover:shadow-lg transition-all transform hover:scale-105 ${
+                                  isActive
+                                    ? 'bg-gradient-to-br from-[#5A6DD0] to-[#5A6DD0]/80 text-white border-[#5A6DD0]'
+                                    : 'bg-white border-gray-100 text-gray-900'
+                                }`}
+                              >
+                                <div className={`w-16 h-16 rounded-[12px] flex items-center justify-center mb-4 ${
+                                  isActive
+                                    ? 'bg-white/20'
+                                    : 'bg-gray-50'
+                                }`}>
+                                  {feature.icon}
+                                </div>
+                                <h4 className={`font-semibold mb-2 text-lg ${
+                                  isActive ? 'text-white' : 'text-[#333333]'
+                                }`}>
+                                  {feature.title}
+                                </h4>
+                                <p className={`text-sm ${
+                                  isActive ? 'text-white/80' : 'text-[#888888]'
+                                }`}>
+                                  {feature.subtitle}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-[#5A6DD0] to-[#5A6DD0]/80 rounded-[20px] p-4 lg:p-6 text-white mb-4 lg:mb-6">
+                    <h3 className="text-lg lg:text-xl font-semibold mb-2">Join to our medicine volunteer</h3>
+                    <p className="text-white/80 mb-4 text-sm lg:text-base">Help others while tracking your own health progress</p>
+                    <button className="bg-white text-[#5A6DD0] px-4 lg:px-6 py-2 rounded-[12px] font-semibold hover:bg-gray-50 transition-colors text-sm lg:text-base">
+                      Join
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {activeTab === 'chat' && (
+                <div className="p-4 lg:p-6 mb-4 lg:mb-6">
+                  <div className="text-center py-8 lg:py-12">
+                    <div className="w-12 h-12 lg:w-16 lg:h-16 bg-[#5A6DD0]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="h-6 w-6 lg:h-8 lg:w-8 text-[#5A6DD0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
-                    }
-                  />
-                  <StatCard
-                    value={
-                      mmseHistory.length > 0 
-                        ? `${Math.round(mmseHistory.reduce((sum, test) => sum + test.total_score, 0) / mmseHistory.length)}/27`
-                        : 'N/A'
-                    }
-                    label="Average score"
-                    icon={
-                      <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                      </svg>
-                    }
-                  />
+                    </div>
+                    <h3 className="text-lg lg:text-xl font-semibold text-[#333333] mb-2">Care Companion Chat</h3>
+                    <p className="text-[#888888] mb-4 lg:mb-6 text-sm lg:text-base">Start a conversation with your AI companion for support and guidance</p>
+                    <button 
+                      onClick={() => navigate('/chatbot')}
+                      className="bg-[#5A6DD0] text-white px-4 lg:px-6 py-2 lg:py-3 rounded-[12px] font-semibold hover:bg-[#5A6DD0]/90 transition-colors text-sm lg:text-base"
+                    >
+                      Start Chatting
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'contacts' && (
+                <div className="p-4 lg:p-6 mb-4 lg:mb-6">
+                  <div className="flex items-center justify-between mb-4 lg:mb-6">
+                    <h3 className="text-lg lg:text-xl font-semibold text-[#333333]">Emergency Contacts</h3>
+                    <button 
+                      onClick={() => navigate('/emergency-contacts')}
+                      className="text-[#5A6DD0] hover:text-[#5A6DD0]/80 font-medium text-sm lg:text-base"
+                    >
+                      Manage →
+                    </button>
+                  </div>
+
+                  {isLoadingContacts ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5A6DD0]"></div>
+                    </div>
+                  ) : emergencyContacts.length > 0 ? (
+                    <div className="space-y-4">
+                      {emergencyContacts.map((contact, index) => (
+                        <div key={contact.id || index} className="flex items-center justify-between p-4 rounded-[12px] border border-gray-100 hover:bg-gray-50 transition-colors">
+                          <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-[#5A6DD0]/10 rounded-full flex items-center justify-center">
+                              <svg className="h-6 w-6 text-[#5A6DD0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <div className="font-semibold text-[#333333]">{contact.contact_name}</div>
+                              <div className="text-[#888888]">{contact.relation}</div>
+                              <div className="text-[#888888]">{contact.phone}</div>
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button 
+                              onClick={() => window.open(`tel:${contact.phone}`, '_self')}
+                              className="bg-[#5A6DD0] text-white px-4 py-2 rounded-[8px] font-medium hover:bg-[#5A6DD0]/90 transition-colors"
+                            >
+                              Call
+                            </button>
+                            {contact.email && (
+                              <button 
+                                onClick={() => window.open(`mailto:${contact.email}`, '_self')}
+                                className="bg-white border border-gray-300 text-[#333333] px-4 py-2 rounded-[8px] hover:bg-gray-50 transition-colors"
+                              >
+                                Email
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                      <h4 className="text-lg font-semibold text-[#333333] mb-2">No Emergency Contacts</h4>
+                      <p className="text-[#888888] mb-4">Add your emergency contacts to keep important people just a tap away</p>
+                      <button 
+                        onClick={() => navigate('/emergency-contacts')}
+                        className="bg-[#5A6DD0] text-white px-6 py-3 rounded-[12px] font-semibold hover:bg-[#5A6DD0]/90 transition-colors"
+                      >
+                        Add Contact
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          </section>
 
-          <section className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Emergency Contacts</h2>
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              {isLoadingContacts ? (
-                <LoadingSpinner />
-              ) : emergencyContacts.length > 0 ? (
-                <div className="space-y-4">
-                  {emergencyContacts.map((contact, index) => (
-                    <div key={contact.id || index} className={`flex items-center justify-between ${index > 0 ? 'pt-4 border-t border-gray-100' : ''}`}>
-                      <div className="flex items-center gap-4">
-                        <div className="h-12 w-12 bg-cyan-100 text-cyan-700 rounded-xl flex items-center justify-center">
-                          <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                        </div>
-                        <div>
-                          <div className="text-lg font-semibold text-gray-900">{contact.contact_name}</div>
-                          <div className="text-lg text-gray-600">{contact.relation}</div>
-                          <div className="text-lg text-gray-600">{contact.phone}</div>
-                        </div>
-                      </div>
-                      <div className="flex gap-3">
-                        <button 
-                          onClick={() => window.open(`tel:${contact.phone}`, '_self')}
-                          className="min-h-12 px-5 rounded-xl bg-cyan-600 text-white text-lg font-semibold hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 transition-colors"
-                          aria-label={`Call ${contact.contact_name}`}
-                        >
-                          Call
-                        </button>
-                        {contact.email && (
-                          <button 
-                            onClick={() => window.open(`mailto:${contact.email}`, '_self')}
-                            className="min-h-12 px-5 rounded-xl bg-white border border-gray-300 text-gray-700 text-lg hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 transition-colors"
-                            aria-label={`Email ${contact.contact_name}`}
-                          >
-                            Email
-                          </button>
-                        )}
-                      </div>
+            <div className="lg:col-span-3">
+              <div className="p-4 lg:p-6 mb-4 lg:mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-2">
+                    <img src="/calendar.png" alt="Calendar" className="h-5 w-5" />
+                    <h3 className="text-lg font-semibold">{currentDate.month} {currentDate.year}</h3>
+                  </div>
+                  <div className="flex space-x-1">
+                    <button className="p-1 rounded-md hover:bg-gray-100">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button className="p-1 rounded-md hover:bg-gray-100">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-7 gap-1 mb-2">
+                  {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map(day => (
+                    <div key={day} className="text-xs text-[#888888] text-center py-2 font-medium">
+                      {day}
                     </div>
                   ))}
                 </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="h-12 w-12 bg-gray-100 text-gray-400 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <p className="text-gray-600 mb-4">No emergency contacts added yet</p>
-                  <button 
-                    onClick={handleEmergencyContacts}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-cyan-600 bg-cyan-50 hover:bg-cyan-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-                  >
-                    Add Emergency Contact
-                  </button>
+
+                <div className="grid grid-cols-7 gap-1">
+                  {calendarDays.map((day, index) => (
+                    <div key={index} className="aspect-square flex items-center justify-center">
+                      {day && (
+                        <button 
+                          className={`w-8 h-8 rounded-full text-sm hover:bg-gray-100 transition-colors ${
+                            day === currentDate.day 
+                              ? 'bg-[#5A6DD0] text-white hover:bg-[#5A6DD0]/90' 
+                              : 'text-[#333333]'
+                          }`}
+                        >
+                          {day}
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              )}
-              {emergencyContacts.length > 0 && (
-                <div className="mt-6 pt-4 border-t border-gray-100">
-                  <button 
-                    onClick={handleEmergencyContacts}
-                    className="text-lg text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-md"
-                  >
-                    Manage contacts →
-                  </button>
+              </div>
+
+              <div className="p-4 lg:p-6 text-center">
+                <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-4 bg-gradient-to-br from-[#5A6DD0]/10 to-[#5A6DD0]/20 rounded-full flex items-center justify-center">
+                  {animationData ? (
+                    <Lottie 
+                      animationData={animationData}
+                      loop={true}
+                      autoplay={true}
+                      className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56"
+                    />
+                  ) : (
+                    <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-[#5A6DD0]/20 rounded-full flex items-center justify-center">
+                      <div className="w-6 h-6 bg-[#5A6DD0] rounded-full animate-pulse"></div>
+                    </div>
+                  )}
                 </div>
-              )}
+                <h4 className="font-semibold text-[#333333] mb-2">Your Health Assistant</h4>
+                <p className="text-[#888888] text-sm">Ready to help you with your health journey</p>
+              </div>
             </div>
-          </section>
-        </main>  
+          </div>
+        </div>
       </div>
     </ProtectedRoute>
   );

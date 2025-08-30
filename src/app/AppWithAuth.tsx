@@ -1,7 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
 import { useAuthInitialization, useAuthStore } from '../features/auth';
-import { ChatFloatingActionButton, ChatInterface } from '../features/chatbot';
+import { ChatInterface } from '../features/chatbot';
 
 export default function AppWithAuth() {
   useAuthInitialization();
@@ -13,7 +13,6 @@ export default function AppWithAuth() {
       {/* Only show chatbot FAB and interface when user is authenticated */}
       {isAuthenticated && (
         <>
-          <ChatFloatingActionButton />
           <ChatInterface />
         </>
       )}
