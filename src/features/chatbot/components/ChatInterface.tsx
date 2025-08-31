@@ -38,7 +38,7 @@ export const ChatInterface: React.FC = () => {
         <div className="w-[70%] flex flex-col">
           <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full overflow-hidden">
+              <div className="w-10 h-10 overflow-hidden">
                 <img src="/chatbot.png" alt="Chatbot Avatar" className="w-full h-full object-cover" />
               </div>
               <div>

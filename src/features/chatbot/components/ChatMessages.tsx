@@ -38,7 +38,7 @@ export const ChatMessages: React.FC = () => {
             <div className="flex justify-start">
               <div className="max-w-[85%] sm:max-w-[75%]">
                 <div className="flex items-start gap-2 sm:gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden">
+                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 overflow-hidden">
                     <img src="/chatbot.png" alt="Chatbot Avatar" className="w-full h-full object-cover" />
                   </div>
                   

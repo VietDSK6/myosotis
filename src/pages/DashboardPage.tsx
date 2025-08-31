@@ -7,10 +7,14 @@ import { getEmergencyContacts, getUserInfo, updateUserInfo } from '../api/user';
 import type { EmergencyContact, UserData } from '../types/user';
 import { AlertMessage, LoadingSpinner } from '../components';
 import Lottie from 'lottie-react';
+import { useChatbotStore } from '../features/chatbot/store';
+import { ChatMessages } from '../features/chatbot/components/ChatMessages';
+import { ChatInput } from '../features/chatbot/components/ChatInput';
 
 export default function DashboardPage() {
   const { user, logout, updateUser } = useAuthStore();
   const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState<'info' | 'chat' | 'contacts'>('info');
   const [sidebarView, setSidebarView] = useState<'dashboard' | 'account' | 'discover'>('dashboard');
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
@@ -19,7 +23,7 @@ export default function DashboardPage() {
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [animationData, setAnimationData] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(true);
-  
+
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
   const [userDataError, setUserDataError] = useState<string | null>(null);
@@ -39,12 +43,13 @@ export default function DashboardPage() {
     medicalNotes: ''
   });
 
+  const { currentMessages, loadSessionHistory, sendMessage } = useChatbotStore();
+
   useSessionTimeout({
     timeoutMinutes: 1440,
     warningMinutes: 30,
   });
 
-  // Fetch user data for personal info
   const fetchUserData = useCallback(async () => {
     if (!user?.id) {
       setUserDataError('User ID not found');
@@ -56,7 +61,7 @@ export default function DashboardPage() {
       setIsLoadingUserData(true);
       const response = await getUserInfo(user.id);
       setUserData(response.data);
-      
+
       setFormData({
         fullName: response.data.profile?.full_name || '',
         email: response.data.email || '',
@@ -97,7 +102,7 @@ export default function DashboardPage() {
     setIsSaving(true);
     setUserDataError(null);
     setSuccessMessage(null);
-    
+
     try {
       const payload = {
         phone: formData.phone,
@@ -114,10 +119,10 @@ export default function DashboardPage() {
       };
 
       await updateUserInfo(user.id, payload);
-      
+
       const freshUserData = await getUserInfo(user.id);
       setUserData(freshUserData.data);
-      
+
       const updatedUser = {
         ...user,
         email: freshUserData.data.email,
@@ -139,10 +144,9 @@ export default function DashboardPage() {
         }
       };
       updateUser(updatedUser);
-      
+
       setIsEditing(false);
       setSuccessMessage('Personal information updated successfully!');
-      setTimeout(() => setSuccessMessage(null), 3000);
     } catch (err) {
       setUserDataError(err instanceof Error ? err.message : 'Failed to save personal information');
     } finally {
@@ -168,7 +172,6 @@ export default function DashboardPage() {
     setIsEditing(false);
   };
 
-  
   const features = [
     {
       title: "Living Memories",
@@ -289,10 +292,9 @@ export default function DashboardPage() {
     }
   };
 
-  
   useEffect(() => {
     if (isCarouselPaused) return;
-    
+
     const interval = setInterval(() => {
       setCurrentCarouselIndex((prev) => prev + 1);
     }, 3000);
@@ -300,18 +302,13 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [isCarouselPaused]);
 
-  
   useEffect(() => {
-    
     if (currentCarouselIndex >= dashboardFeatures.length) {
-      
       setIsTransitioning(false);
       const timer = setTimeout(() => {
         setCurrentCarouselIndex(currentCarouselIndex - dashboardFeatures.length);
-        
         setTimeout(() => setIsTransitioning(true), 50);
-      }, 800); 
-      
+      }, 800);
       return () => clearTimeout(timer);
     } else if (currentCarouselIndex < 0) {
       setIsTransitioning(false);
@@ -319,12 +316,10 @@ export default function DashboardPage() {
         setCurrentCarouselIndex(currentCarouselIndex + dashboardFeatures.length);
         setTimeout(() => setIsTransitioning(true), 50);
       }, 800);
-
       return () => clearTimeout(timer);
     }
   }, [currentCarouselIndex, dashboardFeatures.length]);
 
-  
   useEffect(() => {
     const loadAnimation = async () => {
       try {
@@ -339,11 +334,10 @@ export default function DashboardPage() {
     loadAnimation();
   }, []);
 
-  
   useEffect(() => {
-    const fetchEmergencyContacts = async () => {
+    const fetchEmergencyContactsData = async () => {
       if (!user?.id) return;
-      
+
       setIsLoadingContacts(true);
       try {
         const response = await getEmergencyContacts(user.id);
@@ -356,9 +350,23 @@ export default function DashboardPage() {
     };
 
     if (activeTab === 'contacts') {
-      fetchEmergencyContacts();
+      fetchEmergencyContactsData();
     }
   }, [user?.id, activeTab]);
+
+  useEffect(() => {
+    if (sidebarView === 'dashboard' && activeTab === 'chat' && user?.id) {
+      loadSessionHistory(user.id);
+    }
+  }, [sidebarView, activeTab, user?.id, loadSessionHistory]);
+
+  const handleQuickMessage = async (message: string) => {
+    if (!user?.id) return;
+    await sendMessage({
+      user_id: user.id,
+      message: message,
+    });
+  };
 
   const getCurrentDate = () => {
     const now = new Date();
@@ -380,22 +388,18 @@ export default function DashboardPage() {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    
+
     let startingDayOfWeek = firstDay.getDay();
     startingDayOfWeek = startingDayOfWeek === 0 ? 6 : startingDayOfWeek - 1;
-    
+
     const days = [];
-    
-    
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
-    
-    
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(day);
     }
-    
+
     return days;
   };
 
@@ -417,11 +421,11 @@ export default function DashboardPage() {
               <img src="/apple-touch-icon.png" alt="Myosotis Logo" className="h-8 w-8" />
               <div className="text-xl sm:text-2xl font-bold text-[#5A6DD0]">Myosotis</div>
             </div>
-            
+
             <div className="hidden md:flex flex-1 max-w-lg lg:max-w-2xl">
               <div className="relative w-full">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Search everything in our web"
                   className="w-full px-4 py-3 pl-10 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#5A6DD0] focus:border-transparent"
                 />
@@ -437,7 +441,7 @@ export default function DashboardPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </button>
-              
+
               <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors relative">
                 <img src="/bell.png" alt="Notifications" className="h-5 w-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
@@ -446,24 +450,11 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        <div className="md:hidden bg-white px-4 pb-4">
-          <div className="relative">
-            <input 
-              type="text" 
-              placeholder="Search everything in our web"
-              className="w-full px-4 py-3 pl-10 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-[#5A6DD0] focus:border-transparent text-sm"
-            />
-            <svg className="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-        </div>
-
         <div className="w-full px-4 sm:px-6 lg:px-8 py-6 bg-white">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
             <div className="lg:col-span-2">
               <div className="p-4 lg:p-6 h-full flex flex-col">
-                <button 
+                <button
                   onClick={() => navigate('/mmse-test')}
                   className="w-full bg-[#5A6DD0] text-white rounded-[16px] py-4 mb-6 font-semibold hover:bg-[#5A6DD0]/90 transition-colors flex items-center justify-center space-x-2"
                 >
@@ -474,7 +465,7 @@ export default function DashboardPage() {
                 </button>
 
                 <nav className="space-y-2 mb-8">
-                  <button 
+                  <button
                     onClick={() => setSidebarView('dashboard')}
                     className={`w-full flex items-center space-x-3 p-3 rounded-[12px] transition-colors ${
                       sidebarView === 'dashboard'
@@ -485,7 +476,7 @@ export default function DashboardPage() {
                     <img src="/dashboard.png" alt="Dashboard" className="h-5 w-5" />
                     <span className="font-medium">Dashboard</span>
                   </button>
-                  <button 
+                  <button
                     onClick={() => setSidebarView('account')}
                     className={`w-full flex items-center space-x-3 p-3 rounded-[12px] transition-colors ${
                       sidebarView === 'account'
@@ -496,7 +487,7 @@ export default function DashboardPage() {
                     <img src="/personal-information.png" alt="Personal Information" className="h-5 w-5" />
                     <span className="font-medium">My Account</span>
                   </button>
-                  <button 
+                  <button
                     onClick={() => setSidebarView('discover')}
                     className={`w-full flex items-center space-x-3 p-3 rounded-[12px] transition-colors ${
                       sidebarView === 'discover'
@@ -516,7 +507,7 @@ export default function DashboardPage() {
                     </div>
                     <div>
                       <div className="font-medium text-[#333333]">{displayName}</div>
-                      <button 
+                      <button
                         onClick={handleLogout}
                         className="text-sm text-[#888888] hover:text-[#5A6DD0]"
                       >
@@ -528,38 +519,36 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className={`${
-              sidebarView === 'dashboard' ? 'lg:col-span-7' : 'lg:col-span-10'
-            }`}>
+            <div className={`${sidebarView === 'dashboard' ? 'lg:col-span-7' : 'lg:col-span-10'}`}>
               {sidebarView === 'dashboard' && (
                 <>
                   <div className="p-4 lg:p-6 mb-4 lg:mb-6">
                     <nav className="flex space-x-4 sm:space-x-8 overflow-x-auto">
-                      <button 
+                      <button
                         onClick={() => setActiveTab('info')}
                         className={`font-semibold pb-3 border-b-2 transition-color  ${
-                          activeTab === 'info' 
-                            ? 'text-[#5A6DD0] border-[#5A6DD0]' 
+                          activeTab === 'info'
+                            ? 'text-[#5A6DD0] border-[#5A6DD0]'
                             : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
                         }`}
                       >
                         Info
                       </button>
-                      <button 
+                      <button
                         onClick={() => setActiveTab('chat')}
                         className={`font-semibold pb-3 border-b-2 transition-colors ${
-                          activeTab === 'chat' 
-                            ? 'text-[#5A6DD0] border-[#5A6DD0]' 
+                          activeTab === 'chat'
+                            ? 'text-[#5A6DD0] border-[#5A6DD0]'
                             : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
                         }`}
                       >
                         Chat
                       </button>
-                      <button 
+                      <button
                         onClick={() => setActiveTab('contacts')}
                         className={`font-semibold pb-3 border-b-2 transition-colors ${
-                          activeTab === 'contacts' 
-                            ? 'text-[#5A6DD0] border-[#5A6DD0]' 
+                          activeTab === 'contacts'
+                            ? 'text-[#5A6DD0] border-[#5A6DD0]'
                             : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
                         }`}
                       >
@@ -570,24 +559,26 @@ export default function DashboardPage() {
 
                   {activeTab === 'info' && (
                     <>
-                      <div 
+                      <div
                         className="p-4 lg:p-6 mb-4 lg:mb-6"
                         onMouseEnter={() => setIsCarouselPaused(true)}
                         onMouseLeave={() => setIsCarouselPaused(false)}
                       >
                         <div className="flex items-center justify-end mb-4">
                           <div className="flex space-x-2">
-                            <button 
+                            <button
                               onClick={() => handleCarouselScroll('left')}
                               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                              aria-label="Previous"
                             >
                               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                               </svg>
                             </button>
-                            <button 
+                            <button
                               onClick={() => handleCarouselScroll('right')}
                               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                              aria-label="Next"
                             >
                               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -597,7 +588,7 @@ export default function DashboardPage() {
                         </div>
 
                         <div className="relative overflow-hidden">
-                          <div 
+                          <div
                             className={`flex ${isTransitioning ? 'transition-transform duration-[400ms] ease-in-out' : ''}`}
                             style={{
                               transform: `translateX(-${currentCarouselIndex * (100/3)}%)`
@@ -606,13 +597,13 @@ export default function DashboardPage() {
                             {[...dashboardFeatures, ...dashboardFeatures].map((feature, index) => {
                               const originalIndex = index % dashboardFeatures.length;
                               const isActive = originalIndex === (currentCarouselIndex % dashboardFeatures.length);
-                              
+
                               return (
-                                <div 
+                                <div
                                   key={index}
                                   className="flex-shrink-0 w-1/3 px-2"
                                 >
-                                  <div 
+                                  <div
                                     onClick={feature.onClick}
                                     className={`w-full border rounded-[16px] p-6 cursor-pointer hover:shadow-lg transition-all transform hover:scale-105 ${
                                       isActive
@@ -656,21 +647,48 @@ export default function DashboardPage() {
                   )}
 
                   {activeTab === 'chat' && (
-                    <div className="p-4 lg:p-6 mb-4 lg:mb-6">
-                      <div className="text-center py-8 lg:py-12">
-                        <div className="w-12 h-12 lg:w-16 lg:h-16 bg-[#5A6DD0]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <svg className="h-6 w-6 lg:h-8 lg:w-8 text-[#5A6DD0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                          </svg>
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+                      <div className="h-[730px] flex flex-col">
+                        <div className="flex-1 flex flex-col min-h-0">
+                          {currentMessages.length === 0 ? (
+                            <div className="flex-1 flex flex-col items-center justify-center p-6">
+                              <div className="w-12 h-12 overflow-hidden mb-4">
+                                <img src="/chatbot.png" alt="AI Assistant" className="w-full h-full object-cover" />
+                              </div>
+                              <h4 className="text-lg font-medium text-gray-900 mb-2">Hi! How can I help?</h4>
+                              <p className="text-gray-600 text-center mb-6 text-sm">Ask me anything about your health, medications, or wellness</p>
+
+                              <div className="grid grid-cols-1 gap-3 w-full max-w-sm">
+                                <button
+                                  onClick={() => handleQuickMessage("Can you tell me about my medications and any important reminders?")}
+                                  className="text-left p-4 bg-[#5A6DD0]/5 hover:bg-[#5A6DD0]/10 border border-[#5A6DD0]/20 rounded-xl transition-colors group"
+                                >
+                                  <div className="text-sm text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Ask about medications</div>
+                                </button>
+                                <button
+                                  onClick={() => handleQuickMessage("Can you suggest some memory exercises or activities for brain health?")}
+                                  className="text-left p-4 bg-[#5A6DD0]/5 hover:bg-[#5A6DD0]/10 border border-[#5A6DD0]/20 rounded-xl transition-colors group"
+                                >
+                                  <div className="text-sm text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Memory exercises</div>
+                                </button>
+                                <button
+                                  onClick={() => handleQuickMessage("What are some daily health tips for someone with Alzheimer's?")}
+                                  className="text-left p-4 bg-[#5A6DD0]/5 hover:bg-[#5A6DD0]/10 border border-[#5A6DD0]/20 rounded-xl transition-colors group"
+                                >
+                                  <div className="text-sm text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Health tips</div>
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex-1 overflow-y-auto p-4">
+                              <ChatMessages />
+                            </div>
+                          )}
+
+                          <div className="border-t border-gray-100 p-4">
+                            <ChatInput />
+                          </div>
                         </div>
-                        <h3 className="text-lg lg:text-xl font-semibold text-[#333333] mb-2">Care Companion Chat</h3>
-                        <p className="text-[#888888] mb-4 lg:mb-6 text-sm lg:text-base">Start a conversation with your AI companion for support and guidance</p>
-                        <button 
-                          onClick={() => navigate('/chatbot')}
-                          className="bg-[#5A6DD0] text-white px-4 lg:px-6 py-2 lg:py-3 rounded-[12px] font-semibold hover:bg-[#5A6DD0]/90 transition-colors text-sm lg:text-base"
-                        >
-                          Start Chatting
-                        </button>
                       </div>
                     </div>
                   )}
@@ -679,7 +697,7 @@ export default function DashboardPage() {
                     <div className="p-4 lg:p-6 mb-4 lg:mb-6">
                       <div className="flex items-center justify-between mb-4 lg:mb-6">
                         <h3 className="text-lg lg:text-xl font-semibold text-[#333333]">Emergency Contacts</h3>
-                        <button 
+                        <button
                           onClick={() => navigate('/emergency-contacts')}
                           className="text-[#5A6DD0] hover:text-[#5A6DD0]/80 font-medium text-sm lg:text-base"
                         >
@@ -708,14 +726,14 @@ export default function DashboardPage() {
                                 </div>
                               </div>
                               <div className="flex space-x-2">
-                                <button 
+                                <button
                                   onClick={() => window.open(`tel:${contact.phone}`, '_self')}
                                   className="bg-[#5A6DD0] text-white px-4 py-2 rounded-[8px] font-medium hover:bg-[#5A6DD0]/90 transition-colors"
                                 >
                                   Call
                                 </button>
                                 {contact.email && (
-                                  <button 
+                                  <button
                                     onClick={() => window.open(`mailto:${contact.email}`, '_self')}
                                     className="bg-white border border-gray-300 text-[#333333] px-4 py-2 rounded-[8px] hover:bg-gray-50 transition-colors"
                                   >
@@ -735,7 +753,7 @@ export default function DashboardPage() {
                           </div>
                           <h4 className="text-lg font-semibold text-[#333333] mb-2">No Emergency Contacts</h4>
                           <p className="text-[#888888] mb-4">Add your emergency contacts to keep important people just a tap away</p>
-                          <button 
+                          <button
                             onClick={() => navigate('/emergency-contacts')}
                             className="bg-[#5A6DD0] text-white px-6 py-3 rounded-[12px] font-semibold hover:bg-[#5A6DD0]/90 transition-colors"
                           >
@@ -764,7 +782,7 @@ export default function DashboardPage() {
                               setUserDataError(null);
                               setSuccessMessage(null);
                             }}
-                            className="min-h-12 px-6 py-2 bg-cyan-600 text-white text-lg font-medium rounded-xl hover:bg-cyan-700 transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
+                            className="min-h-12 px-6 py-2 bg-[#5A6DD0] text-white text-lg font-medium rounded-xl hover:bg-[#0927bc] transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
                           >
                             Edit Information
                           </button>
@@ -780,7 +798,7 @@ export default function DashboardPage() {
                             <button
                               onClick={handleSave}
                               disabled={isSaving}
-                              className="min-h-12 px-6 py-2 bg-cyan-600 text-white text-lg font-medium rounded-xl hover:bg-cyan-700 transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                              className="min-h-12 px-6 py-2 bg-[#5A6DD0] text-white text-lg font-medium rounded-xl hover:bg-[#182c8f] transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                             >
                               {isSaving ? (
                                 <>
@@ -1001,10 +1019,10 @@ export default function DashboardPage() {
                     <h3 className="text-2xl font-semibold text-[#333333] mb-2">Your Health Tools</h3>
                     <p className="text-[#888888]">Access all features and tools to support your mental health journey</p>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {features.map((feature, index) => (
-                      <div 
+                      <div
                         key={index}
                         onClick={feature.onClick}
                         className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-all cursor-pointer group"
@@ -1036,12 +1054,12 @@ export default function DashboardPage() {
                       <h3 className="text-lg font-semibold">{currentDate.month} {currentDate.year}</h3>
                     </div>
                     <div className="flex space-x-1">
-                      <button className="p-1 rounded-md hover:bg-gray-100">
+                      <button className="p-1 rounded-md hover:bg-gray-100" aria-label="Previous Month">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                       </button>
-                      <button className="p-1 rounded-md hover:bg-gray-100">
+                      <button className="p-1 rounded-md hover:bg-gray-100" aria-label="Next Month">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
@@ -1049,52 +1067,52 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                <div className="grid grid-cols-7 gap-1 mb-2">
-                  {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map(day => (
-                    <div key={day} className="text-xs text-[#888888] text-center py-2 font-medium">
-                      {day}
-                    </div>
-                  ))}
+                  <div className="grid grid-cols-7 gap-1 mb-2">
+                    {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map(day => (
+                      <div key={day} className="text-xs text-[#888888] text-center py-2 font-medium">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="grid grid-cols-7 gap-1">
+                    {calendarDays.map((day, index) => (
+                      <div key={index} className="aspect-square flex items-center justify-center">
+                        {day && (
+                          <button
+                            className={`w-8 h-8 rounded-full text-sm hover:bg-gray-100 transition-colors ${
+                              day === currentDate.day 
+                                ? 'bg-[#5A6DD0] text-white hover:bg-[#5A6DD0]/90' 
+                                : 'text-[#333333]'
+                            }`}
+                          >
+                            {day}
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-7 gap-1">
-                  {calendarDays.map((day, index) => (
-                    <div key={index} className="aspect-square flex items-center justify-center">
-                      {day && (
-                        <button 
-                          className={`w-8 h-8 rounded-full text-sm hover:bg-gray-100 transition-colors ${
-                            day === currentDate.day 
-                              ? 'bg-[#5A6DD0] text-white hover:bg-[#5A6DD0]/90' 
-                              : 'text-[#333333]'
-                          }`}
-                        >
-                          {day}
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                <div className="p-4 lg:p-6 text-center">
+                  <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-4 bg-gradient-to-br from-[#5A6DD0]/10 to-[#5A6DD0]/20 rounded-full flex items-center justify-center">
+                    {animationData ? (
+                      <Lottie 
+                        animationData={animationData}
+                        loop={true}
+                        autoplay={true}
+                        className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56"
+                      />
+                    ) : (
+                      <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-[#5A6DD0]/20 rounded-full flex items-center justify-center">
+                        <div className="w-6 h-6 bg-[#5A6DD0] rounded-full animate-pulse"></div>
+                      </div>
+                    )}
+                  </div>
+                  <h4 className="font-semibold text-[#333333] mb-2">Your Health Assistant</h4>
+                  <p className="text-[#888888] text-sm">Ready to help you with your health journey</p>
                 </div>
               </div>
-
-              <div className="p-4 lg:p-6 text-center">
-                <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 mx-auto mb-4 bg-gradient-to-br from-[#5A6DD0]/10 to-[#5A6DD0]/20 rounded-full flex items-center justify-center">
-                  {animationData ? (
-                    <Lottie 
-                      animationData={animationData}
-                      loop={true}
-                      autoplay={true}
-                      className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56"
-                    />
-                  ) : (
-                    <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-[#5A6DD0]/20 rounded-full flex items-center justify-center">
-                      <div className="w-6 h-6 bg-[#5A6DD0] rounded-full animate-pulse"></div>
-                    </div>
-                  )}
-                </div>
-                <h4 className="font-semibold text-[#333333] mb-2">Your Health Assistant</h4>
-                <p className="text-[#888888] text-sm">Ready to help you with your health journey</p>
-              </div>
-            </div>
             )}
           </div>
         </div>

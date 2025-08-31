@@ -20,7 +20,7 @@ export const ConversationStarters: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full p-4 sm:p-8 bg-gray-50">
       <div className="max-w-md w-full text-center mb-6 sm:mb-8">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden mx-auto mb-4 sm:mb-6">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 overflow-hidden mx-auto mb-4 sm:mb-6">
           <img src="/chatbot.png" alt="Chatbot Avatar" className="w-full h-full object-cover" />
         </div>
         <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
@@ -38,13 +38,13 @@ export const ConversationStarters: React.FC = () => {
             onClick={() => handleStarterClick(starter.text)}
             disabled={isSending}
             className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-xl shadow-sm 
-                       hover:shadow-md hover:bg-[#92d7e7]/5 transition-all duration-200 
-                       border border-gray-200 hover:border-[#92d7e7]/30 text-left
-                       focus:outline-none focus:ring-2 focus:ring-[#92d7e7]/50
+                       hover:shadow-md hover:bg-[#5A6DD0]/5 transition-all duration-200 
+                       border border-gray-200 hover:border-[#5A6DD0]/30 text-left
+                       focus:outline-none focus:ring-2 focus:ring-[#5A6DD0]/50
                        disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#92d7e7]/10 rounded-lg 
-                          flex items-center justify-center text-[#92d7e7]">
+            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-[#5A6DD0]/10 rounded-lg 
+                          flex items-center justify-center text-[#5A6DD0]">
               {starter.icon}
             </div>
             <span className="text-sm sm:text-lg text-gray-800 font-medium">
