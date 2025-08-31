@@ -6,12 +6,10 @@ import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import WelcomePage from '../pages/WelcomePage';
 import LandingPage from '../pages/LandingPage';
 import CaregiverGuidePage from '../pages/CaregiverGuidePage';
-import { PersonalInfoPage } from '../pages/PersonalInfoPage';
 import { EmergencyContactsPage } from '../pages/EmergencyContactsPage';
 import MMSETestPage from '../pages/MMSETestPage';
 import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
-import FeaturesPage from '../pages/FeaturesPage';
 import AIClonePage from '../pages/AIClonePage';
 import AICloneCreatePage from '../pages/AICloneCreatePage';
 import ChatbotPage from '../pages/ChatbotPage';
@@ -51,10 +49,6 @@ export const router = createBrowserRouter([
     element: <DashboardPage />,
   },
   {
-    path: '/personal-info',
-    element: <PersonalInfoPage />,
-  },
-  {
     path: '/emergency-contacts',
     element: <EmergencyContactsPage />,
   },
@@ -71,10 +65,6 @@ export const router = createBrowserRouter([
     element: <MemoryFilmPage />,
   },
   {
-    path: '/features',
-    element: <FeaturesPage />,
-  },
-  {
     path: '/ai-clone',
     element: <AIClonePage />,
   },
@@ -85,10 +75,6 @@ export const router = createBrowserRouter([
   {
     path: '/ai-clone/history',
     element: <AICloneHistoryPage />,
-  },
-  {
-    path: '/chatbot',
-    element: <ChatbotPage />,
   },
   {
     path: '/chatbot',
