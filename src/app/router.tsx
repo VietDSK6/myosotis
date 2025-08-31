@@ -3,10 +3,8 @@ import { LoginPage, RegisterPage } from '../features/auth';
 import { AICloneHistoryPage } from '../features/ai-clone';
 import DashboardPage from '../pages/DashboardPage';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
-import WelcomePage from '../pages/WelcomePage';
 import LandingPage from '../pages/LandingPage';
 import CaregiverGuidePage from '../pages/CaregiverGuidePage';
-import { EmergencyContactsPage } from '../pages/EmergencyContactsPage';
 import MMSETestPage from '../pages/MMSETestPage';
 import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
@@ -23,10 +21,6 @@ export const router = createBrowserRouter([
   {
     path: '/landing',
     element: <LandingPage />,
-  },
-  {
-    path: '/welcome',
-    element: <WelcomePage />,
   },
   {
     path: '/login',
@@ -47,10 +41,6 @@ export const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: <DashboardPage />,
-  },
-  {
-    path: '/emergency-contacts',
-    element: <EmergencyContactsPage />,
   },
   {
     path: '/mmse-test',
