@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { ProtectedRoute } from '../features/auth';
 import { getMMSEHistory, type MMSEHistoryItem } from '../api/mmse';
-import { PageHeader, HeaderButton, LoadingSpinner, EmptyState } from '../components';
+import { LoadingSpinner } from '../components';
 
 export default function MMSEHistoryPage() {
   const { user } = useAuthStore();
@@ -11,13 +11,7 @@ export default function MMSEHistoryPage() {
   const [history, setHistory] = useState<MMSEHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (user?.id) {
-      fetchHistory();
-    }
-  }, [user?.id]);
-
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     if (!user?.id) return;
 
     try {
@@ -29,7 +23,13 @@ export default function MMSEHistoryPage() {
     } finally {
       setIsLoading(false);  
     }
-  };
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchHistory();
+    }
+  }, [user?.id, fetchHistory]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -83,118 +83,124 @@ export default function MMSEHistoryPage() {
   }
 
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-cyan-50">
-        <PageHeader 
-          title="MMSE Test History"
-          showBackButton={true}
-          backTo="/dashboard"
-          rightActions={
-            <HeaderButton 
-              onClick={() => navigate('/mmse-test')}
-              variant="mmse-test"
-            >
-              Take New Test
-            </HeaderButton>
-          }
-        />
+    <div className="w-full h-full p-6">
+      <div className="max-w-5xl mx-auto">
+        {/* Header with back button */}
+        <div className="flex items-center mb-8">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            aria-label="Back to dashboard"
+          >
+            <svg className="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">MMSE Test History</h1>
+            <p className="text-gray-600">Track your cognitive assessment progress</p>
+          </div>
+          <button
+            onClick={() => navigate('/mmse-test')}
+            className="ml-auto flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Take New Test
+          </button>
+        </div>
 
-        <main className="max-w-5xl mx-auto px-6 py-8 lg:px-8">
-          {history.length === 0 ? (
-            <EmptyState
-              title="No Test History"
-              description="You haven't taken any MMSE tests yet."
-              actionText="Take Your First Test"
-              onAction={() => navigate('/mmse-test')}
-              icon={
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              }
-            />
-          ) : (
-            <div className="space-y-6">
+        {history.length === 0 ? (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+            <div className="max-w-md mx-auto">
+              <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">No Test History</h2>
+              <p className="text-gray-600 mb-6">Take your first MMSE test to start tracking your cognitive health</p>
+              <button
+                onClick={() => navigate('/mmse-test')}
+                className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+              >
+                Take Your First Test
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* Overview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">Test Overview</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-cyan-600">{history.length}</div>
-                    <div className="text-sm text-gray-600">Tests Taken</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">
-                      {history.length > 0 ? Math.round(history.reduce((sum, test) => sum + test.total_score, 0) / history.length) : 0}
-                    </div>
-                    <div className="text-sm text-gray-600">Average Score</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600">
-                      {history.length > 0 ? formatDate(history[0].test_date).split(',')[0] : 'N/A'}
-                    </div>
-                    <div className="text-sm text-gray-600">Latest Test</div>
-                  </div>
-                </div>
+                <div className="text-3xl font-bold text-cyan-600 mb-2">{history.length}</div>
+                <div className="text-gray-600">Total Tests</div>
               </div>
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <div className="text-3xl font-bold text-green-600 mb-2">
+                  {Math.round(history.reduce((sum, test) => sum + test.total_score, 0) / history.length)}
+                </div>
+                <div className="text-gray-600">Average Score</div>
+              </div>
+              <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <div className="text-3xl font-bold text-purple-600 mb-2">
+                  {formatDate(history[0].test_date).split(',')[0]}
+                </div>
+                <div className="text-gray-600">Latest Test</div>
+              </div>
+            </div>
 
-              <div className="space-y-4">
+            {/* Test List */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+              <div className="p-6 border-b border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-900">Test History</h2>
+              </div>
+              <div className="divide-y divide-gray-200">
                 {history.map((test) => {
                   const badge = getInterpretationBadge(test.interpretation.level);
                   return (
-                    <div key={test.assessment_id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                    <div key={test.assessment_id} className="p-6 hover:bg-gray-50 transition-colors">
                       <div className="flex items-center justify-between mb-4">
                         <div>
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            MMSE Test #{test.assessment_id}
-                          </h3>
-                          <p className="text-sm text-gray-600">
+                          <div className="text-lg font-semibold text-gray-900 mb-1">
+                            Test #{test.assessment_id}
+                          </div>
+                          <div className="text-sm text-gray-600">
                             {formatDate(test.test_date)}
-                          </p>
+                          </div>
                         </div>
                         <div className="text-right">
-                          <div className={`text-2xl font-bold ${getScoreColor(test.total_score).split(' ')[0]}`}>
+                          <div className={`text-3xl font-bold ${getScoreColor(test.total_score).split(' ')[0]}`}>
                             {test.total_score}/{test.max_score}
                           </div>
                           <div className="text-sm text-gray-600">
-                            {test.percentage.toFixed(1)}%
+                            {test.percentage.toFixed(1)}% Score
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${badge.color}`}>
-                            {badge.text}
-                          </span>
-                          <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                            Completed
-                          </span>
-                        </div>
-                        
-                        {/* <div className="text-sm text-gray-600">
-                          {test.interpretation.level}
-                        </div> */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${badge.color}`}>
+                          {badge.text}
+                        </span>
+                        <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                          Completed
+                        </span>
                       </div>
 
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <div className="flex justify-between text-sm text-gray-600 mb-1">
-                          <span>Score Progress</span>
-                          <span>{test.total_score} / {test.max_score} points</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(test.total_score)}`}
-                            style={{ width: `${test.percentage}%` }}
-                          ></div>
-                        </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(test.total_score)}`}
+                          style={{ width: `${test.percentage}%` }}
+                        ></div>
                       </div>
                     </div>
                   );
                 })}
               </div>
             </div>
-          )}
-        </main>
+          </div>
+        )}
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

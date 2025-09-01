@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { ProtectedRoute } from '../features/auth';
 import { getMMSEInfo, submitMMSETest, type MMSETestData, type MMSEAnswer, type MMSETestResult } from '../api/mmse';
-import { PageHeader } from '../components/layout';
+
 
 
 const getMediaUrl = (url: string): string => {
@@ -297,7 +297,7 @@ export default function MMSETestPage() {
     const question = getCurrentQuestion();
     if (!question) return null;
 
-    const commonInputClass = "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-lg";
+    const commonInputClass = "w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-cyan-600 focus:border-transparent text-lg bg-white";
 
     switch (question.type) {
       case 'select':
@@ -404,10 +404,10 @@ export default function MMSETestPage() {
       minute: '2-digit'
     });
     
-    const getScoreColor = (percentage: number) => {
-      if (percentage >= 89) return 'text-green-600 bg-green-100';
-      if (percentage >= 70) return 'text-yellow-600 bg-yellow-100';
-      return 'text-red-600 bg-red-100';
+    const getScoreColor = (percentage: number): [string, string, string] => {
+      if (percentage >= 89) return ['text-green-600', 'bg-green-50', 'border-green-200'];
+      if (percentage >= 70) return ['text-yellow-600', 'bg-yellow-50', 'border-yellow-200'];
+      return ['text-red-600', 'bg-red-50', 'border-red-200'];
     };
 
     const scoreColorClass = getScoreColor(scorePercentage);
@@ -415,12 +415,6 @@ export default function MMSETestPage() {
     return (
       <ProtectedRoute>
         <div className="min-h-screen bg-cyan-50">
-          <PageHeader 
-            title="MMSE Test Results"
-            showBackButton={true}
-            backTo="/dashboard"
-          />
-
           <main className="max-w-4xl mx-auto px-6 py-8 lg:px-8">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-8 py-6 text-white">

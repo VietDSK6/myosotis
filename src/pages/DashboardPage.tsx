@@ -12,6 +12,9 @@ import { DashboardDiscoverPanel } from '../components/DashboardDiscoverPanel';
 import Lottie from 'lottie-react';
 import { useChatbotStore } from '../features/chatbot/store';
 import { DashboardChatPanel } from '../components/DashboardChatPanel';
+import { AICloneChoiceScreen } from '../features/ai-clone';
+import MMSETestPage from './MMSETestPage';
+import MMSEHistoryPage from './MMSEHistoryPage';
 
 export default function DashboardPage() {
   const { user, logout, updateUser } = useAuthStore();
@@ -90,7 +93,7 @@ export default function DashboardPage() {
     if (tabParam && (tabParam === 'dashboard' || tabParam === 'account' || tabParam === 'discover')) {
       setSidebarView(tabParam);
     }
-  }, [location.search]);
+  }, [location.search, searchParams]);
 
   useEffect(() => {
     if (sidebarView === 'account') {
@@ -182,6 +185,34 @@ export default function DashboardPage() {
     setIsEditing(false);
   };
 
+  const AICloneIntegrated = () => {
+    return (
+      <div className="p-4">
+        <div className="grid gap-4">
+          <AICloneChoiceScreen />
+        </div>
+      </div>
+    );
+  };
+
+  const MMSETestIntegrated = () => {
+    return (
+      <div className="p-4">
+        <MMSETestPage />
+      </div>
+    );
+  };
+
+  const TestHistoryIntegrated = () => {
+    return (
+      <div className="p-4">
+        <div className="max-h-[600px] overflow-y-auto">
+          <MMSEHistoryPage />
+        </div>
+      </div>
+    );
+  };
+
   const features = [
     {
       title: "Living Memories",
@@ -191,9 +222,10 @@ export default function DashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
         </svg>
       ),
-      onClick: () => navigate('/ai-clone'),
+      onClick: () => {},
       bgColor: "bg-purple-100",
-      textColor: "text-purple-700"
+      textColor: "text-purple-700",
+      integratedFeature: <AICloneIntegrated />
     },
     {
       title: "Memory Test (MMSE)",
@@ -203,9 +235,10 @@ export default function DashboardPage() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
         </svg>
       ),
-      onClick: () => navigate('/mmse-test'),
+      onClick: () => {},
       bgColor: "bg-blue-100",
-      textColor: "text-blue-700"
+      textColor: "text-blue-700",
+      integratedFeature: <MMSETestIntegrated />
     },
     {
       title: "Memory Films",
@@ -241,9 +274,10 @@ export default function DashboardPage() {
           <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5"/>
         </svg>
       ),
-      onClick: () => navigate('/mmse-history'),
+      onClick: () => {},
       bgColor: "bg-green-100",
-      textColor: "text-green-700"
+      textColor: "text-green-700",
+      integratedFeature: <TestHistoryIntegrated />
     },
     {
       title: "Care Companion",
