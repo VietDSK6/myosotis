@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProtectedRoute, useAuthStore } from '../auth';
-import { PageHeader, LoadingSpinner, EmptyState } from '../../components';
+import { useAuthStore } from '../auth';
+import { LoadingSpinner } from '../../components';
 import { getUserVideos, getVideoUrl } from './api';
 import type { AICloneVideo } from './types';
 
@@ -9,6 +9,7 @@ export default function AICloneHistoryPage() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const [videos, setVideos] = useState<AICloneVideo[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,9 +21,9 @@ export default function AICloneHistoryPage() {
         setLoading(true);
         const response = await getUserVideos(user.id);
         if (response.success) {
-          
           const successfulVideos = response.videos.filter(video => video.status !== 'failed');
           setVideos(successfulVideos);
+          setCurrentIndex(0); // Reset to first video
         } else {
           setError('Failed to load video history');
         }
@@ -36,6 +37,14 @@ export default function AICloneHistoryPage() {
 
     fetchVideos();
   }, [user?.id]);
+
+  const handlePrevious = () => {
+    setCurrentIndex(prev => (prev > 0 ? prev - 1 : videos.length - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex(prev => (prev < videos.length - 1 ? prev + 1 : 0));
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -73,142 +82,143 @@ export default function AICloneHistoryPage() {
     }
   };
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
-        <PageHeader 
-          title="Living Memories History"
-          showBackButton={true}
-          backTo="/ai-clone"
-          rightActions={
+    <div className="min-h-screen bg-gray-50">
+      <div className="w-full h-full p-6">
+        <div className="w-full max-w-4xl mx-auto">
+          {/* Header with back button */}
+          <div className="flex items-center mb-8">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+              aria-label="Back to dashboard"
+            >
+              <svg className="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Living Memories</h1>
+              <p className="text-gray-600">Your AI-generated video memories</p>
+            </div>
             <button
               onClick={() => navigate('/ai-clone')}
-              className="flex items-center gap-2 px-4 py-2 bg-[#92d7e7] hover:bg-[#7bc7d9] text-white rounded-lg transition-colors"
+              className="ml-auto flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
               Create New
             </button>
-          }
-        />
+          </div>
 
-        <main className="max-w-6xl mx-auto px-4 py-8">
+          {/* Main Content */}
           {loading ? (
             <div className="flex justify-center items-center py-12">
-              <LoadingSpinner />
+              <LoadingSpinner text="Loading videos..." />
             </div>
           ) : error ? (
-            <div className="text-center py-12">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
               <div className="text-red-600 mb-4">{error}</div>
-              <button 
+              <button
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="text-cyan-600 hover:text-cyan-700"
               >
                 Try Again
               </button>
             </div>
           ) : videos.length === 0 ? (
-            <EmptyState
-              title="No Living Memories Yet"
-              description="You haven't created any AI clone videos yet. Start by creating your first living memory!"
-              actionText="Create Living Memory"
-              onAction={() => navigate('/ai-clone')}
-              icon={
-                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+              <div className="max-w-md mx-auto">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                 </svg>
-              }
-            />
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">No Videos Yet</h2>
+                <p className="text-gray-600 mb-6">Create your first AI clone video to see it here</p>
+                <button
+                  onClick={() => navigate('/ai-clone')}
+                  className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                >
+                  Create First Video
+                </button>
+              </div>
+            </div>
           ) : (
-            <div className="space-y-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+              {/* Video Navigation */}
+              <div className="relative">
+                {/* Current Video */}
+                <div className="aspect-w-16 aspect-h-9 bg-gray-100">
+                  <video
+                    src={videos[currentIndex]?.video_url ? getVideoUrl(videos[currentIndex].video_url) : ''}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {videos.map((video) => (
-                  <div key={video.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-6">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(video.status)}`}>
-                          {getStatusText(video.status)}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                          {formatDate(video.created_at)}
-                        </span>
-                      </div>
+                {/* Navigation Arrows */}
+                <div className="absolute inset-y-0 left-0 flex items-center">
+                  <button
+                    onClick={handlePrevious}
+                    className="p-2 m-4 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"
+                    aria-label="Previous video"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="absolute inset-y-0 right-0 flex items-center">
+                  <button
+                    onClick={handleNext}
+                    className="p-2 m-4 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"
+                    aria-label="Next video"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
 
-                      {video.status === 'completed' && (video.video_filename || video.video_url) && (
-                        <div className="mb-6">
-                          <video 
-                            className="w-full h-64 object-cover rounded-lg bg-gray-100"
-                            controls
-                            src={video.video_filename ? getVideoUrl(video.video_filename) : getVideoUrl(video.video_url!)}
-                          >
-                            Your browser does not support the video tag.
-                          </video>
-                        </div>
-                      )}
-
-                      {video.status === 'processing' && (
-                        <div className="mb-6 h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <div className="text-center">
-                            <LoadingSpinner size="sm" />
-                            <p className="text-sm text-gray-600 mt-2">Processing video...</p>
-                          </div>
-                        </div>
-                      )}
-
-                      {video.status === 'failed' && (
-                        <div className="mb-6 h-64 bg-red-50 rounded-lg flex items-center justify-center">
-                          <div className="text-center">
-                            <svg className="w-8 h-8 text-red-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <p className="text-sm text-red-600">Video generation failed</p>
-                            {video.error_message && (
-                              <p className="text-xs text-red-500 mt-1">{video.error_message}</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="space-y-4">
-                        {video.topic && (
-                          <div>
-                            <h3 className="font-medium text-gray-900 mb-2">Topic</h3>
-                            <p className="text-sm text-gray-600">{video.topic}</p>
-                          </div>
-                        )}
-
-                        {video.keywords && (
-                          <div>
-                            <h3 className="font-medium text-gray-900 mb-2">Keywords</h3>
-                            <p className="text-sm text-gray-600">{video.keywords}</p>
-                          </div>
-                        )}
-                      </div>
-
-                      {video.status === 'completed' && (video.video_filename || video.video_url) && (
-                        <div className="mt-6 pt-4 border-t border-gray-200">
-                          <a
-                            href={video.video_filename ? getVideoUrl(video.video_filename) : getVideoUrl(video.video_url!)}
-                            download={video.video_filename || `living-memory-${video.id}.mp4`}
-                            className="inline-flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            Download Video
-                          </a>
-                        </div>
-                      )}
-                    </div>
+              {/* Video Info */}
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="text-sm text-gray-600">
+                    {formatDate(videos[currentIndex].created_at)}
                   </div>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(videos[currentIndex].status)}`}>
+                    {getStatusText(videos[currentIndex].status)}
+                  </span>
+                </div>
+                {videos[currentIndex].description && (
+                  <p className="text-gray-700">
+                    {videos[currentIndex].description}
+                  </p>
+                )}
+              </div>
+
+              {/* Video Counter */}
+              <div className="px-6 pb-6 flex items-center justify-center space-x-2">
+                {videos.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      index === currentIndex ? 'bg-cyan-600 w-4' : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    aria-label={`Go to video ${index + 1}`}
+                  />
                 ))}
               </div>
             </div>
           )}
-        </main>
+        </div>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

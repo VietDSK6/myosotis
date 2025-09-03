@@ -21,31 +21,33 @@ export const ChatMessages: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-6 sm:space-y-8">
+    <div className="flex-1 overflow-y-auto p-6 space-y-8">
       {currentMessages.map((message) => (
-        <div key={message.id} className="space-y-4 sm:space-y-5">
+        <div key={message.id} className="space-y-6">
+          {/* User Message */}
           <div className="flex justify-end">
-            <div className="max-w-[85%] sm:max-w-[75%]">
-              <div className="bg-[#92d7e7] rounded-2xl px-3 sm:px-6 py-3 sm:py-4">
-                <p className="text-sm sm:text-lg text-white leading-[1.5]">
+            <div className="max-w-[75%]">
+              <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-3xl rounded-br-lg px-6 py-4 shadow-lg">
+                <p className="text-lg leading-relaxed">
                   {message.user_message}
                 </p>
               </div>
             </div>
           </div>
 
+          {/* Bot Response */}
           {message.bot_response && (
             <div className="flex justify-start">
-              <div className="max-w-[85%] sm:max-w-[75%]">
-                <div className="flex items-start gap-2 sm:gap-3">
-                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 overflow-hidden">
-                    <img src="/chatbot.png" alt="Chatbot Avatar" className="w-full h-full object-cover" />
+              <div className="max-w-[75%]">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <img src="/chatbot.png" alt="Care Companion" className="w-6 h-6" />
                   </div>
                   
                   <div className="flex-1">
                     {message.bot_response.split('\n\n').filter(paragraph => paragraph.trim()).map((paragraph, idx) => (
-                      <div key={idx} className={`bg-gray-100 text-gray-900 rounded-2xl px-3 sm:px-6 py-3 sm:py-4 ${idx > 0 ? 'mt-2' : ''}`}>
-                        <div className="text-sm sm:text-lg leading-[1.5] prose max-w-none">
+                      <div key={idx} className={`bg-white/90 backdrop-blur-sm text-gray-900 rounded-3xl rounded-bl-lg px-6 py-4 shadow-lg border border-gray-200/50 ${idx > 0 ? 'mt-3' : ''}`}>
+                        <div className="text-lg leading-relaxed prose max-w-none prose-headings:text-gray-900 prose-p:text-gray-800 prose-strong:text-gray-900">
                           <ReactMarkdown components={chatMarkdownComponents}>
                             {paragraph}
                           </ReactMarkdown>
@@ -60,19 +62,20 @@ export const ChatMessages: React.FC = () => {
         </div>
       ))}
 
+      {/* Typing Indicator */}
       {isSending && (
         <div className="flex justify-start">
-          <div className="max-w-[85%] sm:max-w-[75%]">
-            <div className="flex items-start gap-2 sm:gap-3">
-              <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden">
-                <img src="/chatbot.png" alt="Chatbot Avatar" className="w-full h-full object-cover" />
+          <div className="max-w-[75%]">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <img src="/chatbot.png" alt="Care Companion" className="w-6 h-6" />
               </div>
               
-              <div className="bg-gray-100 text-gray-900 rounded-2xl px-3 sm:px-6 py-3 sm:py-4">
-                <div className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
-                  <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+              <div className="bg-white/90 backdrop-blur-sm text-gray-900 rounded-3xl rounded-bl-lg px-6 py-4 shadow-lg border border-gray-200/50">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
                 </div>
               </div>
             </div>

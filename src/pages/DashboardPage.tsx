@@ -13,6 +13,7 @@ import Lottie from 'lottie-react';
 import { useChatbotStore } from '../features/chatbot/store';
 import { DashboardChatPanel } from '../components/DashboardChatPanel';
 import { AICloneChoiceScreen } from '../features/ai-clone';
+import { IntegratedAICloneHistory } from '../features/ai-clone/components';
 import MMSETestPage from './MMSETestPage';
 import MMSEHistoryPage from './MMSEHistoryPage';
 
@@ -253,16 +254,17 @@ export default function DashboardPage() {
       textColor: "text-indigo-700"
     },
     {
-      title: "Memory History",
+      title: "Living Memories History",
       description: "View your AI clone video history",
       icon: (
         <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      onClick: () => navigate('/ai-clone/history'),
+      onClick: () => {},
       bgColor: "bg-purple-100",
-      textColor: "text-purple-700"
+      textColor: "text-purple-700",
+      integratedFeature: <IntegratedAICloneHistory />
     },
     {
       title: "Test History",
@@ -480,7 +482,7 @@ export default function DashboardPage() {
                 </svg>
               </button>
 
-              <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors relative">
+              <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors relative mr-4">
                 <img src="/bell.png" alt="Notifications" className="h-5 w-5" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>

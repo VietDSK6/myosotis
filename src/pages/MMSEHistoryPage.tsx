@@ -85,31 +85,6 @@ export default function MMSEHistoryPage() {
   return (
     <div className="w-full h-full p-6">
       <div className="max-w-5xl mx-auto">
-        {/* Header with back button */}
-        <div className="flex items-center mb-8">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-            aria-label="Back to dashboard"
-          >
-            <svg className="h-6 w-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">MMSE Test History</h1>
-            <p className="text-gray-600">Track your cognitive assessment progress</p>
-          </div>
-          <button
-            onClick={() => navigate('/mmse-test')}
-            className="ml-auto flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Take New Test
-          </button>
-        </div>
 
         {history.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
@@ -148,8 +123,7 @@ export default function MMSEHistoryPage() {
                 <div className="text-gray-600">Latest Test</div>
               </div>
             </div>
-
-            {/* Test List */}
+            
             <div className="bg-white rounded-xl shadow-sm border border-gray-200">
               <div className="p-6 border-b border-gray-200">
                 <h2 className="text-xl font-semibold text-gray-900">Test History</h2>
