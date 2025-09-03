@@ -115,6 +115,33 @@ export interface MMSEHistoryItem {
   };
 }
 
+export interface MMSEQuestionDetail {
+  question_id: string;
+  question_text: string;
+  question_type: string;
+  section_name: string;
+  user_answer: string | string[] | number | null;
+  correct_answer: string | string[] | number;
+  is_correct: boolean;
+  points_earned: number;
+  max_points: number;
+  explanation: string;
+}
+
+export interface MMSEDetailedHistoryItem {
+  assessment_id: number;
+  test_date: string;
+  total_score: number;
+  max_score: number;
+  percentage: number;
+  interpretation: {
+    level: string;
+    score_range: string;
+  };
+  duration_seconds: number | null;
+  question_details: MMSEQuestionDetail[];
+}
+
 export interface ApiResponse<T> {
   http_code: number;
   success: boolean;
@@ -158,6 +185,17 @@ export const getMMSEHistory = async (userId: number): Promise<ApiResponse<MMSEHi
     return response.data;
   } catch (error) {
     console.error('Error fetching MMSE history:', error);
+    throw error;
+  }
+};
+
+export const getMMSEDetailedHistory = async (userId: number): Promise<ApiResponse<MMSEDetailedHistoryItem[]>> => {
+  try {
+    const response = await mmseAPI.get(`/api/v1/assessments/mmse/history/detailed?user_id=${userId}`);
+    console.log('MMSE detailed history response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching MMSE detailed history:', error);
     throw error;
   }
 };

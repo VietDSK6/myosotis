@@ -154,7 +154,7 @@ export const useChatbotStore = create<ChatbotStore>()(
           set({ sessionHistory: sessions });
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : 'Failed to load session history';
-          set({ error: errorMessage });
+          set({ error: errorMessage, sessionHistory: [] });
         } finally {
           set({ isHistoryLoading: false });
         }
@@ -228,7 +228,16 @@ export const useChatbotStore = create<ChatbotStore>()(
         set({ error: null });
       },
 
-      
+      clearUserData: () => {
+        set({
+          activeSession: null,
+          currentMessages: [],
+          sessionHistory: [],
+          inputMessage: '',
+          error: null,
+        });
+      },
+
       reset: () => {
         set(initialState);
       },

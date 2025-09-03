@@ -23,7 +23,7 @@ export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
   return (
     <>
       <div
-        className="p-4 lg:p-6 mb-4 lg:mb-6"
+        className="px-4 lg:px-6 mb-4 lg:mb-6"
         onMouseEnter={() => setIsCarouselPaused(true)}
         onMouseLeave={() => setIsCarouselPaused(false)}
       >

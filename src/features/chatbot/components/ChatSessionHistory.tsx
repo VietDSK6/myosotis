@@ -92,7 +92,7 @@ export const ChatSessionHistory: React.FC = () => {
         <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Conversations</h2>
         <button
           onClick={handleNewChat}
-          className="w-full bg-[#92d7e7] hover:bg-[#7bc7d9] text-white py-2.5 sm:py-3 px-3 sm:px-4 
+          className="w-full bg-[#5A6DD0] hover:bg-[#1932b1] text-white py-2.5 sm:py-3 px-3 sm:px-4 
                      rounded-lg font-medium text-sm sm:text-lg transition-colors duration-200 
                      flex items-center justify-center gap-2 focus:outline-none 
                      focus:ring-2 focus:ring-[#92d7e7]/50"

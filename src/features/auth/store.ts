@@ -103,7 +103,7 @@ export const useAuthStore = create<AuthStore>()(
         } catch (error) {
           console.error('Logout error:', error);
         } finally {
-          
+          // Clear auth state
           set({
             user: null,
             loginData: null,
@@ -111,6 +111,11 @@ export const useAuthStore = create<AuthStore>()(
             isLoading: false,
             error: null,
           });
+          
+          // Clear chatbot data when logging out
+          // Import is done dynamically to avoid circular dependency
+          const { useChatbotStore } = await import('../chatbot/store');
+          useChatbotStore.getState().clearUserData();
         }
       },
 

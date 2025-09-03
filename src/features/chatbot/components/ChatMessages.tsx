@@ -24,7 +24,6 @@ export const ChatMessages: React.FC = () => {
     <div className="flex-1 overflow-y-auto p-6 space-y-8">
       {currentMessages.map((message) => (
         <div key={message.id} className="space-y-6">
-          {/* User Message */}
           <div className="flex justify-end">
             <div className="max-w-[75%]">
               <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-3xl rounded-br-lg px-6 py-4 shadow-lg">

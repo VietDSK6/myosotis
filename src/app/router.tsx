@@ -1,7 +1,17 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { LoginPage, RegisterPage } from '../features/auth';
 import { AICloneHistoryPage } from '../features/ai-clone';
-import DashboardPage from '../pages/DashboardPage';
+import { DashboardLayout } from '../components/layout';
+import {
+  DashboardHomePage,
+  DashboardAccountPage,
+  DashboardDiscoverPage,
+  DashboardMMSETestPage,
+  DashboardMMSEHistoryPage,
+  DashboardAIClonePage,
+  DashboardMemoryFilmPage,
+  DashboardChatbotPage,
+} from '../pages/dashboard';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import LandingPage from '../pages/LandingPage';
 import CaregiverGuidePage from '../pages/CaregiverGuidePage';
@@ -40,7 +50,41 @@ export const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <DashboardPage />,
+    element: <DashboardLayout />,
+    children: [
+      {
+        index: true,
+        element: <DashboardHomePage />,
+      },
+      {
+        path: 'account',
+        element: <DashboardAccountPage />,
+      },
+      {
+        path: 'discover',
+        element: <DashboardDiscoverPage />,
+      },
+      {
+        path: 'ai-clone',
+        element: <DashboardAIClonePage />,
+      },
+      {
+        path: 'mmse-test',
+        element: <DashboardMMSETestPage />,
+      },
+      {
+        path: 'mmse-history',
+        element: <DashboardMMSEHistoryPage />,
+      },
+      {
+        path: 'memory-film',
+        element: <DashboardMemoryFilmPage />,
+      },
+      {
+        path: 'chatbot',
+        element: <DashboardChatbotPage />,
+      },
+    ],
   },
   {
     path: '/mmse-test',

@@ -37,13 +37,13 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
   handleCancel,
   setIsEditing,
 }) => (
-  <div className="p-4 lg:p-6 mb-4 lg:mb-6">
+  <div>
     {isLoadingUserData ? (
-      <div className="flex items-center justify-center py-12">
+      <div className="flex items-center justify-center py-6">
         <LoadingSpinner text="Loading personal information..." />
       </div>
     ) : (
-      <div className="bg-white rounded-3xl shadow-lg p-8 lg:p-12">
+      <div className="bg-white rounded-3xl shadow-lg px-8 lg:px-12 pb-8">
         <div className="flex justify-end items-center mb-8">
           {!isEditing ? (
             <button

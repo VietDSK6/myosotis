@@ -87,6 +87,7 @@ export interface ChatbotActions {
   clearError: () => void;
   
   
+  clearUserData: () => void;
   reset: () => void;
 }
 

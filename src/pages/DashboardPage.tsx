@@ -454,7 +454,7 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-[#F9F9FB] antialiased font-['Poppins'] text-[#333333]">
+      <div className="min-h-screen bg-[#F9F9FB] antialiased text-[#333333]">
         <header className="bg-white py-4">
           <div className="w-full flex items-center justify-between">
             <div className="px-4 sm:px-6 lg:px-8 w-full lg:w-2/12 flex items-center space-x-3">
