@@ -1,11 +1,19 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import DashboardHeader from './DashboardHeader';
 import { AICloneHistoryContent } from '../components';
 
 export default function AICloneContent() {
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'overview' | 'history'>('overview');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'history') {
+      setActiveTab('history');
+    }
+  }, [searchParams]);
 
   return (
     <div className="space-y-6">

@@ -21,7 +21,7 @@ export default function AICloneCreatePage() {
 
   const handleGoToGallery = () => {
     setShowGenerationModal(false);
-    navigate('/ai-clone/history');
+    navigate('/dashboard/ai-clone?tab=history');
   };
 
   const handleWaitOnPage = () => {
@@ -45,7 +45,7 @@ export default function AICloneCreatePage() {
                   Back
                 </button>
                 <button
-                  onClick={() => navigate('/ai-clone/history')}
+                  onClick={() => navigate('/dashboard/ai-clone?tab=history')}
                   className="flex items-center gap-2 px-4 py-2 text-cyan-600 hover:text-cyan-700 hover:bg-white rounded-lg transition-colors font-medium"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

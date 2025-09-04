@@ -7,13 +7,13 @@ export const ChatFloatingActionButton: React.FC = () => {
   return (
     <button
       onClick={openChat}
-      className="fixed bottom-6 right-6 w-16 h-16 bg-[#92d7e7] hover:bg-[#7bc7d9] 
+      className="fixed bottom-6 right-6 w-22 h-22 bg-[#92d7e7] hover:bg-[#7bc7d9] 
                  text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 
                  flex items-center justify-center z-50 group focus:outline-none focus:ring-4 
                  focus:ring-[#92d7e7]/50"
       aria-label="Open chat"
     >
-      <div className="w-8 h-8 overflow-hidden group-hover:scale-110 transition-transform duration-200">
+      <div className="w-12 h-12 overflow-hidden group-hover:scale-110 transition-transform duration-200">
         <img src="/chatbot.png" alt="Chatbot Avatar" className="w-full h-full object-cover" />
       </div>
       
