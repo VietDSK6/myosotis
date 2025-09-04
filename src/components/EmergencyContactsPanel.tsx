@@ -81,7 +81,7 @@ export const EmergencyContactsPanel: React.FC<EmergencyContactsPanelProps> = ({ 
   return (
     <div className="p-4 lg:p-6 mb-4 lg:mb-6">
       <div className="flex items-center justify-between mb-4 lg:mb-6">
-        <h3 className="text-lg lg:text-xl font-semibold text-[#333333]">Emergency Contacts</h3>
+        <h3 className="text-lg lg:text-xl font-semibold text-[#333333]"></h3>
         <button
           onClick={handleAddContact}
           className="bg-[#5A6DD0] text-white px-4 py-2 rounded-[12px] font-semibold hover:bg-[#5A6DD0]/90 transition-colors text-sm lg:text-base"

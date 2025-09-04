@@ -5,7 +5,6 @@ import { useAuthStore } from '../features/auth/store';
 import LifeEventModal from '../components/LifeEventModal';
 import { getStoriesByUserId, createStory, updateStory, updateStoryFile, deleteStory, getMediaUrl } from '../api/stories';
 import type { LifeEvent, LifeEventInput } from '../types/memory';
-import { PageHeader, HeaderButton } from '../components/layout';
 
 const Timeline = lazy(() => import('timelinejs-react'));
 
@@ -224,7 +223,7 @@ export default function MemoryFilmPage() {
           }
           
           .tl-timeline .tl-headline-date {
-            font-size: 32px !important;
+            font-size: 24px !important;
             color: #000000 !important;
             text-shadow: none !important;
             font-weight: 600 !important;
@@ -266,28 +265,38 @@ export default function MemoryFilmPage() {
           }
         `}</style>
         
-        <PageHeader 
-          title="Memory Films"
-          showBackButton={true}
-          backTo="/dashboard"
-          variant="solid" 
-          rightActions={
-            <>
-              <HeaderButton
+        {/* Header with inline action buttons */}
+        <div className="border-b border-gray-200 bg-white px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Memory Films</h1>
+              <p className="text-gray-600 mt-1">View and manage your cherished life memories</p>
+            </div>
+            <div className="flex gap-3">
+              <button
                 onClick={() => setIsModalOpen(true)}
-                variant="memory-add"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
               >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
                 Add Memory
-              </HeaderButton>
-              <HeaderButton
-                onClick={() => setShowManagePanel(!showManagePanel)}
-                variant="memory-manage"
-              >
-                Manage Memories
-              </HeaderButton>
-            </>
-          }
-        />
+              </button>
+              
+              {lifeEvents.length > 0 && (
+                <button
+                  onClick={() => setShowManagePanel(!showManagePanel)}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                  </svg>
+                  Manage ({lifeEvents.length})
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
 
         <div className="timeline-container flex-1 relative">
           {showManagePanel && (

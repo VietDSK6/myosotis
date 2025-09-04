@@ -18,7 +18,7 @@ import {
   PolarAngleAxis,
   PolarRadiusAxis,
   Radar,
-  Legend
+  Legend,
 } from 'recharts';
 
 const SEVERITY_BANDS = [
@@ -33,10 +33,11 @@ interface TooltipPayload {
     testNumber: number;
     formattedDate: string;
     shortDate: string;
+    scoreDifference?: number | null;
   };
 }
 
-// Custom tooltip component for the chart
+
 const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
@@ -50,6 +51,11 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Toolti
         <p className="text-sm text-gray-600 mb-1">Date: {data.formattedDate}</p>
         <p className="text-sm text-gray-600 mb-1">Score: {data.total_score}/{data.max_score}</p>
         <p className="text-sm text-gray-600 mb-1">Percentage: {data.percentage.toFixed(1)}%</p>
+        {data.scoreDifference && Math.abs(data.scoreDifference) > 5 && (
+          <p className={`text-sm font-medium ${data.scoreDifference > 0 ? 'text-green-600' : 'text-red-600'}`}>
+            Change: {data.scoreDifference > 0 ? '+' : ''}{data.scoreDifference} points
+          </p>
+        )}
         {severityBand && (
           <p className="text-sm font-medium" style={{ color: severityBand.color }}>
             {severityBand.label}
@@ -61,6 +67,11 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Toolti
   return null;
 };
 
+const CustomDot = (props: { cx?: number; cy?: number; payload?: { scoreDifference?: number | null; [key: string]: unknown } }) => {
+  const { cx = 0, cy = 0 } = props;
+  return <circle cx={cx} cy={cy} r={6} fill="#0891b2" strokeWidth={2} stroke="#0891b2" />;
+};
+
 export default function MMSEHistoryPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
@@ -68,7 +79,6 @@ export default function MMSEHistoryPage() {
   const [detailedHistory, setDetailedHistory] = useState<MMSEDetailedHistoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTests, setSelectedTests] = useState<{ test1: number; test2: number }>({ test1: 0, test2: 1 });
-  const [activeTab, setActiveTab] = useState<'line' | 'radar'>('line');
 
   const fetchHistory = useCallback(async () => {
     if (!user?.id) return;
@@ -96,19 +106,43 @@ export default function MMSEHistoryPage() {
 
   const chartData = history
     .sort((a, b) => new Date(a.test_date).getTime() - new Date(b.test_date).getTime())
-    .map((item, index) => ({
-      ...item,
-      testNumber: index + 1,
-      formattedDate: new Date(item.test_date).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-      }),
-      shortDate: new Date(item.test_date).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric'
-      })
-    }));
+    .reduce((acc, item) => {
+      const dateKey = new Date(item.test_date).toDateString();
+      
+      if (!acc.some(existing => new Date(existing.test_date).toDateString() === dateKey)) {
+        acc.push(item);
+      } else {
+        const existingIndex = acc.findIndex(existing => 
+          new Date(existing.test_date).toDateString() === dateKey
+        );
+        if (item.assessment_id > acc[existingIndex].assessment_id) {
+          acc[existingIndex] = item;
+        }
+      }
+      
+      return acc;
+    }, [] as MMSEHistoryItem[])
+    .map((item, index, array) => {
+      let scoreDifference = null;
+      if (index > 0) {
+        scoreDifference = item.total_score - array[index - 1].total_score;
+      }
+      
+      return {
+        ...item,
+        testNumber: index + 1,
+        formattedDate: new Date(item.test_date).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        }),
+        shortDate: new Date(item.test_date).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric'
+        }),
+        scoreDifference
+      };
+    });
 
   const processRadarData = () => {
     if (detailedHistory.length < 2) return { radarData: [], availableTests: [] };
@@ -200,279 +234,213 @@ export default function MMSEHistoryPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {/* Chart Section with Tabs */}
+            {/* Score Trend Chart */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Assessment Analytics</h2>
-                <p className="text-gray-600 text-sm">View your cognitive assessment data through different visualizations</p>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">Score Trend Analysis</h2>
+                <p className="text-gray-600 text-sm">Track your cognitive assessment scores over time</p>
               </div>
 
-              {/* Tab Navigation */}
+              {/* Severity Legend */}
               <div className="mb-6">
-                <div className="border-b border-gray-200">
-                  <nav className="-mb-px flex space-x-8">
-                    <button
-                      onClick={() => setActiveTab('line')}
-                      className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                        activeTab === 'line'
-                          ? 'border-cyan-500 text-cyan-600'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        Score Trend
-                      </div>
-                    </button>
-                    <button
-                      onClick={() => setActiveTab('radar')}
-                      disabled={detailedHistory.length < 2}
-                      className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                        activeTab === 'radar' && detailedHistory.length >= 2
-                          ? 'border-cyan-500 text-cyan-600'
-                          : detailedHistory.length < 2
-                          ? 'border-transparent text-gray-300 cursor-not-allowed'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                        Domain Comparison
-                        {detailedHistory.length < 2 && (
-                          <span className="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">
-                            Need 2+ tests
-                          </span>
-                        )}
-                      </div>
-                    </button>
-                  </nav>
+                <div className="flex flex-wrap gap-4 text-sm">
+                  {SEVERITY_BANDS.map((band) => (
+                    <div key={band.label} className="flex items-center gap-2">
+                      <div 
+                        className="w-4 h-4 rounded"
+                        style={{ backgroundColor: band.color }}
+                      ></div>
+                      <span className="text-gray-700">
+                        {band.label} ({band.min}-{band.max === 27 ? '27' : band.max})
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              {/* Tab Content */}
-              {activeTab === 'line' && (
-                <>
-                  {/* Severity Legend */}
-                  <div className="mb-6">
-                    <div className="flex flex-wrap gap-4 text-sm">
-                      {SEVERITY_BANDS.map((band) => (
-                        <div key={band.label} className="flex items-center gap-2">
-                          <div 
-                            className="w-4 h-4 rounded"
-                            style={{ backgroundColor: band.color }}
-                          ></div>
-                          <span className="text-gray-700">
-                            {band.label} ({band.min}-{band.max === 27 ? '27' : band.max})
-                          </span>
-                        </div>
+              <div className="h-96 w-full relative">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={chartData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    
+                    <ReferenceLine y={24} stroke="#10b981" strokeDasharray="5 5" strokeOpacity={0.7} />
+                    <ReferenceLine y={20} stroke="#f59e0b" strokeDasharray="5 5" strokeOpacity={0.7} />
+                    <ReferenceLine y={14} stroke="#f97316" strokeDasharray="5 5" strokeOpacity={0.7} />
+                    
+                    <XAxis 
+                      dataKey="shortDate"
+                      tick={{ fontSize: 12 }}
+                      angle={-45}
+                      textAnchor="end"
+                      height={60}
+                      interval={0}
+                    />
+                    <YAxis 
+                      domain={[0, 27]}
+                      tick={{ fontSize: 12 }}
+                      label={{ value: 'MMSE Score', angle: -90, position: 'insideLeft' }}
+                    />
+                    
+                    <Tooltip content={<CustomTooltip />} />
+                    
+                    <Line 
+                      type="monotone" 
+                      dataKey="total_score" 
+                      stroke="#0891b2"
+                      strokeWidth={3}
+                      dot={<CustomDot />}
+                      activeDot={{ r: 8, stroke: '#0891b2', strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+                
+                {/* Overlay for line segment labels */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {chartData.length > 1 && chartData.map((item, index) => {
+                    if (index === 0 || !item.scoreDifference || Math.abs(item.scoreDifference) <= 5) return null;
+                    
+                    const difference = item.scoreDifference;
+                    const isPositive = difference > 0;
+                    
+                    
+                    const xPercent = ((index - 0.5) / (chartData.length - 1)) * 100;
+                    const currentScore = item.total_score;
+                    const previousScore = chartData[index - 1].total_score;
+                    const yPercent = 100 - (((currentScore + previousScore) / 2) / 27) * 100;
+                    
+                    return (
+                      <div
+                        key={`line-label-${index}`}
+                        className="absolute transform -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          left: `${xPercent}%`,
+                          top: `${yPercent}%`
+                        }}
+                      >
+                        <span
+                          className={`inline-block px-2 py-1 text-xs font-bold rounded shadow-sm border ${
+                            isPositive 
+                              ? 'bg-green-50 text-green-700 border-green-200' 
+                              : 'bg-red-50 text-red-700 border-red-200'
+                          }`}
+                        >
+                          {isPositive ? `+${difference}` : difference}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-4 text-xs text-gray-500">
+                <p>• Higher scores indicate better cognitive function</p>
+                <p>• Dotted lines represent severity thresholds for cognitive impairment</p>
+              </div>
+            </div>
+
+            {/* Domain Comparison Chart */}
+            {detailedHistory.length >= 2 && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Domain Comparison Analysis</h2>
+                  <p className="text-gray-600 text-sm">Compare performance across different cognitive domains between tests</p>
+                </div>
+
+                {/* Test Selection */}
+                <div className="mb-6 flex gap-4 flex-wrap">
+                  <div className="flex-1 min-w-48">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">First Test</label>
+                    <select 
+                      value={selectedTests.test1}
+                      onChange={(e) => setSelectedTests(prev => ({ ...prev, test1: parseInt(e.target.value) }))}
+                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                    >
+                      {availableTests.map((test, index) => (
+                        <option key={test.assessment_id} value={index}>
+                          Test #{test.assessment_id} - {new Date(test.test_date).toLocaleDateString()}
+                        </option>
                       ))}
-                    </div>
+                    </select>
                   </div>
-
-                  <div className="h-96 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart
-                        data={chartData}
-                        margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
-                      >
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                        
-                        <ReferenceLine y={24} stroke="#10b981" strokeDasharray="5 5" strokeOpacity={0.7} />
-                        <ReferenceLine y={20} stroke="#f59e0b" strokeDasharray="5 5" strokeOpacity={0.7} />
-                        <ReferenceLine y={14} stroke="#f97316" strokeDasharray="5 5" strokeOpacity={0.7} />
-                        
-                        <XAxis 
-                          dataKey="shortDate"
-                          tick={{ fontSize: 12 }}
-                          angle={-45}
-                          textAnchor="end"
-                          height={60}
-                          interval={0}
-                        />
-                        <YAxis 
-                          domain={[0, 27]}
-                          tick={{ fontSize: 12 }}
-                          label={{ value: 'MMSE Score', angle: -90, position: 'insideLeft' }}
-                        />
-                        
-                        <Tooltip content={<CustomTooltip />} />
-                        
-                        <Line 
-                          type="monotone" 
-                          dataKey="total_score" 
-                          stroke="#0891b2"
-                          strokeWidth={3}
-                          dot={{ fill: '#0891b2', strokeWidth: 2, r: 6 }}
-                          activeDot={{ r: 8, stroke: '#0891b2', strokeWidth: 2 }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
+                  <div className="flex-1 min-w-48">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Second Test</label>
+                    <select 
+                      value={selectedTests.test2}
+                      onChange={(e) => setSelectedTests(prev => ({ ...prev, test2: parseInt(e.target.value) }))}
+                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
+                    >
+                      {availableTests.map((test, index) => (
+                        <option key={test.assessment_id} value={index}>
+                          Test #{test.assessment_id} - {new Date(test.test_date).toLocaleDateString()}
+                        </option>
+                      ))}
+                    </select>
                   </div>
+                </div>
 
-                  <div className="mt-4 text-xs text-gray-500">
-                    <p>• Higher scores indicate better cognitive function</p>
-                    <p>• Dotted lines represent severity thresholds for cognitive impairment</p>
-                  </div>
-                </>
-              )}
+                <div className="h-96 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart data={radarData} margin={{ top: 20, right: 80, bottom: 20, left: 80 }}>
+                      <PolarGrid />
+                      <PolarAngleAxis 
+                        dataKey="section" 
+                        tick={{ fontSize: 12 }}
+                        className="text-xs"
+                      />
+                      <PolarRadiusAxis 
+                        domain={[0, 100]} 
+                        tick={{ fontSize: 10 }}
+                        tickCount={6}
+                      />
+                      <Radar
+                        name={`Test #${availableTests[selectedTests.test1]?.assessment_id || ''}`}
+                        dataKey="test1"
+                        stroke="#0891b2"
+                        fill="#0891b2"
+                        fillOpacity={0.1}
+                        strokeWidth={2}
+                      />
+                      <Radar
+                        name={`Test #${availableTests[selectedTests.test2]?.assessment_id || ''}`}
+                        dataKey="test2"
+                        stroke="#f59e0b"
+                        fill="#f59e0b"
+                        fillOpacity={0.1}
+                        strokeWidth={2}
+                      />
+                      <Legend />
+                      <Tooltip 
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            const data = payload[0].payload;
+                            return (
+                              <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
+                                <p className="font-semibold text-gray-900 mb-2">{data.fullSection}</p>
+                                {payload.map((entry, index) => (
+                                  <p key={index} className="text-sm" style={{ color: entry.color }}>
+                                    {entry.name}: {entry.value?.toFixed(1)}%
+                                  </p>
+                                ))}
+                              </div>
+                            );
+                          }
+                          return null;
+                        }}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </div>
 
-              {activeTab === 'radar' && detailedHistory.length >= 2 && (
-                <>
-                  {/* Test Selection */}
-                  <div className="mb-6 flex gap-4 flex-wrap">
-                    <div className="flex-1 min-w-48">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">First Test</label>
-                      <select 
-                        value={selectedTests.test1}
-                        onChange={(e) => setSelectedTests(prev => ({ ...prev, test1: parseInt(e.target.value) }))}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-                      >
-                        {availableTests.map((test, index) => (
-                          <option key={test.assessment_id} value={index}>
-                            Test #{test.assessment_id} - {new Date(test.test_date).toLocaleDateString()}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="flex-1 min-w-48">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Second Test</label>
-                      <select 
-                        value={selectedTests.test2}
-                        onChange={(e) => setSelectedTests(prev => ({ ...prev, test2: parseInt(e.target.value) }))}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-                      >
-                        {availableTests.map((test, index) => (
-                          <option key={test.assessment_id} value={index}>
-                            Test #{test.assessment_id} - {new Date(test.test_date).toLocaleDateString()}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="h-96 w-full">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <RadarChart data={radarData} margin={{ top: 20, right: 80, bottom: 20, left: 80 }}>
-                        <PolarGrid />
-                        <PolarAngleAxis 
-                          dataKey="section" 
-                          tick={{ fontSize: 12 }}
-                          className="text-xs"
-                        />
-                        <PolarRadiusAxis 
-                          domain={[0, 100]} 
-                          tick={{ fontSize: 10 }}
-                          tickCount={6}
-                        />
-                        <Radar
-                          name={`Test #${availableTests[selectedTests.test1]?.assessment_id || ''}`}
-                          dataKey="test1"
-                          stroke="#0891b2"
-                          fill="#0891b2"
-                          fillOpacity={0.1}
-                          strokeWidth={2}
-                        />
-                        <Radar
-                          name={`Test #${availableTests[selectedTests.test2]?.assessment_id || ''}`}
-                          dataKey="test2"
-                          stroke="#f59e0b"
-                          fill="#f59e0b"
-                          fillOpacity={0.1}
-                          strokeWidth={2}
-                        />
-                        <Legend />
-                        <Tooltip 
-                          content={({ active, payload }) => {
-                            if (active && payload && payload.length) {
-                              const data = payload[0].payload;
-                              return (
-                                <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-                                  <p className="font-semibold text-gray-900 mb-2">{data.fullSection}</p>
-                                  {payload.map((entry, index) => (
-                                    <p key={index} className="text-sm" style={{ color: entry.color }}>
-                                      {entry.name}: {entry.value?.toFixed(1)}%
-                                    </p>
-                                  ))}
-                                </div>
-                              );
-                            }
-                            return null;
-                          }}
-                        />
-                      </RadarChart>
-                    </ResponsiveContainer>
-                  </div>
-
-                  <div className="mt-4 text-xs text-gray-500">
-                    <p>• Each axis represents a cognitive domain from the MMSE test</p>
-                    <p>• Percentages show correct answers within each domain</p>
-                    <p>• Compare the two colored areas to see which domains improved or declined</p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900">Recent Test Details</h2>
+                <div className="mt-4 text-xs text-gray-500">
+                  <p>• Each axis represents a cognitive domain from the MMSE test</p>
+                  <p>• Percentages show correct answers within each domain</p>
+                  <p>• Compare the two colored areas to see which domains improved or declined</p>
+                </div>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Test</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {chartData.slice(-5).reverse().map((test) => {
-                      const severityBand = SEVERITY_BANDS.find(band => 
-                        test.total_score >= band.min && test.total_score <= band.max
-                      );
-                      return (
-                        <tr key={test.assessment_id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            Test #{test.assessment_id}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            {test.formattedDate}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium text-gray-900">
-                                {test.total_score}/{test.max_score}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                ({test.percentage.toFixed(1)}%)
-                              </span>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {severityBand && (
-                              <span 
-                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                                style={{ 
-                                  backgroundColor: severityBand.bgColor,
-                                  color: severityBand.color 
-                                }}
-                              >
-                                {severityBand.label}
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>
