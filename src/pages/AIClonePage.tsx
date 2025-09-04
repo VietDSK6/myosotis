@@ -22,7 +22,6 @@ export default function AIClonePage() {
           </div>
         </header>
 
-        {/* Main Content */}
         <main className="w-full px-4 sm:px-6 lg:px-8 py-6">
           <div className="max-w-7xl mx-auto">
             <div className="mb-6">
@@ -43,7 +42,6 @@ export default function AIClonePage() {
               />
             </div>
             
-            {/* Content Card */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 lg:p-8">
                 <AICloneChoiceScreen />

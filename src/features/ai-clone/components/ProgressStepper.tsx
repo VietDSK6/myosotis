@@ -21,7 +21,7 @@ export default function ProgressStepper({ currentStep }: ProgressStepperProps) {
                 w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold
                 ${
                   step.number <= currentStep
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-cyan-600 text-white'
                     : 'bg-gray-200 text-gray-500'
                 }
               `}
@@ -34,7 +34,7 @@ export default function ProgressStepper({ currentStep }: ProgressStepperProps) {
                 ml-3 text-sm font-medium
                 ${
                   step.number <= currentStep
-                    ? 'text-blue-600'
+                    ? 'text-cyan-600'
                     : 'text-gray-500'
                 }
               `}
@@ -48,7 +48,7 @@ export default function ProgressStepper({ currentStep }: ProgressStepperProps) {
                   flex-1 h-0.5 mx-6 min-w-[80px]
                   ${
                     step.number < currentStep
-                      ? 'bg-blue-600'
+                      ? 'bg-cyan-600'
                       : 'bg-gray-200'
                   }
                 `}

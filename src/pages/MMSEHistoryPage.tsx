@@ -281,7 +281,6 @@ export default function MMSEHistoryPage() {
                       >
                         <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                         
-                        {/* Severity band reference lines - all 4 levels */}
                         <ReferenceLine y={24} stroke="#10b981" strokeDasharray="5 5" strokeOpacity={0.7} />
                         <ReferenceLine y={20} stroke="#f59e0b" strokeDasharray="5 5" strokeOpacity={0.7} />
                         <ReferenceLine y={14} stroke="#f97316" strokeDasharray="5 5" strokeOpacity={0.7} />
@@ -355,7 +354,6 @@ export default function MMSEHistoryPage() {
                     </div>
                   </div>
 
-                  {/* Radar Chart */}
                   <div className="h-96 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                       <RadarChart data={radarData} margin={{ top: 20, right: 80, bottom: 20, left: 80 }}>

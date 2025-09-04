@@ -6,6 +6,7 @@ import {
   DashboardHomePage,
   DashboardAccountPage,
   DashboardDiscoverPage,
+  DashboardContactsPage,
   DashboardMMSETestPage,
   DashboardMMSEHistoryPage,
   DashboardAIClonePage,
@@ -63,6 +64,10 @@ export const router = createBrowserRouter([
       {
         path: 'discover',
         element: <DashboardDiscoverPage />,
+      },
+      {
+        path: 'contacts',
+        element: <DashboardContactsPage />,
       },
       {
         path: 'ai-clone',

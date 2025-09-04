@@ -23,19 +23,19 @@ export const DashboardChatPanel: React.FC<DashboardChatPanelProps> = ({ currentM
                 onClick={() => handleQuickMessage("Can you tell me about my medications and any important reminders?")}
                 className="text-left p-4 bg-[#5A6DD0]/5 hover:bg-[#5A6DD0]/10 border border-[#5A6DD0]/20 rounded-xl transition-colors group"
               >
-                <div className="text-sm text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Ask about medications</div>
+                <div className="text-18px text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80 ">Ask about medications</div>
               </button>
               <button
                 onClick={() => handleQuickMessage("Can you suggest some memory exercises or activities for brain health?")}
                 className="text-left p-4 bg-[#5A6DD0]/5 hover:bg-[#5A6DD0]/10 border border-[#5A6DD0]/20 rounded-xl transition-colors group"
               >
-                <div className="text-sm text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Memory exercises</div>
+                <div className="text-18px text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Memory exercises</div>
               </button>
               <button
                 onClick={() => handleQuickMessage("What are some daily health tips for someone with Alzheimer's?")}
                 className="text-left p-4 bg-[#5A6DD0]/5 hover:bg-[#5A6DD0]/10 border border-[#5A6DD0]/20 rounded-xl transition-colors group"
               >
-                <div className="text-sm text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Health tips</div>
+                <div className="text-18px text-[#5A6DD0] font-medium group-hover:text-[#5A6DD0]/80">Health tips</div>
               </button>
             </div>
           </div>

@@ -199,7 +199,7 @@ export default function Step3Preview() {
                       <button
                         onClick={generateVideo}
                         disabled={isGenerating || !currentScript.trim()}
-                        className="w-20 h-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
+                        className="w-20 h-20 bg-cyan-600 hover:bg-cyan-700 text-white rounded-full flex items-center justify-center transition-colors disabled:opacity-50"
                       >
                         <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
@@ -210,7 +210,7 @@ export default function Step3Preview() {
                   {scriptMode === 'ai-generated' && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
                       <div className="text-center text-white">
-                        <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-20 h-20 bg-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4">
                           <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                           </svg>
@@ -243,7 +243,7 @@ export default function Step3Preview() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Script</h3>
                 {scriptMode === 'ai-generated' && (
-                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  <span className="text-xs bg-cyan-100 text-cyan-800 px-2 py-1 rounded">
                     AI Generated
                   </span>
                 )}
@@ -275,20 +275,20 @@ export default function Step3Preview() {
             <div className="lg:w-1/2">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">AI Script Generation</h3>
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                <span className="text-xs bg-cyan-100 text-cyan-800 px-2 py-1 rounded">
                   In Progress
                 </span>
               </div>
               
-              <div className="h-64 border-2 border-dashed border-blue-300 rounded-lg flex items-center justify-center bg-blue-50">
+              <div className="h-64 border-2 border-dashed border-cyan-300 rounded-lg flex items-center justify-center bg-cyan-50">
                 <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p className="text-blue-800 font-medium">Generating script from your topic...</p>
-                  <p className="text-blue-600 text-sm mt-2">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600 mx-auto mb-4"></div>
+                  <p className="text-cyan-800 font-medium">Generating script from your topic...</p>
+                  <p className="text-cyan-600 text-sm mt-2">
                     Topic: <span className="font-semibold">{topic}</span>
                   </p>
                   {keywords && (
-                    <p className="text-blue-600 text-sm">
+                    <p className="text-cyan-600 text-sm">
                       Keywords: <span className="font-semibold">{keywords}</span>
                     </p>
                   )}
@@ -345,7 +345,7 @@ export default function Step3Preview() {
               disabled={!currentScript.trim() || isGenerating}
               className={`px-8 py-3 rounded-lg font-medium transition-colors ${
                 currentScript.trim() && !isGenerating
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                  ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
                   : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
             >
@@ -354,7 +354,7 @@ export default function Step3Preview() {
           )}
 
           {scriptMode === 'ai-generated' && !generatedVideoUrl && isGenerating && (
-            <div className="px-8 py-3 bg-blue-100 text-blue-800 rounded-lg font-medium">
+            <div className="px-8 py-3 bg-cyan-100 text-cyan-800 rounded-lg font-medium">
               AI Generating Video...
             </div>
           )}
@@ -371,13 +371,13 @@ export default function Step3Preview() {
       </div>
 
       {isGenerating && (
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="mt-6 bg-cyan-50 border border-cyan-200 rounded-lg p-4">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-cyan-600"></div>
             </div>
             <div className="ml-3">
-              <p className="text-sm text-blue-800">
+              <p className="text-sm text-cyan-800">
                 Generating your AI character video. This process may take several minutes depending on the script length.
               </p>
             </div>

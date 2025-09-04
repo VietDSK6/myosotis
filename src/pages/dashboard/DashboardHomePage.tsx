@@ -1,23 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useAuthStore } from '../../features/auth/store';
-import { useChatbotStore } from '../../features/chatbot/store';
 import { DashboardInfoPanel } from '../../components/DashboardInfoPanel';
-import { DashboardChatPanel } from '../../components/DashboardChatPanel';
-import { EmergencyContactsPanel } from '../../components/EmergencyContactsPanel';
 import DashboardHeader from '../../components/DashboardHeader';
 import { useNavigate } from 'react-router-dom';
 import Lottie from 'lottie-react';
 
 export default function DashboardHomePage() {
-  const { user } = useAuthStore();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'info' | 'chat' | 'contacts'>('info');
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [animationData, setAnimationData] = useState(null);
-
-  const { currentMessages, loadSessionHistory, sendMessage } = useChatbotStore();
 
   const dashboardFeatures = [
     {
@@ -111,18 +103,8 @@ export default function DashboardHomePage() {
     loadAnimation();
   }, []);
 
-  useEffect(() => {
-    if (activeTab === 'chat' && user?.id) {
-      loadSessionHistory(user.id);
-    }
-  }, [activeTab, user?.id, loadSessionHistory]);
-
-  const handleQuickMessage = async (message: string) => {
-    if (!user?.id) return;
-    await sendMessage({
-      user_id: user.id,
-      message: message,
-    });
+  const handleNavigateToChart = () => {
+    navigate('/dashboard/mmse-history');
   };
 
   const getCurrentDate = () => {
@@ -171,61 +153,14 @@ export default function DashboardHomePage() {
           description="Welcome to your health and memory care dashboard"
         />
         
-        <div className="px-4 lg:px-6 mb-4 lg:mb-6">
-          <nav className="flex space-x-4 sm:space-x-8 overflow-x-auto">
-            <button
-              onClick={() => setActiveTab('info')}
-              className={`font-semibold pb-3 border-b-2 transition-colors ${
-                activeTab === 'info'
-                  ? 'text-[#5A6DD0] border-[#5A6DD0]'
-                  : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
-              }`}
-            >
-              Info
-            </button>
-            <button
-              onClick={() => setActiveTab('chat')}
-              className={`font-semibold pb-3 border-b-2 transition-colors ${
-                activeTab === 'chat'
-                  ? 'text-[#5A6DD0] border-[#5A6DD0]'
-                  : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
-              }`}
-            >
-              Chat
-            </button>
-            <button
-              onClick={() => setActiveTab('contacts')}
-              className={`font-semibold pb-3 border-b-2 transition-colors ${
-                activeTab === 'contacts'
-                  ? 'text-[#5A6DD0] border-[#5A6DD0]'
-                  : 'text-[#888888] hover:text-[#5A6DD0] border-transparent hover:border-[#5A6DD0]/30'
-              }`}
-            >
-              Contacts
-            </button>
-          </nav>
-        </div>
-
-        {activeTab === 'info' && (
-          <DashboardInfoPanel
-            dashboardFeatures={dashboardFeatures}
-            currentCarouselIndex={currentCarouselIndex}
-            isTransitioning={isTransitioning}
-            setIsCarouselPaused={setIsCarouselPaused}
-            handleCarouselScroll={handleCarouselScroll}
-          />
-        )}
-
-        {activeTab === 'chat' && (
-          <DashboardChatPanel
-            currentMessages={currentMessages}
-            handleQuickMessage={handleQuickMessage}
-          />
-        )}
-
-        {activeTab === 'contacts' && (
-          <EmergencyContactsPanel userId={user?.id} />
-        )}
+        <DashboardInfoPanel
+          dashboardFeatures={dashboardFeatures}
+          currentCarouselIndex={currentCarouselIndex}
+          isTransitioning={isTransitioning}
+          setIsCarouselPaused={setIsCarouselPaused}
+          handleCarouselScroll={handleCarouselScroll}
+          onNavigateToChart={handleNavigateToChart}
+        />
       </div>
 
       <div className="lg:col-span-4">

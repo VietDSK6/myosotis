@@ -1,4 +1,5 @@
 import React from 'react';
+import { SimpleChart } from './SimpleChart';
 
 interface DashboardInfoPanelProps {
   dashboardFeatures: Array<{
@@ -11,6 +12,7 @@ interface DashboardInfoPanelProps {
   isTransitioning: boolean;
   setIsCarouselPaused: (paused: boolean) => void;
   handleCarouselScroll: (direction: 'left' | 'right') => void;
+  onNavigateToChart: () => void;
 }
 
 export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
@@ -19,6 +21,7 @@ export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
   isTransitioning,
   setIsCarouselPaused,
   handleCarouselScroll,
+  onNavigateToChart,
 }) => {
   return (
     <>
@@ -99,12 +102,9 @@ export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-[#5A6DD0] to-[#5A6DD0]/80 rounded-[20px] p-4 lg:p-6 text-white mb-4 lg:mb-6">
-        <h3 className="text-lg lg:text-xl font-semibold mb-2">Join to our medicine volunteer</h3>
-        <p className="text-white/80 mb-4 text-sm lg:text-base">Help others while tracking your own health progress</p>
-        <button className="bg-white text-[#5A6DD0] px-4 lg:px-6 py-2 rounded-[12px] font-semibold hover:bg-gray-50 transition-colors text-sm lg:text-base">
-          Join
-        </button>
+      {/* Simple Chart Section */}
+      <div className="px-4 lg:px-6 mb-4 lg:mb-6">
+        <SimpleChart onNavigateToChart={onNavigateToChart} />
       </div>
     </>
   );

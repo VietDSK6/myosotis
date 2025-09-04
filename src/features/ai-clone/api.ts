@@ -122,5 +122,5 @@ export function getVideoUrl(videoFilename: string): string {
   }
   
   const filename = videoFilename.split('/').pop() || videoFilename;
-  return `${API_BASE_URL}/api/v1/ai-clone/human-clone/view/${filename}`;
+  return `${API_BASE_URL}/api/v1/ai-clone/human-clone/view/${filename}.mp4`;
 }

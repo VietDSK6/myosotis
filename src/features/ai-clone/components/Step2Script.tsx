@@ -54,16 +54,16 @@ export default function Step2Script() {
           onClick={() => handleModeSelect('manual')}
           className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
             selectedMode === 'manual'
-              ? 'border-blue-500 bg-blue-50'
+              ? 'border-cyan-500 bg-cyan-50'
               : 'border-gray-200 hover:border-gray-300 bg-white'
           }`}
         >
           <div className="flex items-start space-x-4">
             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-              selectedMode === 'manual' ? 'border-blue-500' : 'border-gray-300'
+              selectedMode === 'manual' ? 'border-cyan-500' : 'border-gray-300'
             }`}>
               {selectedMode === 'manual' && (
-                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <div className="w-3 h-3 rounded-full bg-cyan-500"></div>
               )}
             </div>
             <div className="flex-1">
@@ -85,16 +85,16 @@ export default function Step2Script() {
           onClick={() => handleModeSelect('ai-generated')}
           className={`p-6 rounded-lg border-2 cursor-pointer transition-all ${
             selectedMode === 'ai-generated'
-              ? 'border-blue-500 bg-blue-50'
+              ? 'border-cyan-500 bg-cyan-50'
               : 'border-gray-200 hover:border-gray-300 bg-white'
           }`}
         >
           <div className="flex items-start space-x-4">
             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-              selectedMode === 'ai-generated' ? 'border-blue-500' : 'border-gray-300'
+              selectedMode === 'ai-generated' ? 'border-cyan-500' : 'border-gray-300'
             }`}>
               {selectedMode === 'ai-generated' && (
-                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <div className="w-3 h-3 rounded-full bg-cyan-500"></div>
               )}
             </div>
             <div className="flex-1">
@@ -191,7 +191,7 @@ export default function Step2Script() {
           disabled={!canProceedToStep3()}
           className={`px-8 py-3 rounded-lg font-medium transition-colors ${
             canProceedToStep3()
-              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >

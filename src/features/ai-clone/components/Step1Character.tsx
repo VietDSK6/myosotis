@@ -185,7 +185,7 @@ export default function Step1Character() {
                 onClick={() => setActiveTab('record')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'record'
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-cyan-500 text-cyan-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -195,7 +195,7 @@ export default function Step1Character() {
                 onClick={() => setActiveTab('upload')}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'upload'
-                    ? 'border-blue-500 text-blue-600'
+                    ? 'border-cyan-500 text-cyan-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
@@ -244,7 +244,7 @@ export default function Step1Character() {
                     <div className="flex justify-center space-x-4">
                       <button
                         onClick={playRecording}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                        className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
                       >
                         {isPlaying ? 'Stop' : 'Listen Again'}
                       </button>
@@ -315,7 +315,7 @@ export default function Step1Character() {
           disabled={!canProceedToStep2()}
           className={`px-8 py-3 rounded-lg font-medium transition-colors ${
             canProceedToStep2()
-              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+              ? 'bg-cyan-600 hover:bg-cyan-700 text-white'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >

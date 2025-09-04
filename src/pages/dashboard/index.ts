@@ -1,6 +1,7 @@
 export { default as DashboardHomePage } from './DashboardHomePage';
 export { default as DashboardAccountPage } from './DashboardAccountPage';
 export { default as DashboardDiscoverPage } from './DashboardDiscoverPage';
+export { default as DashboardContactsPage } from './DashboardContactsPage';
 export { default as DashboardMMSETestPage } from './DashboardMMSETestPage';
 export { default as DashboardMMSEHistoryPage } from './DashboardMMSEHistoryPage';
 export { default as DashboardAIClonePage } from './DashboardAIClonePage';
