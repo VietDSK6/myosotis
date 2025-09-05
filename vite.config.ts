@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import  tailwindcss  from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'timeline': ['timelinejs-react'],
+          timeline: ['timelinejs-react'],
         },
       },
     },
@@ -29,5 +29,9 @@ export default defineConfig({
         global: 'globalThis',
       },
     },
+  },
+  server: {
+    host: true, // cho phép truy cập từ ngoài (Docker, LAN,...)
+    allowedHosts: ['seadev-1.ript.vn'], // thêm domain của bạn vào đây
   },
 })
