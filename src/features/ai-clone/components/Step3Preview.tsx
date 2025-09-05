@@ -141,7 +141,7 @@ export default function Step3Preview() {
 
   const handleGoToGallery = () => {
     setShowNotificationModal(false);
-    navigate('/ai-clone-history');
+    navigate('/dashboard/ai-clone?tab=history');
   };
 
   const handleWaitOnPage = () => {
