@@ -115,7 +115,8 @@ export default function MMSEHistoryPage() {
         const existingIndex = acc.findIndex(existing => 
           new Date(existing.test_date).toDateString() === dateKey
         );
-        if (item.assessment_id > acc[existingIndex].assessment_id) {
+        // Take the latest test of the day (most recent timestamp)
+        if (new Date(item.test_date).getTime() > new Date(acc[existingIndex].test_date).getTime()) {
           acc[existingIndex] = item;
         }
       }
@@ -200,7 +201,7 @@ export default function MMSEHistoryPage() {
   if (isLoading) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-cyan-50 flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
           <LoadingSpinner text="Loading test history..." />
         </div>
       </ProtectedRoute>
@@ -226,7 +227,7 @@ export default function MMSEHistoryPage() {
               <p className="text-gray-600 mb-6">Take your first MMSE test to start tracking your cognitive health</p>
               <button
                 onClick={() => navigate('/mmse-test')}
-                className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                className="hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
               >
                 Take Your First Test
               </button>

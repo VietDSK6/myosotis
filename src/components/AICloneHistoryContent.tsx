@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth';
 import { LoadingSpinner } from '../components';
@@ -8,10 +8,14 @@ import type { AICloneVideo } from '../features/ai-clone/types';
 export default function AICloneHistoryContent() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [videos, setVideos] = useState<AICloneVideo[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -23,7 +27,7 @@ export default function AICloneHistoryContent() {
         if (response.success) {
           const successfulVideos = response.videos.filter(video => video.status !== 'failed');
           setVideos(successfulVideos);
-          setCurrentIndex(0); // Reset to first video
+          setCurrentIndex(0);
         } else {
           setError('Failed to load video history');
         }
@@ -38,12 +42,68 @@ export default function AICloneHistoryContent() {
     fetchVideos();
   }, [user?.id]);
 
+  // Reset video state when changing videos
+  useEffect(() => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+    }
+  }, [currentIndex]);
+
   const handlePrevious = () => {
     setCurrentIndex(prev => (prev > 0 ? prev - 1 : videos.length - 1));
+    setIsPlaying(false);
   };
 
   const handleNext = () => {
     setCurrentIndex(prev => (prev < videos.length - 1 ? prev + 1 : 0));
+    setIsPlaying(false);
+  };
+
+  const togglePlayPause = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        videoRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleVideoEnd = () => {
+    setIsPlaying(false);
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (videoRef.current && duration > 0) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const newTime = (clickX / rect.width) * duration;
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   const formatDate = (dateString: string) => {
@@ -98,11 +158,51 @@ export default function AICloneHistoryContent() {
             <div className="relative">
               <div className="aspect-w-16 aspect-h-9 bg-gray-100">
                 <video
+                  ref={videoRef}
                   src={videos[currentIndex]?.video_url ? getVideoUrl(videos[currentIndex].video_url) : ''}
-                  controls
                   className="w-full h-full object-cover rounded-t-xl"
                   style={{ maxHeight: '700px' }}
+                  onTimeUpdate={handleTimeUpdate}
+                  onLoadedMetadata={handleLoadedMetadata}
+                  onEnded={handleVideoEnd}
+                  onClick={togglePlayPause}
                 />
+                
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <button
+                    onClick={togglePlayPause}
+                    className={`p-4 rounded-full bg-black/50 hover:bg-black/70 text-white transition-all ${
+                      isPlaying ? 'opacity-0 hover:opacity-100' : 'opacity-100'
+                    }`}
+                  >
+                    {isPlaying ? (
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6" />
+                      </svg>
+                    ) : (
+                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                      </svg>
+                    )}
+                  </button>
+                </div>
+
+                {/* Custom Progress Bar */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4">
+                  <div className="flex items-center space-x-2 text-white text-sm">
+                    <span>{formatTime(currentTime)}</span>
+                    <div 
+                      className="flex-1 h-2 bg-white/30 rounded-full cursor-pointer"
+                      onClick={handleSeek}
+                    >
+                      <div 
+                        className="h-full bg-white rounded-full transition-all"
+                        style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}
+                      />
+                    </div>
+                    <span>{formatTime(duration)}</span>
+                  </div>
+                </div>
               </div>
 
               {videos.length > 1 && (

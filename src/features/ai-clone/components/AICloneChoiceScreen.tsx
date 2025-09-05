@@ -14,7 +14,6 @@ export default function AICloneChoiceScreen() {
         </div>
 
         <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
-          {/* Create New Card */}
           <div
             onClick={() => navigate('/ai-clone/create')}
             className="bg-white rounded-xl shadow-lg p-8 cursor-pointer hover:shadow-xl transition-shadow duration-200 border border-gray-200 hover:border-blue-300"
