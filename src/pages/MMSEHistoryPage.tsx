@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { ProtectedRoute } from '../features/auth';
-import { getMMSEHistory, getMMSEDetailedHistory, type MMSEHistoryItem, type MMSEDetailedHistoryItem } from '../api/mmse';
+import { getMMSEChartData } from '../api/mmse';
 import { LoadingSpinner } from '../components';
 import { 
   LineChart, 
@@ -29,12 +29,34 @@ const SEVERITY_BANDS = [
 ];
 
 interface TooltipPayload {
-  payload: MMSEHistoryItem & {
-    testNumber: number;
+  payload: {
+    test_date: string;
+    total_score: number;
+    max_score: number;
+    percentage: number;
+    interpretation: string;
+    assessment_id: number;
     formattedDate: string;
     shortDate: string;
     scoreDifference?: number | null;
   };
+}
+
+interface ChartDataPoint {
+  test_date: string;
+  total_score: number;
+  max_score: number;
+  percentage: number;
+  interpretation: string;
+  assessment_id: number;
+  formattedDate: string;
+  shortDate: string;
+  scoreDifference?: number | null;
+}
+
+interface RadarDataPoint {
+  section: string;
+  percentage: number;
 }
 
 
@@ -75,24 +97,74 @@ const CustomDot = (props: { cx?: number; cy?: number; payload?: { scoreDifferenc
 export default function MMSEHistoryPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const [history, setHistory] = useState<MMSEHistoryItem[]>([]);
-  const [detailedHistory, setDetailedHistory] = useState<MMSEDetailedHistoryItem[]>([]);
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+  const [radarData, setRadarData] = useState<RadarDataPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedTests, setSelectedTests] = useState<{ test1: number; test2: number }>({ test1: 0, test2: 1 });
 
-  const fetchHistory = useCallback(async () => {
+  const fetchChartData = useCallback(async () => {
     if (!user?.id) return;
 
     try {
       setIsLoading(true);
-      const [historyResponse, detailedResponse] = await Promise.all([
-        getMMSEHistory(user.id),
-        getMMSEDetailedHistory(user.id)
-      ]);
-      setHistory(historyResponse.data || []);
-      setDetailedHistory(detailedResponse.data || []);
+      const response = await getMMSEChartData(user.id);
+      
+      if (response.success) {
+        // Process line chart data - group by day and take latest test
+        const lineData = response.data.line_chart.datasets[0];
+        const processedData: { [date: string]: ChartDataPoint } = {};
+        
+        lineData.data.forEach((score, index) => {
+          const testDate = response.data.line_chart.labels[index];
+          const dateKey = new Date(testDate).toDateString();
+          
+          const dataPoint: ChartDataPoint = {
+            test_date: testDate,
+            total_score: score,
+            max_score: response.data.line_chart.metadata.max_possible_score,
+            percentage: lineData.percentages[index],
+            interpretation: lineData.interpretations[index],
+            assessment_id: lineData.assessment_ids[index],
+            formattedDate: new Date(testDate).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            }),
+            shortDate: new Date(testDate).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric'
+            }),
+          };
+          
+          // Keep the latest test of each day
+          if (!processedData[dateKey] || new Date(testDate).getTime() > new Date(processedData[dateKey].test_date).getTime()) {
+            processedData[dateKey] = dataPoint;
+          }
+        });
+        
+        // Convert to array and add score differences
+        const sortedData = Object.values(processedData)
+          .sort((a, b) => new Date(a.test_date).getTime() - new Date(b.test_date).getTime())
+          .map((item, index, array) => {
+            let scoreDifference = null;
+            if (index > 0) {
+              scoreDifference = item.total_score - array[index - 1].total_score;
+            }
+            return { ...item, scoreDifference };
+          });
+        
+        setChartData(sortedData);
+        
+        // Process radar chart data for latest test
+        const radarChart = response.data.radar_chart;
+        const radarChartData: RadarDataPoint[] = radarChart.section_labels.map((label, index) => ({
+          section: label.length > 20 ? label.substring(0, 20) + '...' : label,
+          percentage: radarChart.section_percentages[index]
+        }));
+        
+        setRadarData(radarChartData);
+      }
     } catch (error) {
-      console.error('Failed to fetch MMSE history:', error);
+      console.error('Failed to fetch MMSE chart data:', error);
     } finally {
       setIsLoading(false);  
     }
@@ -100,103 +172,9 @@ export default function MMSEHistoryPage() {
 
   useEffect(() => {
     if (user?.id) {
-      fetchHistory();
+      fetchChartData();
     }
-  }, [user?.id, fetchHistory]);
-
-  const chartData = history
-    .sort((a, b) => new Date(a.test_date).getTime() - new Date(b.test_date).getTime())
-    .reduce((acc, item) => {
-      const dateKey = new Date(item.test_date).toDateString();
-      
-      if (!acc.some(existing => new Date(existing.test_date).toDateString() === dateKey)) {
-        acc.push(item);
-      } else {
-        const existingIndex = acc.findIndex(existing => 
-          new Date(existing.test_date).toDateString() === dateKey
-        );
-        // Take the latest test of the day (most recent timestamp)
-        if (new Date(item.test_date).getTime() > new Date(acc[existingIndex].test_date).getTime()) {
-          acc[existingIndex] = item;
-        }
-      }
-      
-      return acc;
-    }, [] as MMSEHistoryItem[])
-    .map((item, index, array) => {
-      let scoreDifference = null;
-      if (index > 0) {
-        scoreDifference = item.total_score - array[index - 1].total_score;
-      }
-      
-      return {
-        ...item,
-        testNumber: index + 1,
-        formattedDate: new Date(item.test_date).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        }),
-        shortDate: new Date(item.test_date).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric'
-        }),
-        scoreDifference
-      };
-    });
-
-  const processRadarData = () => {
-    if (detailedHistory.length < 2) return { radarData: [], availableTests: [] };
-
-    const sortedDetailed = detailedHistory
-      .sort((a, b) => new Date(a.test_date).getTime() - new Date(b.test_date).getTime());
-
-    const test1 = sortedDetailed[selectedTests.test1];
-    const test2 = sortedDetailed[selectedTests.test2];
-
-    if (!test1 || !test2) return { radarData: [], availableTests: sortedDetailed };
-
-    const getSectionPercentages = (test: MMSEDetailedHistoryItem) => {
-      const sectionStats: Record<string, { earned: number; total: number }> = {};
-      
-      test.question_details.forEach(q => {
-        if (!sectionStats[q.section_name]) {
-          sectionStats[q.section_name] = { earned: 0, total: 0 };
-        }
-        sectionStats[q.section_name].earned += q.points_earned;
-        sectionStats[q.section_name].total += q.max_points;
-      });
-
-      return Object.entries(sectionStats).map(([name, stats]) => ({
-        section: name,
-        percentage: (stats.earned / stats.total) * 100
-      }));
-    };
-
-    const test1Sections = getSectionPercentages(test1);
-    const test2Sections = getSectionPercentages(test2);
-
-    const allSections = [...new Set([
-      ...test1Sections.map(s => s.section),
-      ...test2Sections.map(s => s.section)
-    ])];
-
-    const radarData = allSections.map(section => {
-      const test1Data = test1Sections.find(s => s.section === section) || { percentage: 0 };
-      const test2Data = test2Sections.find(s => s.section === section) || { percentage: 0 };
-      
-      return {
-        section: section.length > 20 ? section.substring(0, 20) + '...' : section,
-        fullSection: section,
-        test1: test1Data.percentage,
-        test2: test2Data.percentage
-      };
-    });
-
-    return { radarData, availableTests: sortedDetailed };
-  };
-
-  const { radarData, availableTests } = processRadarData();
+  }, [user?.id, fetchChartData]);
 
   if (isLoading) {
     return (
@@ -217,7 +195,7 @@ export default function MMSEHistoryPage() {
           <p className="text-gray-600">Track your cognitive assessment scores over time</p>
         </div>
 
-        {history.length === 0 ? (
+        {chartData.length === 0 ? (
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
             <div className="max-w-md mx-auto">
               <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,44 +320,12 @@ export default function MMSEHistoryPage() {
               </div>
             </div>
 
-            {/* Domain Comparison Chart */}
-            {detailedHistory.length >= 2 && (
+            {/* Latest Test Domain Analysis */}
+            {radarData.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Domain Comparison Analysis</h2>
-                  <p className="text-gray-600 text-sm">Compare performance across different cognitive domains between tests</p>
-                </div>
-
-                {/* Test Selection */}
-                <div className="mb-6 flex gap-4 flex-wrap">
-                  <div className="flex-1 min-w-48">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">First Test</label>
-                    <select 
-                      value={selectedTests.test1}
-                      onChange={(e) => setSelectedTests(prev => ({ ...prev, test1: parseInt(e.target.value) }))}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-                    >
-                      {availableTests.map((test, index) => (
-                        <option key={test.assessment_id} value={index}>
-                          Test #{test.assessment_id} - {new Date(test.test_date).toLocaleDateString()}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex-1 min-w-48">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Second Test</label>
-                    <select 
-                      value={selectedTests.test2}
-                      onChange={(e) => setSelectedTests(prev => ({ ...prev, test2: parseInt(e.target.value) }))}
-                      className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
-                    >
-                      {availableTests.map((test, index) => (
-                        <option key={test.assessment_id} value={index}>
-                          Test #{test.assessment_id} - {new Date(test.test_date).toLocaleDateString()}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Latest Test Domain Analysis</h2>
+                  <p className="text-gray-600 text-sm">Performance breakdown across different cognitive domains</p>
                 </div>
 
                 <div className="h-96 w-full">
@@ -397,18 +343,10 @@ export default function MMSEHistoryPage() {
                         tickCount={6}
                       />
                       <Radar
-                        name={`Test #${availableTests[selectedTests.test1]?.assessment_id || ''}`}
-                        dataKey="test1"
+                        name="Latest Test"
+                        dataKey="percentage"
                         stroke="#0891b2"
                         fill="#0891b2"
-                        fillOpacity={0.1}
-                        strokeWidth={2}
-                      />
-                      <Radar
-                        name={`Test #${availableTests[selectedTests.test2]?.assessment_id || ''}`}
-                        dataKey="test2"
-                        stroke="#f59e0b"
-                        fill="#f59e0b"
                         fillOpacity={0.1}
                         strokeWidth={2}
                       />
@@ -419,12 +357,10 @@ export default function MMSEHistoryPage() {
                             const data = payload[0].payload;
                             return (
                               <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-                                <p className="font-semibold text-gray-900 mb-2">{data.fullSection}</p>
-                                {payload.map((entry, index) => (
-                                  <p key={index} className="text-sm" style={{ color: entry.color }}>
-                                    {entry.name}: {entry.value?.toFixed(1)}%
-                                  </p>
-                                ))}
+                                <p className="font-semibold text-gray-900 mb-2">{data.section}</p>
+                                <p className="text-sm text-cyan-600">
+                                  Score: {data.percentage.toFixed(1)}%
+                                </p>
                               </div>
                             );
                           }
@@ -438,7 +374,7 @@ export default function MMSEHistoryPage() {
                 <div className="mt-4 text-xs text-gray-500">
                   <p>• Each axis represents a cognitive domain from the MMSE test</p>
                   <p>• Percentages show correct answers within each domain</p>
-                  <p>• Compare the two colored areas to see which domains improved or declined</p>
+                  <p>• Higher values indicate better performance in that domain</p>
                 </div>
               </div>
             )}

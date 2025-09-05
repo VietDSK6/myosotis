@@ -115,6 +115,50 @@ export interface MMSEHistoryItem {
   };
 }
 
+export interface MMSEChartData {
+  success: true;
+  user_id: number;
+  test_name: string;
+  radar_chart: {
+    assessment_id: number;
+    test_date: string;
+    total_score: number;
+    max_score: number;
+    percentage: number;
+    interpretation: string;
+    section_labels: string[];
+    section_scores: number[];
+    section_max_scores: number[];
+    section_percentages: number[];
+  };
+  line_chart: {
+    labels: string[];
+    datasets: [{
+      label: string;
+      data: number[];
+      percentages: number[];
+      interpretations: string[];
+      assessment_ids: number[];
+    }];
+    metadata: {
+      total_tests: number;
+      max_possible_score: number;
+      date_range: {
+        start: string;
+        end: string;
+      };
+    };
+  };
+  summary_stats: {
+    total_tests: number;
+    average_score: number;
+    highest_score: number;
+    latest_score: number;
+    lowest_score: number;
+    improvement_trend: string;
+  };
+}
+
 export interface MMSEQuestionDetail {
   question_id: string;
   question_text: string;
@@ -196,6 +240,17 @@ export const getMMSEDetailedHistory = async (userId: number): Promise<ApiRespons
     return response.data;
   } catch (error) {
     console.error('Error fetching MMSE detailed history:', error);
+    throw error;
+  }
+};
+
+export const getMMSEChartData = async (userId: number): Promise<ApiResponse<MMSEChartData>> => {
+  try {
+    const response = await mmseAPI.get(`/api/v1/assessments/mmse/chart-data?user_id=${userId}`);
+    console.log('MMSE chart data response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching MMSE chart data:', error);
     throw error;
   }
 };

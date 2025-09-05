@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
-import { getMMSEHistory } from '../api/mmse';
+import { getMMSEChartData } from '../api/mmse';
 import { useAuthStore } from '../features/auth/store';
 
 interface SimpleChartProps {
@@ -11,6 +11,15 @@ interface ChartDataPoint {
   name: string;
   score: number;
   date: string;
+}
+
+interface ProcessedTestData {
+  test_date: string;
+  total_score: number;
+  max_score: number;
+  percentage: number;
+  interpretation: string;
+  assessment_id: number;
 }
 
 export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) => {
@@ -28,16 +37,38 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
 
       try {
         setIsLoading(true);
-        const response = await getMMSEHistory(user.id);
-        const history = response.data || [];
+        const response = await getMMSEChartData(user.id);
         
-        if (history.length > 0) {
+        if (response.success) {
           
-          const sortedHistory = history
-            .sort((a, b) => new Date(a.test_date).getTime() - new Date(b.test_date).getTime())
+          const lineData = response.data.line_chart.datasets[0];
+          const processedData: { [date: string]: ProcessedTestData } = {};
+          
+          lineData.data.forEach((score: number, index: number) => {
+            const testDate = response.data.line_chart.labels[index];
+            const dateKey = new Date(testDate).toDateString();
+            
+            const dataPoint: ProcessedTestData = {
+              test_date: testDate,
+              total_score: score,
+              max_score: response.data.line_chart.metadata.max_possible_score,
+              percentage: lineData.percentages[index],
+              interpretation: lineData.interpretations[index],
+              assessment_id: lineData.assessment_ids[index],
+            };
+            
+            
+            if (!processedData[dateKey] || new Date(testDate).getTime() > new Date(processedData[dateKey].test_date).getTime()) {
+              processedData[dateKey] = dataPoint;
+            }
+          });
+          
+          
+          const sortedData = Object.values(processedData)
+            .sort((a: ProcessedTestData, b: ProcessedTestData) => new Date(a.test_date).getTime() - new Date(b.test_date).getTime())
             .slice(-4);
 
-          const processedData = sortedHistory.map((item, index) => ({
+          const chartDataPoints = sortedData.map((item: ProcessedTestData, index: number) => ({
             name: `Test ${index + 1}`,
             score: item.total_score,
             date: new Date(item.test_date).toLocaleDateString('en-US', {
@@ -46,17 +77,19 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
             })
           }));
 
-          setChartData(processedData);
+          setChartData(chartDataPoints);
           
           
-          const latestTest = sortedHistory[sortedHistory.length - 1];
-          setLatestScore({
-            score: latestTest.total_score,
-            maxScore: latestTest.max_score
-          });
+          if (sortedData.length > 0) {
+            const latestTest = sortedData[sortedData.length - 1];
+            setLatestScore({
+              score: latestTest.total_score,
+              maxScore: latestTest.max_score
+            });
+          }
         }
       } catch (error) {
-        console.error('Failed to fetch MMSE history:', error);
+        console.error('Failed to fetch MMSE chart data:', error);
       } finally {
         setIsLoading(false);
       }
