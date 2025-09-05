@@ -12,6 +12,10 @@ import {
   DashboardAIClonePage,
   DashboardMemoryFilmPage,
   DashboardChatbotPage,
+  DashboardMemoryMapPage,
+  DashboardMiniGamesPage,
+  DashboardSudokuGamePage,
+  DashboardPictureRecallPage,
 } from '../pages/dashboard';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage';
 import LandingPage from '../pages/LandingPage';
@@ -88,6 +92,22 @@ export const router = createBrowserRouter([
       {
         path: 'chatbot',
         element: <DashboardChatbotPage />,
+      },
+      {
+        path: 'memory-map',
+        element: <DashboardMemoryMapPage />,
+      },
+      {
+        path: 'mini-games',
+        element: <DashboardMiniGamesPage />,
+      },
+      {
+        path: 'mini-games/sudoku',
+        element: <DashboardSudokuGamePage />,
+      },
+      {
+        path: 'mini-games/picture-recall',
+        element: <DashboardPictureRecallPage />,
       },
     ],
   },

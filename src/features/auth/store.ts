@@ -116,6 +116,10 @@ export const useAuthStore = create<AuthStore>()(
           // Import is done dynamically to avoid circular dependency
           const { useChatbotStore } = await import('../chatbot/store');
           useChatbotStore.getState().clearUserData();
+          
+          // Clear memory map data when logging out
+          const { useMemoryMapStore } = await import('../memory-map/store');
+          useMemoryMapStore.getState().clearAllMemories();
         }
       },
 

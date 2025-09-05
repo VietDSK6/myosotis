@@ -75,6 +75,32 @@ export default function DashboardDiscoverPage() {
       onClick: () => navigate('/dashboard/contacts'),
       bgColor: "bg-orange-100",
       textColor: "text-orange-700"
+    },
+    {
+      title: "Memory Map",
+      description: "Explore places and create location-based memories with Street View",
+      icon: (
+        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+      onClick: () => navigate('/dashboard/memory-map'),
+      bgColor: "bg-red-100",
+      textColor: "text-red-700"
+    },
+    {
+      title: "Mini Games",
+      description: "Exercise your mind with Sudoku and other brain puzzles",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M10 2a2 2 0 0 1-1.5 1.937v5.087c.863.083 1.5.377 1.5.726 0 .414-.895.75-2 .75s-2-.336-2-.75c0-.35.637-.643 1.5-.726V3.937A2 2 0 1 1 10 2"/>
+          <path d="M0 9.665v1.717a1 1 0 0 0 .553.894l6.553 3.277a2 2 0 0 0 1.788 0l6.553-3.277a1 1 0 0 0 .553-.894V9.665c0-.1-.06-.19-.152-.23L9.5 6.715v.993l5.227 2.178a.125.125 0 0 1 .001.23l-5.94 2.546a2 2 0 0 1-1.576 0l-5.94-2.546a.125.125 0 0 1 .001-.23L6.5 7.708l-.013-.988L.152 9.435a.25.25 0 0 0-.152.23"/>
+        </svg>
+      ),
+      onClick: () => navigate('/dashboard/mini-games'),
+      bgColor: "bg-pink-100",
+      textColor: "text-pink-700"
     }
   ];
 

@@ -7,3 +7,7 @@ export { default as DashboardMMSEHistoryPage } from './DashboardMMSEHistoryPage'
 export { default as DashboardAIClonePage } from './DashboardAIClonePage';
 export { default as DashboardMemoryFilmPage } from './DashboardMemoryFilmPage';
 export { default as DashboardChatbotPage } from './DashboardChatbotPage';
+export { default as DashboardMemoryMapPage } from './DashboardMemoryMapPage';
+export { default as DashboardMiniGamesPage } from './DashboardMiniGamesPage';
+export { default as DashboardSudokuGamePage } from './DashboardSudokuPage';
+export { default as DashboardPictureRecallPage } from './DashboardPictureRecallPage';
