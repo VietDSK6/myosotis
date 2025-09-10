@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginFormData } from "./validation";
+import { getLoginSchema, type LoginFormData } from "./validation";
 import { useAuthStore } from "./store";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function LoginForm() {
+  const { t } = useTranslation(['auth']);
   const navigate = useNavigate();
   const { login, isLoading, error, clearError } = useAuthStore();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -15,7 +17,7 @@ export default function LoginForm() {
     handleSubmit, 
     formState: { errors, isSubmitting } 
   } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(getLoginSchema(t)),
   });
 
   const onSubmit = async (data: LoginFormData) => {
@@ -26,7 +28,7 @@ export default function LoginForm() {
       navigate('/dashboard');
     } catch (error) {
       console.error('Login failed:', error);
-      setSubmitError('Login failed. Please check your credentials.');
+      setSubmitError(t('auth:login.loginFailed'));
     }
   };
 
@@ -42,25 +44,25 @@ export default function LoginForm() {
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        Back to Home
+        {t('auth:login.backToHome')}
       </button>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
           <label htmlFor="email" className="block text-lg font-medium text-gray-900 mb-2">
-            Email <span className="text-red-500">*</span>
+            {t('auth:login.emailLabel')} <span className="text-red-500">{t('auth:login.required')}</span>
           </label>
           <input
             id="email"
             type="email"
             {...register("email")}
-            placeholder="Enter your email"
+            placeholder={t('auth:login.emailPlaceholder')}
             className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
             aria-invalid={errors.email ? 'true' : 'false'}
             aria-describedby={errors.email ? 'email-error' : 'email-help'}
           />
           <p id="email-help" className="text-lg text-gray-600 mt-1">
-            Email you used to register
+            {t('auth:login.emailHelp')}
           </p>
           {errors.email && (
             <span id="email-error" className="block text-lg text-red-600 mt-1" role="alert">
@@ -71,13 +73,13 @@ export default function LoginForm() {
 
         <div>
           <label htmlFor="password" className="block text-lg font-medium text-gray-900 mb-2">
-            Password <span className="text-red-500">*</span>
+            {t('auth:login.passwordLabel')} <span className="text-red-500">{t('auth:login.required')}</span>
           </label>
           <input
             id="password"
             type="password"
             {...register("password")}
-            placeholder="Enter your password"
+            placeholder={t('auth:login.passwordPlaceholder')}
             className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
             aria-invalid={errors.password ? 'true' : 'false'}
             aria-describedby={errors.password ? 'password-error' : undefined}
@@ -106,10 +108,10 @@ export default function LoginForm() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Signing in...
+              {t('auth:login.submittingButton')}
             </span>
           ) : (
-            'Sign In'
+            t('auth:login.submitButton')
           )}
         </button>
 
@@ -119,18 +121,18 @@ export default function LoginForm() {
             onClick={() => navigate('/forgot-password')}
             className="text-lg text-cyan-600 hover:text-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-lg p-2"
           >
-            Forgot password?
+            {t('auth:login.forgotPassword')}
           </button>
         </div>
 
         <div className="text-center text-lg text-gray-600">
-          Don't have an account?{' '}
+          {t('auth:login.noAccount')}{' '}
           <button 
             type="button"
             onClick={() => navigate('/register')}
             className="text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-lg p-1"
           >
-            Sign up now
+            {t('auth:login.signUpNow')}
           </button>
         </div>
       </form>

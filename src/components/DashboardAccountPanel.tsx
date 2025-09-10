@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertMessage, LoadingSpinner } from '../components';
+import { useTranslation } from 'react-i18next';
 
 interface DashboardAccountPanelProps {
   isLoadingUserData: boolean;
@@ -36,11 +37,14 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
   handleSave,
   handleCancel,
   setIsEditing,
-}) => (
+}) => {
+  const { t } = useTranslation(['dashboard']);
+
+  return (
   <div>
     {isLoadingUserData ? (
       <div className="flex items-center justify-center py-6">
-        <LoadingSpinner text="Loading personal information..." />
+        <LoadingSpinner text={t('dashboard:accountPage.loading')} />
       </div>
     ) : (
       <div className="bg-white rounded-3xl shadow-lg px-8 lg:px-12 pb-8">
@@ -52,7 +56,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
               }}
               className="min-h-12 px-6 py-2 bg-[#5A6DD0] text-white text-lg font-medium rounded-xl hover:bg-[#0927bc] transition-all focus:outline-none focus:ring-4 focus:ring-cyan-300"
             >
-              Edit Information
+              {t('dashboard:accountPage.buttons.edit')}
             </button>
           ) : (
             <div className="flex gap-3">
@@ -61,7 +65,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 disabled={isSaving}
                 className="min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300 disabled:opacity-50"
               >
-                Cancel
+                {t('dashboard:accountPage.buttons.cancel')}
               </button>
               <button
                 onClick={handleSave}
@@ -71,10 +75,10 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 {isSaving ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Saving...
+                    {t('dashboard:accountPage.buttons.saving')}
                   </>
                 ) : (
-                  'Save Changes'
+                  t('dashboard:accountPage.buttons.save')
                 )}
               </button>
             </div>
@@ -98,7 +102,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
         <div className="space-y-8">
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">
-              Full Name
+              {t('dashboard:accountPage.fields.fullName')}
             </label>
             {isEditing ? (
               <input
@@ -110,7 +114,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
               />
             ) : (
               <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                {formData.fullName || 'Not provided'}
+                {formData.fullName || t('dashboard:accountPage.fields.notProvided')}
               </div>
             )}
           </div>
@@ -118,7 +122,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Email Address
+                {t('dashboard:accountPage.fields.email')}
               </label>
               {isEditing ? (
                 <input
@@ -130,14 +134,14 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 />
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.email || 'Not provided'}
+                  {formData.email || t('dashboard:accountPage.fields.notProvided')}
                 </div>
               )}
             </div>
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Phone Number
+                {t('dashboard:accountPage.fields.phone')}
               </label>
               {isEditing ? (
                 <input
@@ -149,7 +153,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 />
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.phone || 'Not provided'}
+                  {formData.phone || t('dashboard:accountPage.fields.notProvided')}
                 </div>
               )}
             </div>
@@ -158,7 +162,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Date of Birth
+                {t('dashboard:accountPage.fields.dateOfBirth')}
               </label>
               {isEditing ? (
                 <input
@@ -170,14 +174,14 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 />
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.dateOfBirth || 'Not provided'}
+                  {formData.dateOfBirth || t('dashboard:accountPage.fields.notProvided')}
                 </div>
               )}
             </div>
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Gender
+                {t('dashboard:accountPage.fields.gender')}
               </label>
               {isEditing ? (
                 <select
@@ -186,13 +190,13 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                   onChange={handleInputChange}
                   className="w-full min-h-12 px-4 py-3 text-lg border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:ring-4 focus:ring-cyan-200 outline-none transition-all"
                 >
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="">{t('dashboard:accountPage.fields.selectGender')}</option>
+                  <option value="male">{t('dashboard:accountPage.fields.male')}</option>
+                  <option value="female">{t('dashboard:accountPage.fields.female')}</option>
                 </select>
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.gender ? formData.gender.charAt(0).toUpperCase() + formData.gender.slice(1) : 'Not provided'}
+                  {formData.gender ? (formData.gender === 'male' ? t('dashboard:accountPage.fields.male') : t('dashboard:accountPage.fields.female')) : t('dashboard:accountPage.fields.notProvided')}
                 </div>
               )}
             </div>
@@ -200,7 +204,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
 
           <div>
             <label className="block text-lg font-medium text-gray-700 mb-2">
-              Address
+              {t('dashboard:accountPage.fields.address')}
             </label>
             {isEditing ? (
               <input
@@ -212,7 +216,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
               />
             ) : (
               <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                {formData.address || 'Not provided'}
+                {formData.address || t('dashboard:accountPage.fields.notProvided')}
               </div>
             )}
           </div>
@@ -220,7 +224,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Current City
+                {t('dashboard:accountPage.fields.city')}
               </label>
               {isEditing ? (
                 <input
@@ -232,14 +236,14 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 />
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.city || 'Not provided'}
+                  {formData.city || t('dashboard:accountPage.fields.notProvided')}
                 </div>
               )}
             </div>
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Hometown
+                {t('dashboard:accountPage.fields.hometown')}
               </label>
               {isEditing ? (
                 <input
@@ -251,14 +255,14 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 />
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.hometown || 'Not provided'}
+                  {formData.hometown || t('dashboard:accountPage.fields.notProvided')}
                 </div>
               )}
             </div>
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Country
+                {t('dashboard:accountPage.fields.country')}
               </label>
               {isEditing ? (
                 <input
@@ -270,7 +274,7 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
                 />
               ) : (
                 <div className="w-full min-h-12 px-4 py-3 text-lg bg-gray-50 rounded-xl flex items-center">
-                  {formData.country || 'Not provided'}
+                  {formData.country || t('dashboard:accountPage.fields.notProvided')}
                 </div>
               )}
             </div>
@@ -279,4 +283,5 @@ export const DashboardAccountPanel: React.FC<DashboardAccountPanelProps> = ({
       </div>
     )}
   </div>
-);
+  );
+};

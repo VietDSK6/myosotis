@@ -4,8 +4,10 @@ import { getUserInfo, updateUserInfo } from '../../api/user';
 import type { UserData } from '../../types/user';
 import { DashboardAccountPanel } from '../../components/DashboardAccountPanel';
 import DashboardHeader from '../../components/DashboardHeader';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardAccountPage() {
+  const { t } = useTranslation(['dashboard']);
   const { user, updateUser } = useAuthStore();
 
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -29,7 +31,7 @@ export default function DashboardAccountPage() {
 
   const fetchUserData = useCallback(async () => {
     if (!user?.id) {
-      setUserDataError('User ID not found');
+      setUserDataError(t('dashboard:accountPage.errors.userIdNotFound'));
       setIsLoadingUserData(false);
       return;
     }
@@ -53,11 +55,11 @@ export default function DashboardAccountPage() {
       });
       setUserDataError(null);
     } catch (err) {
-      setUserDataError(err instanceof Error ? err.message : 'Failed to fetch user information');
+      setUserDataError(err instanceof Error ? err.message : t('dashboard:accountPage.errors.fetchFailed'));
     } finally {
       setIsLoadingUserData(false);
     }
-  }, [user?.id]);
+  }, [user?.id, t]);
 
   useEffect(() => {
     fetchUserData();
@@ -121,9 +123,9 @@ export default function DashboardAccountPage() {
       updateUser(updatedUser);
 
       setIsEditing(false);
-      setSuccessMessage('Personal information updated successfully!');
+      setSuccessMessage(t('dashboard:accountPage.messages.updateSuccess'));
     } catch (err) {
-      setUserDataError(err instanceof Error ? err.message : 'Failed to save personal information');
+      setUserDataError(err instanceof Error ? err.message : t('dashboard:accountPage.errors.saveFailed'));
     } finally {
       setIsSaving(false);
     }
@@ -150,8 +152,8 @@ export default function DashboardAccountPage() {
   return (
     <div className="lg:col-span-10">
       <DashboardHeader 
-        title="My Account" 
-        description="Manage your personal information and account settings"
+        title={t('dashboard:accountPage.title')}
+        description={t('dashboard:accountPage.description')}
       />
       <DashboardAccountPanel
         isLoadingUserData={isLoadingUserData}

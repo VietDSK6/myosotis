@@ -3,8 +3,11 @@ import { ProtectedRoute } from '../../features/auth';
 import { useAuthStore } from '../../features/auth/store';
 import { useSessionTimeout } from '../../hooks/useSessionTimeout';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 export default function DashboardLayout() {
+  const { t } = useTranslation(['dashboard']);
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,19 +34,19 @@ export default function DashboardLayout() {
   const navigationItems = [
     {
       key: 'dashboard',
-      label: 'Dashboard',
+      label: t('dashboard:navigation.dashboard'),
       icon: '/dashboard.png',
       path: '/dashboard',
     },
     {
       key: 'account',
-      label: 'My Account',
+      label: t('dashboard:navigation.myAccount'),
       icon: '/personal-information.png',
       path: '/dashboard/account',
     },
     {
       key: 'discover',
-      label: 'Discover',
+      label: t('dashboard:navigation.discover'),
       icon: '/discover.png',
       path: '/dashboard/discover',
     },
@@ -81,7 +84,7 @@ export default function DashboardLayout() {
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span>Schedule feature is coming soon!</span>
+            <span>{t('dashboard:notifications.scheduleComingSoon')}</span>
           </div>
         )}
 
@@ -89,7 +92,7 @@ export default function DashboardLayout() {
           <div className="p-4 lg:p-6 h-screen flex flex-col sticky top-0">
             <div className="flex items-center space-x-3 mb-6 pb-4 border-b border-gray-100">
               <img src="/apple-touch-icon.png" alt="Myosotis Logo" className="h-8 w-8" />
-              <div className="text-2xl font-bold text-[#5A6DD0]">Myosotis</div>
+              <div className="text-2xl font-bold text-[#5A6DD0]">{t('dashboard:branding.myosotis')}</div>
             </div>
 
             <button
@@ -99,7 +102,7 @@ export default function DashboardLayout() {
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              <span>Create New Schedule</span>
+              <span>{t('dashboard:buttons.createNewSchedule')}</span>
             </button>
 
             <nav className="space-y-2 flex-1 lg:overflow-y-auto mb-6">
@@ -130,7 +133,7 @@ export default function DashboardLayout() {
                     onClick={handleLogout}
                     className="text-sm text-[#888888] hover:text-[#5A6DD0]"
                   >
-                    Sign out
+                    {t('dashboard:buttons.signOut')}
                   </button>
                 </div>
               </div>
@@ -146,7 +149,7 @@ export default function DashboardLayout() {
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
                   <div className="flex items-center space-x-3">
                     <img src="/apple-touch-icon.png" alt="Myosotis Logo" className="h-8 w-8" />
-                    <div className="text-xl font-bold text-[#5A6DD0]">Myosotis</div>
+                    <div className="text-xl font-bold text-[#5A6DD0]">{t('dashboard:branding.myosotis')}</div>
                   </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -165,7 +168,7 @@ export default function DashboardLayout() {
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  <span>Create New Schedule</span>
+                  <span>{t('dashboard:buttons.createNewSchedule')}</span>
                 </button>
 
                 <nav className="space-y-2 flex-1 overflow-y-auto mb-6">
@@ -199,7 +202,7 @@ export default function DashboardLayout() {
                         onClick={handleLogout}
                         className="text-sm text-[#888888] hover:text-[#5A6DD0]"
                       >
-                        Sign out
+                        {t('dashboard:buttons.signOut')}
                       </button>
                     </div>
                   </div>
@@ -229,6 +232,8 @@ export default function DashboardLayout() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </button>
+
+                <LanguageSwitcher />
 
                 <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors relative mr-4">
                   <img src="/bell.png" alt="Notifications" className="h-5 w-5" />

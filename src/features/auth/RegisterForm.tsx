@@ -1,11 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema, type RegisterFormData } from "./validation";
+import { getRegisterSchema, type RegisterFormData } from "./validation";
 import { useAuthStore } from "./store";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterForm() {
+  const { t } = useTranslation(['auth']);
   const navigate = useNavigate();
   const { register: registerUser, isLoading, error, clearError } = useAuthStore();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -15,7 +17,7 @@ export default function RegisterForm() {
     handleSubmit, 
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(getRegisterSchema(t)),
   });
 
   const onSubmit = async (data: RegisterFormData) => {
@@ -26,7 +28,7 @@ export default function RegisterForm() {
       navigate('/personal-info?edit=true');
     } catch (error) {
       console.error('Registration failed:', error);
-      setSubmitError('Registration failed. Please try again.');
+      setSubmitError(t('auth:register.registrationFailed'));
     }
   };
 
@@ -42,34 +44,34 @@ export default function RegisterForm() {
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        Back to Home
+        {t('auth:register.backToHome')}
       </button>
 
       <div className="mb-8 text-center">
         <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-          Create Your Account
+          {t('auth:register.title')}
         </h2>
         <p className="text-lg text-gray-600">
-          Get started with just a few details
+          {t('auth:register.subtitle')}
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div>
           <label htmlFor="email" className="block text-lg font-medium text-gray-900 mb-2">
-            Email <span className="text-red-500">*</span>
+            {t('auth:register.emailLabel')} <span className="text-red-500">{t('auth:register.required')}</span>
           </label>
           <input
             id="email"
             type="email"
             {...register("email")}
-            placeholder="Enter your email"
+            placeholder={t('auth:register.emailPlaceholder')}
             className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
             aria-invalid={errors.email ? 'true' : 'false'}
             aria-describedby={errors.email ? 'email-error' : 'email-help'}
           />
           <p id="email-help" className="text-lg text-gray-600 mt-1">
-            Email will be used for login
+            {t('auth:register.emailHelp')}
           </p>
           {errors.email && (
             <span id="email-error" className="block text-lg text-red-600 mt-1" role="alert">
@@ -80,13 +82,13 @@ export default function RegisterForm() {
 
         <div>
           <label htmlFor="full_name" className="block text-lg font-medium text-gray-900 mb-2">
-            Full Name <span className="text-red-500">*</span>
+            {t('auth:register.fullNameLabel')} <span className="text-red-500">{t('auth:register.required')}</span>
           </label>
           <input
             id="full_name"
             type="text"
             {...register("profile.full_name")}
-            placeholder="Enter your full name"
+            placeholder={t('auth:register.fullNamePlaceholder')}
             className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
             aria-invalid={errors.profile?.full_name ? 'true' : 'false'}
             aria-describedby={errors.profile?.full_name ? 'full_name-error' : undefined}
@@ -100,13 +102,13 @@ export default function RegisterForm() {
 
         <div>
           <label htmlFor="password" className="block text-lg font-medium text-gray-900 mb-2">
-            Password <span className="text-red-500">*</span>
+            {t('auth:register.passwordLabel')} <span className="text-red-500">{t('auth:register.required')}</span>
           </label>
           <input
             id="password"
             type="password"
             {...register("password")}
-            placeholder="Enter password (at least 8 characters)"
+            placeholder={t('auth:register.passwordPlaceholder')}
             className="min-h-12 w-full px-4 py-3 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 focus:border-cyan-600"
             aria-invalid={errors.password ? 'true' : 'false'}
             aria-describedby={errors.password ? 'password-error' : 'password-help'}
@@ -129,10 +131,10 @@ export default function RegisterForm() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Creating Account...
+              {t('auth:register.submittingButton')}
             </span>
           ) : (
-            'Create Account'
+            t('auth:register.submitButton')
           )}
         </button>
 
@@ -143,18 +145,18 @@ export default function RegisterForm() {
         )}
 
         <div className="text-center text-lg text-gray-600">
-          Already have an account?{' '}
+          {t('auth:register.haveAccount')}{' '}
           <button 
             type="button"
             onClick={() => navigate('/login')}
             className="text-cyan-600 hover:text-cyan-700 font-medium focus:outline-none focus:ring-4 focus:ring-cyan-300 rounded-lg p-1"
           >
-            Sign in now
+            {t('auth:register.signInNow')}
           </button>
         </div>
 
         <div className="text-center text-sm text-gray-500 mt-4">
-          <p>You'll be able to complete your profile after registration</p>
+          <p>{t('auth:register.profileNote')}</p>
         </div>
       </form>
     </div>

@@ -7,6 +7,7 @@ export { default as AICloneHistoryContent } from './AICloneHistoryContent';
 export { default as ChatbotContent } from './ChatbotContent';
 export { default as MMSETestContent } from './MMSETestContent';
 export { default as DashboardHeader } from './DashboardHeader';
+export { default as LanguageSwitcher } from './LanguageSwitcher';
 export { SimpleChart } from './SimpleChart';
 export { PageHeader, HeaderButton } from './layout';
 export { LoadingSpinner, EmptyState, FeatureCard, AlertMessage, StatCard } from './ui';

@@ -1,0 +1,154 @@
+{
+  "navigation": {
+    "dashboard": "Bảng điều khiển",
+    "myAccount": "Tài khoản của tôi",
+    "discover": "Khám phá"
+  },
+  "buttons": {
+    "createNewSchedule": "Tạo lịch trình mới",
+    "signOut": "Đăng xuất",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "previousMonth": "Tháng trước",
+    "nextMonth": "Tháng sau"
+  },
+  "notifications": {
+    "scheduleComingSoon": "Tính năng Lịch trình sắp ra mắt!"
+  },
+  "branding": {
+    "myosotis": "Myosotis"
+  },
+  "homePage": {
+    "title": "Bảng điều khiển",
+    "description": "Chào mừng bạn đến với bảng điều khiển chăm sóc sức khỏe và trí nhớ",
+    "features": {
+      "livingMemories": {
+        "title": "Ký Ức Sống Động",
+        "subtitle": "Tạo avatar AI với giọng nói của người thân"
+      },
+      "memoryTest": {
+        "title": "Kiểm Tra Trí Nhớ",
+        "subtitle": "Thực hiện bài đánh giá nhận thức"
+      },
+      "careCompanion": {
+        "title": "Bạn Đồng Hành Chăm Sóc",
+        "subtitle": "Trò chuyện với bạn đồng hành AI"
+      },
+      "memoryFilms": {
+        "title": "Thước Phim Ký Ức",
+        "subtitle": "Xem lại những kỷ niệm trân quý"
+      },
+      "memoryMap": {
+        "title": "Bản Đồ Ký Ức",
+        "subtitle": "Khám phá địa điểm và tạo ký ức"
+      },
+      "miniGames": {
+        "title": "Trò Chơi Trí Tuệ",
+        "subtitle": "Rèn luyện trí não với trò chơi Sudoku"
+      }
+    },
+    "calendar": {
+      "months": {
+        "january": "Tháng 1",
+        "february": "Tháng 2", 
+        "march": "Tháng 3",
+        "april": "Tháng 4",
+        "may": "Tháng 5",
+        "june": "Tháng 6",
+        "july": "Tháng 7",
+        "august": "Tháng 8",
+        "september": "Tháng 9",
+        "october": "Tháng 10",
+        "november": "Tháng 11",
+        "december": "Tháng 12"
+      },
+      "daysOfWeekShort": {
+        "monday": "T2",
+        "tuesday": "T3",
+        "wednesday": "T4",
+        "thursday": "T5",
+        "friday": "T6",
+        "saturday": "T7",
+        "sunday": "CN"
+      }
+    },
+    "healthAssistant": {
+      "title": "Trợ Lý Sức Khỏe Của Bạn",
+      "description": "Sẵn sàng giúp đỡ bạn trên hành trình sức khỏe"
+    }
+  },
+  "discoverPage": {
+    "title": "Khám phá",
+    "description": "Khám phá tất cả các tính năng và công cụ có sẵn",
+    "features": {
+      "livingMemories": {
+        "title": "Ký Ức Sống Động",
+        "description": "Tạo avatar AI với giọng nói của người thân yêu"
+      },
+      "memoryTest": {
+        "title": "Kiểm Tra Trí Nhớ (MMSE)",
+        "description": "Thực hiện các bài kiểm tra đánh giá nhận thức"
+      },
+      "memoryFilms": {
+        "title": "Thước Phim Ký Ức",
+        "description": "Xem lại ảnh và những kỷ niệm của bạn"
+      },
+      "scoreAnalysis": {
+        "title": "Phân Tích Điểm Số",
+        "description": "Xem kết quả kiểm tra MMSE và theo dõi tiến trình của bạn"
+      },
+      "careCompanion": {
+        "title": "Bạn Đồng Hành Chăm Sóc",
+        "description": "Trò chuyện với bạn đồng hành AI của bạn"
+      },
+      "emergencyContacts": {
+        "title": "Danh Bạ Khẩn Cấp",
+        "description": "Quản lý danh bạ khẩn cấp và người chăm sóc"
+      },
+      "memoryMap": {
+        "title": "Bản Đồ Ký Ức",
+        "description": "Khám phá các địa điểm và tạo ký ức theo vị trí với Chế độ xem phố"
+      },
+      "miniGames": {
+        "title": "Trò Chơi Trí Tuệ",
+        "description": "Rèn luyện trí não với Sudoku và các câu đố trí tuệ khác"
+      }
+    }
+  },
+  "accountPage": {
+    "title": "Tài khoản của tôi",
+    "description": "Quản lý thông tin cá nhân và cài đặt tài khoản của bạn",
+    "loading": "Đang tải thông tin cá nhân...",
+    "fields": {
+      "fullName": "Họ và tên",
+      "email": "Địa chỉ email",
+      "phone": "Số điện thoại",
+      "dateOfBirth": "Ngày sinh",
+      "gender": "Giới tính",
+      "address": "Địa chỉ",
+      "city": "Thành phố hiện tại",
+      "hometown": "Quê quán",
+      "country": "Quốc gia",
+      "medicalNotes": "Ghi chú y tế",
+      "notProvided": "Chưa cung cấp",
+      "selectGender": "Chọn giới tính",
+      "male": "Nam",
+      "female": "Nữ"
+    },
+    "buttons": {
+      "edit": "Chỉnh sửa thông tin",
+      "save": "Lưu thay đổi",
+      "cancel": "Hủy",
+      "saving": "Đang lưu..."
+    },
+    "errors": {
+      "userIdNotFound": "Không tìm thấy ID người dùng",
+      "fetchFailed": "Không thể tải thông tin người dùng",
+      "saveFailed": "Lưu thông tin cá nhân thất bại"
+    },
+    "messages": {
+      "updateSuccess": "Cập nhật thông tin cá nhân thành công!"
+    }
+  }
+}

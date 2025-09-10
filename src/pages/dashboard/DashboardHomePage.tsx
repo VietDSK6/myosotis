@@ -3,8 +3,10 @@ import { DashboardInfoPanel } from '../../components/DashboardInfoPanel';
 import DashboardHeader from '../../components/DashboardHeader';
 import { useNavigate } from 'react-router-dom';
 import Lottie from 'lottie-react';
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardHomePage() {
+  const { t } = useTranslation(['dashboard']);
   const navigate = useNavigate();
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
@@ -13,32 +15,32 @@ export default function DashboardHomePage() {
 
   const dashboardFeatures = [
     {
-      title: "Living Memories",
-      subtitle: "Create AI avatars with your loved one's voice",
+      title: t('dashboard:homePage.features.livingMemories.title'),
+      subtitle: t('dashboard:homePage.features.livingMemories.subtitle'),
       icon: <img src="/living-memories.png" alt="Living Memories" className="h-12 w-12" />,
       onClick: () => navigate('/dashboard/ai-clone')
     },
     {
-      title: "Memory Test",
-      subtitle: "Take cognitive assessment",
+      title: t('dashboard:homePage.features.memoryTest.title'),
+      subtitle: t('dashboard:homePage.features.memoryTest.subtitle'),
       icon: <img src="/test-icon.png" alt="Memory Test" className="h-12 w-12" />,
       onClick: () => navigate('/dashboard/mmse-test')
     },
     {
-      title: "Care Companion",
-      subtitle: "Chat with your AI companion",
+      title: t('dashboard:homePage.features.careCompanion.title'),
+      subtitle: t('dashboard:homePage.features.careCompanion.subtitle'),
       icon: <img src="/chat.png" alt="Care Companion" className="h-12 w-12" />,
       onClick: () => navigate('/dashboard/chatbot')
     },
     {
-      title: "Memory Films",
-      subtitle: "View your cherished memories",
+      title: t('dashboard:homePage.features.memoryFilms.title'),
+      subtitle: t('dashboard:homePage.features.memoryFilms.subtitle'),
       icon: <img src="/film.png" alt="Memory Films" className="h-12 w-12" />,
       onClick: () => navigate('/dashboard/memory-film')
     },
     {
-      title: "Memory Map",
-      subtitle: "Explore places and create location memories",
+      title: t('dashboard:homePage.features.memoryMap.title'),
+      subtitle: t('dashboard:homePage.features.memoryMap.subtitle'),
       icon: (
         <svg className="h-12 w-12 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -48,8 +50,8 @@ export default function DashboardHomePage() {
       onClick: () => navigate('/dashboard/memory-map')
     },
     {
-      title: "Mini Games",
-      subtitle: "Exercise your mind with Sudoku puzzles",
+      title: t('dashboard:homePage.features.miniGames.title'),
+      subtitle: t('dashboard:homePage.features.miniGames.subtitle'),
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-black" fill="currentColor" viewBox="0 0 16 16">
           <path d="M10 2a2 2 0 0 1-1.5 1.937v5.087c.863.083 1.5.377 1.5.726 0 .414-.895.75-2 .75s-2-.336-2-.75c0-.35.637-.643 1.5-.726V3.937A2 2 0 1 1 10 2"/>
@@ -132,8 +134,18 @@ export default function DashboardHomePage() {
   const getCurrentDate = () => {
     const now = new Date();
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      t('dashboard:homePage.calendar.months.january'),
+      t('dashboard:homePage.calendar.months.february'),
+      t('dashboard:homePage.calendar.months.march'),
+      t('dashboard:homePage.calendar.months.april'),
+      t('dashboard:homePage.calendar.months.may'),
+      t('dashboard:homePage.calendar.months.june'),
+      t('dashboard:homePage.calendar.months.july'),
+      t('dashboard:homePage.calendar.months.august'),
+      t('dashboard:homePage.calendar.months.september'),
+      t('dashboard:homePage.calendar.months.october'),
+      t('dashboard:homePage.calendar.months.november'),
+      t('dashboard:homePage.calendar.months.december')
     ];
     return {
       month: months[now.getMonth()],
@@ -171,8 +183,8 @@ export default function DashboardHomePage() {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
       <div className="lg:col-span-8">
         <DashboardHeader 
-          title="Dashboard" 
-          description="Welcome to your health and memory care dashboard"
+          title={t('dashboard:homePage.title')}
+          description={t('dashboard:homePage.description')}
         />
         
         <DashboardInfoPanel
@@ -207,8 +219,16 @@ export default function DashboardHomePage() {
           </div>
 
           <div className="grid grid-cols-7 gap-1 mb-2">
-            {['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'].map(day => (
-              <div key={day} className="text-xs text-[#888888] text-center py-2 font-medium">
+            {[
+              t('dashboard:homePage.calendar.daysOfWeekShort.monday'),
+              t('dashboard:homePage.calendar.daysOfWeekShort.tuesday'),
+              t('dashboard:homePage.calendar.daysOfWeekShort.wednesday'),
+              t('dashboard:homePage.calendar.daysOfWeekShort.thursday'),
+              t('dashboard:homePage.calendar.daysOfWeekShort.friday'),
+              t('dashboard:homePage.calendar.daysOfWeekShort.saturday'),
+              t('dashboard:homePage.calendar.daysOfWeekShort.sunday')
+            ].map((day, index) => (
+              <div key={index} className="text-xs text-[#888888] text-center py-2 font-medium">
                 {day}
               </div>
             ))}
@@ -248,8 +268,8 @@ export default function DashboardHomePage() {
               </div>
             )}
           </div>
-          <h4 className="font-semibold text-[#333333] mb-2">Your Health Assistant</h4>
-          <p className="text-[#888888] text-sm">Ready to help you with your health journey</p>
+          <h4 className="font-semibold text-[#333333] mb-2">{t('dashboard:homePage.healthAssistant.title')}</h4>
+          <p className="text-[#888888] text-sm">{t('dashboard:homePage.healthAssistant.description')}</p>
         </div>
       </div>
     </div>

@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 export default function LandingPage() {
+  const { t } = useTranslation(['landing', 'common']);
   const scrollToFeatures = () => {
     const featuresSection = document.getElementById('features');
     featuresSection?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    section?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -25,56 +23,23 @@ export default function LandingPage() {
                 />
               </div>
               <div className="text-xl font-semibold text-gray-900">
-                Myosotis
+                {t('common:common.myosotis')}
               </div>
             </div>
             
-            {/* Feature Navigation Menu */}
-            <div className="hidden lg:flex items-center space-x-6">
-              <button
-                onClick={() => scrollToSection('ai-memories')}
-                className="text-sm font-medium text-gray-600 hover:text-[#92d7e7] transition-colors"
-              >
-                AI Memories
-              </button>
-              <button
-                onClick={() => scrollToSection('ai-companion')}
-                className="text-sm font-medium text-gray-600 hover:text-[#92d7e7] transition-colors"
-              >
-                AI Companion
-              </button>
-              <button
-                onClick={() => scrollToSection('memory-book')}
-                className="text-sm font-medium text-gray-600 hover:text-[#92d7e7] transition-colors"
-              >
-                Memory Book
-              </button>
-              <button
-                onClick={() => scrollToSection('cognitive-assessment')}
-                className="text-sm font-medium text-gray-600 hover:text-[#92d7e7] transition-colors"
-              >
-                Assessment
-              </button>
-              <button
-                onClick={() => scrollToSection('emergency-support')}
-                className="text-sm font-medium text-gray-600 hover:text-[#92d7e7] transition-colors"
-              >
-                Emergency
-              </button>
-            </div>
-            
             <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
               <Link
                 to="/login"
                 className="px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all"
               >
-                Sign In
+                {t('common:buttons.signIn')}
               </Link>
               <Link
                 to="/register"
                 className="px-4 py-2 text-lg font-medium text-white bg-[#92d7e7] hover:bg-[#7bc9db] rounded-xl transition-all shadow-sm"
               >
-                Get Started
+                {t('common:buttons.getStarted')}
               </Link>
             </div>
           </div>
@@ -86,20 +51,26 @@ export default function LandingPage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-left">
               <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Holistic Care, Preserving{' '}
-                <span className="text-[#92d7e7]">Memories</span>{' '}
-                for Your Loved Ones
+                {t('landing:hero.title').split('<highlight>').map((part, index) => {
+                  if (index === 0) return part;
+                  const [highlighted, rest] = part.split('</highlight>');
+                  return (
+                    <span key={index}>
+                      <span className="text-[#92d7e7]">{highlighted}</span>
+                      {rest}
+                    </span>
+                  );
+                })}
               </h1>
               <p className="text-xl text-gray-700 mb-8 leading-relaxed">
-                Myosotis is the digital companion for Alzheimer's patients and their families, 
-                delivering peace of mind and connection.
+                {t('landing:hero.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={scrollToFeatures}
                   className="px-6 py-3 text-lg font-semibold text-white bg-[#92d7e7] hover:bg-[#7bc9db] rounded-xl transition-all shadow-lg hover:shadow-xl"
                 >
-                  Experience the Demo
+                  {t('landing:hero.cta')}
                 </button>
               </div>
             </div>
@@ -121,10 +92,10 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Comprehensive Digital Care for Alzheimer's Families
+              {t('landing:overview.title')}
             </h2>
             <p className="text-xl text-gray-700 leading-relaxed max-w-4xl mx-auto">
-              Myosotis is more than just an app—it's a complete ecosystem designed to support both patients and their families throughout the Alzheimer's journey. Our platform combines cutting-edge AI technology with compassionate care features to preserve memories, maintain connections, and provide peace of mind.
+              {t('landing:overview.subtitle')}
             </p>
           </div>
 
@@ -135,9 +106,9 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">For Patients</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('landing:overview.forPatients.title')}</h3>
               <p className="text-gray-600">
-                Interactive memory exercises, AI companionship, and cognitive assessments to maintain mental engagement and track progress.
+                {t('landing:overview.forPatients.description')}
               </p>
             </div>
 
@@ -147,9 +118,9 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">For Families</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('landing:overview.forFamilies.title')}</h3>
               <p className="text-gray-600">
-                Collaborative memory books, emergency contacts management, and real-time progress monitoring to stay connected and informed.
+                {t('landing:overview.forFamilies.description')}
               </p>
             </div>
 
@@ -159,28 +130,26 @@ export default function LandingPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">For Caregivers</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">{t('landing:overview.forCaregivers.title')}</h3>
               <p className="text-gray-600">
-                Emergency response systems, caregiver guidance, and 24/7 AI support to ensure comprehensive care and safety.
+                {t('landing:overview.forCaregivers.description')}
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* MVP Features Section */}
       <section id="features" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Our MVP Features
+              {t('landing:features.title')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience our core features designed to make a real difference in Alzheimer's care. Each feature has been carefully crafted based on real family needs and clinical insights.
+              {t('landing:features.subtitle')}
             </p>
           </div>
 
-          {/* Feature 1: AI Living Memories */}
           <div id="ai-memories" className="mb-24">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
@@ -188,27 +157,27 @@ export default function LandingPage() {
                   <div className="w-8 h-8 bg-[#92d7e7] rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold">1</span>
                   </div>
-                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">AI Living Memories</span>
+                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">{t('landing:features.aiMemories.label')}</span>
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                  Bring Loved Ones Back to Life
+                  {t('landing:features.aiMemories.title')}
                 </h3>
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  Transform cherished photos and voice recordings into interactive AI avatars. With just one photo and a short voice sample, create lifelike talking memories that can tell stories, share wisdom, or provide comfort—preserving the essence of your loved ones forever.
+                  {t('landing:features.aiMemories.description')}
                 </p>
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Deep neural voice synthesis technology</span>
+                    <span className="text-gray-700">{t('landing:features.aiMemories.features.voiceSynthesis')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Natural lip-sync and facial expressions</span>
+                    <span className="text-gray-700">{t('landing:features.aiMemories.features.lipSync')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Custom scripts or AI-generated content</span>
+                    <span className="text-gray-700">{t('landing:features.aiMemories.features.customContent')}</span>
                   </div>
                 </div>
               </div>
@@ -248,13 +217,13 @@ export default function LandingPage() {
                     </div>
                     <div className="space-y-3">
                       <div className="bg-[#92d7e7] text-white p-3 rounded-lg max-w-xs">
-                        Good morning! How are you feeling today?
+                        {t('landing:features.aiCompanion.chatExample.greeting')}
                       </div>
                       <div className="bg-gray-700 text-white p-3 rounded-lg max-w-xs ml-auto">
-                        I'm a bit confused about my medication schedule.
+                        {t('landing:features.aiCompanion.chatExample.userResponse')}
                       </div>
                       <div className="bg-[#92d7e7] text-white p-3 rounded-lg max-w-xs">
-                        I understand. Let me help you with that. Your morning medication should be taken with breakfast...
+                        {t('landing:features.aiCompanion.chatExample.aiResponse')}
                       </div>
                     </div>
                   </div>
@@ -266,27 +235,27 @@ export default function LandingPage() {
                   <div className="w-8 h-8 bg-[#92d7e7] rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold">2</span>
                   </div>
-                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">AI Care Companion</span>
+                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">{t('landing:features.aiCompanion.label')}</span>
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                  24/7 Caring Companion
+                  {t('landing:features.aiCompanion.title')}
                 </h3>
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  An intelligent, always-available companion that understands and responds with empathy. Powered by SEA-LION AI for culturally-aware conversations in local languages, providing comfort, guidance, and friendly chat whenever needed.
+                  {t('landing:features.aiCompanion.description')}
                 </p>
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">SEA-LION AI for local language support</span>
+                    <span className="text-gray-700">{t('landing:features.aiCompanion.features.seaLion')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Contextual memory for natural conversations</span>
+                    <span className="text-gray-700">{t('landing:features.aiCompanion.features.contextualMemory')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Personalized responses based on user profile</span>
+                    <span className="text-gray-700">{t('landing:features.aiCompanion.features.personalizedResponses')}</span>
                   </div>
                 </div>
               </div>
@@ -301,27 +270,27 @@ export default function LandingPage() {
                   <div className="w-8 h-8 bg-[#92d7e7] rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold">3</span>
                   </div>
-                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">Digital Memory Book</span>
+                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">{t('landing:features.memoryBook.label')}</span>
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                  Collaborative Family Storybook
+                  {t('landing:features.memoryBook.title')}
                 </h3>
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  Build a rich, interactive timeline where families come together to preserve memories. Add photos, write stories, and mark important life events in a beautiful, secure digital space that keeps precious memories alive for generations.
+                  {t('landing:features.memoryBook.description')}
                 </p>
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Collaborative storytelling for families</span>
+                    <span className="text-gray-700">{t('landing:features.memoryBook.features.collaborative')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Interactive timeline with photos and events</span>
+                    <span className="text-gray-700">{t('landing:features.memoryBook.features.timeline')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Secure, private family space</span>
+                    <span className="text-gray-700">{t('landing:features.memoryBook.features.secure')}</span>
                   </div>
                 </div>
               </div>
@@ -355,74 +324,118 @@ export default function LandingPage() {
                   <div className="w-8 h-8 bg-[#92d7e7] rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold">4</span>
                   </div>
-                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">Cognitive Assessment</span>
+                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">{t('landing:features.cognitiveAssessment.label')}</span>
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                  Track Mental Health Progress
+                  {t('landing:features.cognitiveAssessment.title')}
                 </h3>
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  Regular, gentle cognitive assessments help monitor progress and provide valuable insights for healthcare providers. Our digital MMSE tests are designed to be engaging and stress-free while providing accurate measurements.
+                  {t('landing:features.cognitiveAssessment.description')}
                 </p>
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Standardized MMSE cognitive tests</span>
+                    <span className="text-gray-700">{t('landing:features.cognitiveAssessment.features.mmse')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Progress tracking and historical data</span>
+                    <span className="text-gray-700">{t('landing:features.cognitiveAssessment.features.tracking')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Easy-to-understand results for families</span>
+                    <span className="text-gray-700">{t('landing:features.cognitiveAssessment.features.familyFriendly')}</span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Feature 5: Emergency Support */}
-          <div id="emergency-support" className="mb-16">
+          {/* Feature 5: Memory Map */}
+          <div id="memory-map" className="mb-24">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-8 h-8 bg-[#92d7e7] rounded-lg flex items-center justify-center">
                     <span className="text-white font-bold">5</span>
                   </div>
-                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">Emergency Support</span>
+                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">{t('landing:features.memoryMap.label')}</span>
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">
-                  Peace of Mind for Families
+                  {t('landing:features.memoryMap.title')}
                 </h3>
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                  Comprehensive emergency contact management and caregiver resources ensure help is always available. Quick access to important contacts, medical information, and care instructions provides security for both patients and families.
+                  {t('landing:features.memoryMap.description')}
                 </p>
                 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Emergency contact management</span>
+                    <span className="text-gray-700">{t('landing:features.memoryMap.features.googleMaps')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Caregiver guides and resources</span>
+                    <span className="text-gray-700">{t('landing:features.memoryMap.features.locationNotes')}</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
-                    <span className="text-gray-700">Quick access to medical information</span>
+                    <span className="text-gray-700">{t('landing:features.memoryMap.features.streetView')}</span>
                   </div>
                 </div>
-
               </div>
 
               <div>
                 <div className="rounded-2xl shadow-lg overflow-hidden">
                   <img 
-                    src="/emergency.png" 
-                    alt="Emergency contact interface showing family contacts and caregiver information"
+                    src="/memory-map.png" 
+                    alt="Interactive memory map showing location-based memories and navigation features"
                     className="w-full h-80 object-cover"
                   />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Feature 6: Mini Games */}
+          <div id="mini-games" className="mb-24">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="order-2 lg:order-1">
+                <div className="rounded-2xl shadow-lg overflow-hidden">
+                  <img 
+                    src="/mini-games.png" 
+                    alt="Mini games interface showing cognitive exercises like Sudoku and Picture Recall"
+                    className="w-full h-80 object-cover"
+                  />
+                </div>
+              </div>
+
+              <div className="order-1 lg:order-2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 bg-[#92d7e7] rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold">6</span>
+                  </div>
+                  <span className="text-sm font-semibold text-[#92d7e7] uppercase tracking-wide">{t('landing:features.miniGames.label')}</span>
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-6">
+                  {t('landing:features.miniGames.title')}
+                </h3>
+                <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+                  {t('landing:features.miniGames.description')}
+                </p>
+                
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
+                    <span className="text-gray-700">{t('landing:features.miniGames.features.sudoku')}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
+                    <span className="text-gray-700">{t('landing:features.miniGames.features.pictureRecall')}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-5 h-5 bg-[#92d7e7] rounded-full flex-shrink-0"></div>
+                    <span className="text-gray-700">{t('landing:features.miniGames.features.progressTracking')}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -434,10 +447,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              How It Works
+              {t('landing:howItWorks.title')}
             </h2>
             <p className="text-xl text-gray-600">
-              Getting started with Myosotis is simple and stress-free
+              {t('landing:howItWorks.subtitle')}
             </p>
           </div>
 
@@ -447,11 +460,10 @@ export default function LandingPage() {
                 <span className="text-3xl font-bold text-white">1</span>
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Create a Profile
+                {t('landing:howItWorks.steps.createProfile.title')}
               </h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Set up your loved one's profile and contacts in just a few minutes. 
-                Secure and private by design.
+                {t('landing:howItWorks.steps.createProfile.description')}
               </p>
             </div>
 
@@ -460,11 +472,10 @@ export default function LandingPage() {
                 <span className="text-3xl font-bold text-white">2</span>
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Build & Practice
+                {t('landing:howItWorks.steps.buildPractice.title')}
               </h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Work together to add memories and complete brain training exercises. 
-                Make it a bonding experience.
+                {t('landing:howItWorks.steps.buildPractice.description')}
               </p>
             </div>
 
@@ -473,11 +484,10 @@ export default function LandingPage() {
                 <span className="text-3xl font-bold text-white">3</span>
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Connect & Track
+                {t('landing:howItWorks.steps.connectTrack.title')}
               </h3>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Family connects through stories and tracks cognitive health progress. 
-                Stay informed and involved.
+                {t('landing:howItWorks.steps.connectTrack.description')}
               </p>
             </div>
           </div>
@@ -487,24 +497,23 @@ export default function LandingPage() {
       <section className="py-20 bg-[#92d7e7]">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to Experience Myosotis?
+            {t('landing:cta.title')}
           </h2>
           <p className="text-xl text-white/90 mb-8 leading-relaxed">
-            Join families who are already creating meaningful connections and preserving precious memories. 
-            Start your journey today with our comprehensive care platform.
+            {t('landing:cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/register"
               className="px-8 py-4 text-lg font-semibold text-[#92d7e7] bg-white hover:bg-gray-50 rounded-xl transition-all shadow-lg hover:shadow-xl"
             >
-              Experience the Demo Now
+              {t('landing:cta.primaryButton')}
             </Link>
             <button
               onClick={scrollToFeatures}
               className="px-8 py-4 text-lg font-semibold text-white border-2 border-white hover:bg-white hover:text-[#92d7e7] rounded-xl transition-all"
             >
-              Learn More
+              {t('landing:cta.secondaryButton')}
             </button>
           </div>
         </div>
@@ -520,24 +529,24 @@ export default function LandingPage() {
                 className="w-8 h-8"
               />
               <div className="text-xl font-semibold text-white">
-                Myosotis
+                {t('common:common.myosotis')}
               </div>
             </div>
             <div className="flex space-x-6">
               <Link to="/login" className="text-gray-400 hover:text-white transition-colors">
-                Sign In
+                {t('common:navigation.signIn')}
               </Link>
               <Link to="/register" className="text-gray-400 hover:text-white transition-colors">
-                Register
+                {t('common:navigation.register')}
               </Link>
               <a href="#features" className="text-gray-400 hover:text-white transition-colors">
-                Features
+                {t('common:navigation.features')}
               </a>
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center">
             <p className="text-gray-400">
-              © 2025 Myosotis. Caring for memories, supporting families.
+              {t('common:common.copyright')}
             </p>
           </div>
         </div>
