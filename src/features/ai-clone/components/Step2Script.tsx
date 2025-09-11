@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAICloneStore } from '../store';
 
 export default function Step2Script() {
+  const { t } = useTranslation('aiClone');
   const {
     scriptMode,
     manualScript,
@@ -45,8 +47,8 @@ export default function Step2Script() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Create the Script</h2>
-        <p className="text-lg text-gray-600">Choose how you want to create the content for your character</p>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('step2.title')}</h2>
+        <p className="text-lg text-gray-600">{t('step2.description')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -67,15 +69,15 @@ export default function Step2Script() {
               )}
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Write the Exact Text</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('step2.modes.manual.title')}</h3>
               <p className="text-gray-600 mb-4">
-                Type the full message you want the character to speak. Perfect for personal messages or retelling a specific story.
+                {t('step2.modes.manual.description')}
               </p>
               <div className="flex items-center text-sm text-gray-500">
                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
                 </svg>
-                Full control over content
+                {t('step2.modes.manual.feature')}
               </div>
             </div>
           </div>
@@ -98,15 +100,15 @@ export default function Step2Script() {
               )}
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Generate Content with AI</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('step2.modes.aiGenerated.title')}</h3>
               <p className="text-gray-600 mb-4">
-                Just provide a topic and a few keywords, and our AI will help you write a warm, natural script.
+                {t('step2.modes.aiGenerated.description')}
               </p>
               <div className="flex items-center text-sm text-gray-500">
                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                AI-powered content generation
+                {t('step2.modes.aiGenerated.feature')}
               </div>
             </div>
           </div>
@@ -116,62 +118,62 @@ export default function Step2Script() {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         {selectedMode === 'manual' ? (
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900">Write Your Script</h4>
+            <h4 className="text-lg font-semibold text-gray-900">{t('step2.manual.title')}</h4>
             <textarea
               value={manualScript || ''}
               onChange={(e) => handleManualScriptChange(e.target.value)}
-              placeholder="Hello, I remember when we went to the beach together in 1995. It was such a beautiful summer day, and the whole family was there..."
+              placeholder={t('step2.manual.placeholder')}
               className="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
             />
             <div className="flex justify-between items-center text-sm text-gray-500">
-              <span>Write naturally, as if speaking to a loved one</span>
-              <span>{manualScript?.length || 0} characters</span>
+              <span>{t('step2.manual.tip')}</span>
+              <span>{t('step2.manual.characterCount', { count: manualScript?.length || 0 })}</span>
             </div>
           </div>
         ) : (
           <div className="space-y-6">
-            <h4 className="text-lg font-semibold text-gray-900">AI Content Generation</h4>
+            <h4 className="text-lg font-semibold text-gray-900">{t('step2.aiGenerated.title')}</h4>
             
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Topic <span className="text-red-500">*</span>
+                  {t('step2.aiGenerated.topic.label')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={topic || ''}
                   onChange={(e) => handleTopicChange(e.target.value)}
-                  placeholder="e.g., Family Vacation, Wedding Day, Words of Encouragement"
+                  placeholder={t('step2.aiGenerated.topic.placeholder')}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Keywords (optional)
+                  {t('step2.aiGenerated.keywords.label')}
                 </label>
                 <input
                   type="text"
                   value={keywords || ''}
                   onChange={(e) => handleKeywordsChange(e.target.value)}
-                  placeholder="e.g., Vung Tau, 1995, fun, the whole family"
+                  placeholder={t('step2.aiGenerated.keywords.placeholder')}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-                <p className="text-xs text-gray-500 mt-1">Separate keywords with commas</p>
+                <p className="text-xs text-gray-500 mt-1">{t('step2.aiGenerated.keywords.help')}</p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description (optional)
+                  {t('step2.aiGenerated.description.label')}
                 </label>
                 <textarea
                   value={description || ''}
                   onChange={(e) => handleDescriptionChange(e.target.value)}
-                  placeholder="e.g., Tell a happy story about a family beach trip, in a warm and joyful tone."
+                  placeholder={t('step2.aiGenerated.description.placeholder')}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   rows={3}
                 />
-                <p className="text-xs text-gray-500 mt-1">Describe the tone and style you want</p>
+                <p className="text-xs text-gray-500 mt-1">{t('step2.aiGenerated.description.help')}</p>
               </div>
             </div>
           </div>
@@ -183,7 +185,7 @@ export default function Step2Script() {
           onClick={prevStep}
           className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
         >
-          ← Back
+          {t('step2.backButton')}
         </button>
         
         <button
@@ -195,7 +197,7 @@ export default function Step2Script() {
               : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >
-          Next: Preview & Generate →
+          {t('step2.nextButton')}
         </button>
       </div>
     </div>

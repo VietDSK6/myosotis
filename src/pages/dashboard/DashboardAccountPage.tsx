@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/store';
 import { getUserInfo, updateUserInfo } from '../../api/user';
 import type { UserData } from '../../types/user';
@@ -9,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 export default function DashboardAccountPage() {
   const { t } = useTranslation(['dashboard']);
   const { user, updateUser } = useAuthStore();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
@@ -64,6 +66,20 @@ export default function DashboardAccountPage() {
   useEffect(() => {
     fetchUserData();
   }, [fetchUserData]);
+
+  
+  useEffect(() => {
+    const editParam = searchParams.get('edit');
+    if (editParam === 'true') {
+      setIsEditing(true);
+      
+      setSearchParams(prev => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete('edit');
+        return newParams;
+      });
+    }
+  }, [searchParams, setSearchParams]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

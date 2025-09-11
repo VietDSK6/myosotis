@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../features/auth/store';
 import { ProtectedRoute } from '../features/auth';
 import { getMMSEChartData } from '../api/mmse';
@@ -22,10 +23,10 @@ import {
 } from 'recharts';
 
 const SEVERITY_BANDS = [
-  { min: 24, max: 27, label: 'No cognitive impairment', color: '#10b981', bgColor: '#dcfce7' },
-  { min: 20, max: 23, label: 'Mild cognitive impairment', color: '#f59e0b', bgColor: '#fef3c7' },
-  { min: 14, max: 19, label: 'Moderate cognitive impairment', color: '#f97316', bgColor: '#fed7aa' },
-  { min: 0, max: 13, label: 'Severe cognitive impairment', color: '#ef4444', bgColor: '#fecaca' }
+  { min: 24, max: 27, label: 'mmse:historyPage.severityBands.noCognitive', color: '#10b981', bgColor: '#dcfce7' },
+  { min: 20, max: 23, label: 'mmse:historyPage.severityBands.mildCognitive', color: '#f59e0b', bgColor: '#fef3c7' },
+  { min: 14, max: 19, label: 'mmse:historyPage.severityBands.moderateCognitive', color: '#f97316', bgColor: '#fed7aa' },
+  { min: 0, max: 13, label: 'mmse:historyPage.severityBands.severeCognitive', color: '#ef4444', bgColor: '#fecaca' }
 ];
 
 interface TooltipPayload {
@@ -60,7 +61,7 @@ interface RadarDataPoint {
 }
 
 
-const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: TooltipPayload[] }) => {
+const CustomTooltip = ({ active, payload, t }: { active?: boolean; payload?: TooltipPayload[]; t: (key: string, options?: Record<string, unknown>) => string }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const severityBand = SEVERITY_BANDS.find(band => 
@@ -69,18 +70,18 @@ const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Toolti
     
     return (
       <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-        <p className="font-semibold text-gray-900 mb-2">Test #{data.assessment_id}</p>
-        <p className="text-sm text-gray-600 mb-1">Date: {data.formattedDate}</p>
-        <p className="text-sm text-gray-600 mb-1">Score: {data.total_score}/{data.max_score}</p>
-        <p className="text-sm text-gray-600 mb-1">Percentage: {data.percentage.toFixed(1)}%</p>
+        <p className="font-semibold text-gray-900 mb-2">{t('mmse:historyPage.tooltip.testNumber', { number: data.assessment_id })}</p>
+        <p className="text-sm text-gray-600 mb-1">{t('mmse:historyPage.tooltip.date', { date: data.formattedDate })}</p>
+        <p className="text-sm text-gray-600 mb-1">{t('mmse:historyPage.tooltip.score', { score: data.total_score, maxScore: data.max_score })}</p>
+        <p className="text-sm text-gray-600 mb-1">{t('mmse:historyPage.tooltip.percentage', { percentage: data.percentage.toFixed(1) })}</p>
         {data.scoreDifference && Math.abs(data.scoreDifference) > 5 && (
           <p className={`text-sm font-medium ${data.scoreDifference > 0 ? 'text-green-600' : 'text-red-600'}`}>
-            Change: {data.scoreDifference > 0 ? '+' : ''}{data.scoreDifference} points
+            {t('mmse:historyPage.tooltip.change', { change: data.scoreDifference > 0 ? `+${data.scoreDifference}` : data.scoreDifference })}
           </p>
         )}
         {severityBand && (
           <p className="text-sm font-medium" style={{ color: severityBand.color }}>
-            {severityBand.label}
+            {t(severityBand.label)}
           </p>
         )}
       </div>
@@ -97,6 +98,7 @@ const CustomDot = (props: { cx?: number; cy?: number; payload?: { scoreDifferenc
 export default function MMSEHistoryPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const { t } = useTranslation(['mmse', 'common']);
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [radarData, setRadarData] = useState<RadarDataPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -180,7 +182,7 @@ export default function MMSEHistoryPage() {
     return (
       <ProtectedRoute>
         <div className="min-h-screen flex items-center justify-center">
-          <LoadingSpinner text="Loading test history..." />
+          <LoadingSpinner text={t('mmse:historyPage.loading')} />
         </div>
       </ProtectedRoute>
     );
@@ -191,8 +193,8 @@ export default function MMSEHistoryPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">MMSE Score Progression</h1>
-          <p className="text-gray-600">Track your cognitive assessment scores over time</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('mmse:historyPage.title')}</h1>
+          <p className="text-gray-600">{t('mmse:historyPage.subtitle')}</p>
         </div>
 
         {chartData.length === 0 ? (
@@ -201,13 +203,13 @@ export default function MMSEHistoryPage() {
               <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">No Test History</h2>
-              <p className="text-gray-600 mb-6">Take your first MMSE test to start tracking your cognitive health</p>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('mmse:historyPage.noHistory.title')}</h2>
+              <p className="text-gray-600 mb-6">{t('mmse:historyPage.noHistory.subtitle')}</p>
               <button
                 onClick={() => navigate('/mmse-test')}
-                className="hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                className="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
               >
-                Take Your First Test
+                {t('mmse:historyPage.noHistory.takeFirstTest')}
               </button>
             </div>
           </div>
@@ -216,8 +218,8 @@ export default function MMSEHistoryPage() {
             {/* Score Trend Chart */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-2">Score Trend Analysis</h2>
-                <p className="text-gray-600 text-sm">Track your cognitive assessment scores over time</p>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('mmse:historyPage.trendAnalysis.title')}</h2>
+                <p className="text-gray-600 text-sm">{t('mmse:historyPage.trendAnalysis.subtitle')}</p>
               </div>
 
               {/* Severity Legend */}
@@ -230,7 +232,7 @@ export default function MMSEHistoryPage() {
                         style={{ backgroundColor: band.color }}
                       ></div>
                       <span className="text-gray-700">
-                        {band.label} ({band.min}-{band.max === 27 ? '27' : band.max})
+                        {t(band.label)} ({band.min}-{band.max === 27 ? '27' : band.max})
                       </span>
                     </div>
                   ))}
@@ -260,10 +262,10 @@ export default function MMSEHistoryPage() {
                     <YAxis 
                       domain={[0, 27]}
                       tick={{ fontSize: 12 }}
-                      label={{ value: 'MMSE Score', angle: -90, position: 'insideLeft' }}
+                      label={{ value: t('mmse:historyPage.chart.yAxisLabel'), angle: -90, position: 'insideLeft' }}
                     />
                     
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip content={<CustomTooltip t={t} />} />
                     
                     <Line 
                       type="monotone" 
@@ -315,8 +317,8 @@ export default function MMSEHistoryPage() {
               </div>
 
               <div className="mt-4 text-xs text-gray-500">
-                <p>• Higher scores indicate better cognitive function</p>
-                <p>• Dotted lines represent severity thresholds for cognitive impairment</p>
+                <p>{t('mmse:historyPage.chart.higherScoresBetter')}</p>
+                <p>{t('mmse:historyPage.chart.severityThresholds')}</p>
               </div>
             </div>
 
@@ -324,8 +326,8 @@ export default function MMSEHistoryPage() {
             {radarData.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">Latest Test Domain Analysis</h2>
-                  <p className="text-gray-600 text-sm">Performance breakdown across different cognitive domains</p>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('mmse:historyPage.domainAnalysis.title')}</h2>
+                  <p className="text-gray-600 text-sm">{t('mmse:historyPage.domainAnalysis.subtitle')}</p>
                 </div>
 
                 <div className="h-96 w-full">
@@ -343,7 +345,7 @@ export default function MMSEHistoryPage() {
                         tickCount={6}
                       />
                       <Radar
-                        name="Latest Test"
+                        name={t('mmse:historyPage.tooltip.latestTest')}
                         dataKey="percentage"
                         stroke="#0891b2"
                         fill="#0891b2"
@@ -359,7 +361,7 @@ export default function MMSEHistoryPage() {
                               <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
                                 <p className="font-semibold text-gray-900 mb-2">{data.section}</p>
                                 <p className="text-sm text-cyan-600">
-                                  Score: {data.percentage.toFixed(1)}%
+                                  {t('mmse:historyPage.tooltip.scoreLabel', { percentage: data.percentage.toFixed(1) })}
                                 </p>
                               </div>
                             );
@@ -372,9 +374,9 @@ export default function MMSEHistoryPage() {
                 </div>
 
                 <div className="mt-4 text-xs text-gray-500">
-                  <p>• Each axis represents a cognitive domain from the MMSE test</p>
-                  <p>• Percentages show correct answers within each domain</p>
-                  <p>• Higher values indicate better performance in that domain</p>
+                  <p>{t('mmse:historyPage.chart.cognitiveDomainsAxis')}</p>
+                  <p>{t('mmse:historyPage.chart.percentagesShow')}</p>
+                  <p>{t('mmse:historyPage.chart.higherValuesBetter')}</p>
                 </div>
               </div>
             )}

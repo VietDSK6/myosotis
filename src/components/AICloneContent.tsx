@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import DashboardHeader from './DashboardHeader';
 import { AICloneHistoryContent } from '../components';
+import { useTranslation } from 'react-i18next';
 
 export default function AICloneContent() {
+  const { t } = useTranslation(['aiClone']);
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<'overview' | 'history'>('overview');
   const navigate = useNavigate();
@@ -18,8 +20,8 @@ export default function AICloneContent() {
   return (
     <div className="space-y-6">
       <DashboardHeader 
-        title="Living Memories" 
-        description="Create AI avatars with your loved one's voice and preserve precious memories"
+        title={t('aiClone:title')}
+        description={t('aiClone:description')}
       />
       
       <div className="bg-white rounded-xl shadow-sm border border-gray-200">
@@ -38,7 +40,7 @@ export default function AICloneContent() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Overview
+                  {t('aiClone:tabs.overview')}
                 </div>
               </button>
               <button
@@ -53,7 +55,7 @@ export default function AICloneContent() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
-                  Memory Gallery
+                  {t('aiClone:tabs.memoryGallery')}
                 </div>
               </button>
             </nav>
@@ -66,9 +68,9 @@ export default function AICloneContent() {
             <div className="space-y-8">
               {/* Create New Section */}
               <div className="text-center max-w-2xl mx-auto">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Create New Living Memory</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('aiClone:createNew.title')}</h2>
                 <p className="text-gray-600 mb-8">
-                  Transform photos and voices into interactive memories that bring your loved ones back to life
+                  {t('aiClone:createNew.description')}
                 </p>
                 <button
                   onClick={() => navigate('/ai-clone/create')}
@@ -77,7 +79,7 @@ export default function AICloneContent() {
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
-                  Start Creating
+                  {t('aiClone:createNew.startButton')}
                 </button>
               </div>
 
@@ -89,8 +91,8 @@ export default function AICloneContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Upload Photos</h3>
-                  <p className="text-sm text-gray-600">Upload clear photos of your loved one</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{t('aiClone:features.uploadPhotos.title')}</h3>
+                  <p className="text-sm text-gray-600">{t('aiClone:features.uploadPhotos.description')}</p>
                 </div>
 
                 <div className="text-center p-6 rounded-lg border border-gray-200">
@@ -99,8 +101,8 @@ export default function AICloneContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Record Voice</h3>
-                  <p className="text-sm text-gray-600">Capture their unique voice and speech patterns</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{t('aiClone:features.recordVoice.title')}</h3>
+                  <p className="text-sm text-gray-600">{t('aiClone:features.recordVoice.description')}</p>
                 </div>
 
                 <div className="text-center p-6 rounded-lg border border-gray-200">
@@ -109,8 +111,8 @@ export default function AICloneContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Generate Video</h3>
-                  <p className="text-sm text-gray-600">AI creates a talking avatar with their voice</p>
+                  <h3 className="font-semibold text-gray-900 mb-2">{t('aiClone:features.generateVideo.title')}</h3>
+                  <p className="text-sm text-gray-600">{t('aiClone:features.generateVideo.description')}</p>
                 </div>
               </div>
             </div>

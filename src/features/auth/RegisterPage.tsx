@@ -1,10 +1,12 @@
 
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuthStore } from "./store";
 import RegisterForm from "./RegisterForm";
 
 export default function RegisterPage() {
+  const { t } = useTranslation('auth');
   const navigate = useNavigate();
   const { isAuthenticated } = useAuthStore();
 
@@ -24,10 +26,10 @@ export default function RegisterPage() {
       <div className="max-w-lg w-full">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-semibold text-gray-900">
-            Create New Account
+            {t('register.pageTitle')}
           </h2>
           <p className="mt-2 text-lg text-gray-600">
-            Join us to support people with Alzheimer's
+            {t('register.pageSubtitle')}
           </p>
         </div>
         
@@ -36,13 +38,13 @@ export default function RegisterPage() {
         </div>
         
         <div className="text-center text-lg text-gray-500 mt-6">
-          By signing up, you agree to our{' '}
+          {t('register.termsText')}{' '}
           <button className="text-cyan-600 hover:text-cyan-700 font-medium">
-            Terms of Service
+            {t('register.termsOfService')}
           </button>{' '}
-          and{' '}
+          {t('register.and')}{' '}
           <button className="text-cyan-600 hover:text-cyan-700 font-medium">
-            Privacy Policy
+            {t('register.privacyPolicy')}
           </button>.
         </div>
       </div>

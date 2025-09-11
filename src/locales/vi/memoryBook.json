@@ -1,0 +1,23 @@
+{
+  "title": "Phim Ký Ức",
+  "description": "Xem và quản lý những kỷ niệm quý giá trong cuộc đời bạn",
+  "addMemory": "Thêm Kỷ Niệm",
+  "manage": "Quản Lý ({{count}})",
+  "manageMemories": "Quản Lý Kỷ Niệm",
+  "editMemory": "Chỉnh Sửa Kỷ Niệm",
+  "delete": "Xóa",
+  "loading": "Đang tải kỷ niệm của bạn...",
+  "timelineLoading": "Đang tải dòng thời gian...",
+  "confirmDelete": "Bạn có chắc chắn muốn xóa kỷ niệm này không?",
+  "emptyState": {
+    "title": "📖 Chưa có kỷ niệm nào",
+    "description": "Bắt đầu xây dựng dòng thời gian cá nhân của bạn bằng cách thêm kỷ niệm quý giá đầu tiên. Mỗi câu chuyện đều có ý nghĩa và giúp bảo tồn hành trình của bạn. 💙",
+    "addFirstMemory": "✨ Thêm Kỷ Niệm Đầu Tiên"
+  },
+  "errors": {
+    "loadFailed": "Không thể tải kỷ niệm của bạn. Vui lòng thử lại.",
+    "createFailed": "Không thể tạo kỷ niệm. Vui lòng thử lại.",
+    "updateFailed": "Không thể cập nhật kỷ niệm. Vui lòng thử lại.",
+    "deleteFailed": "Không thể xóa kỷ niệm. Vui lòng thử lại."
+  }
+}

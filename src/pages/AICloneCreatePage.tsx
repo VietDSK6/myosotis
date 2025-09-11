@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react';
 import { AICloneWizard, useAICloneStore } from '../features/ai-clone';
 import { ProtectedRoute } from '../features/auth';
 import GenerationNotificationModal from '../features/ai-clone/components/GenerationNotificationModal';
+import { useTranslation } from 'react-i18next';
 
 export default function AICloneCreatePage() {
+  const { t } = useTranslation(['aiClone']);
   const navigate = useNavigate();
   const { reset, isGenerating } = useAICloneStore();
   const [showGenerationModal, setShowGenerationModal] = useState(false);
@@ -42,7 +44,7 @@ export default function AICloneCreatePage() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
-                  Back
+                  {t('aiClone:navigation.back')}
                 </button>
                 <button
                   onClick={() => navigate('/dashboard/ai-clone?tab=history')}
@@ -51,11 +53,11 @@ export default function AICloneCreatePage() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  View Gallery
+                  {t('aiClone:navigation.viewGallery')}
                 </button>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Living Memory</h1>
-              <p className="text-gray-600">Transform photos and voices into interactive memories that bring your loved ones back to life</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('aiClone:createPage.title')}</h1>
+              <p className="text-gray-600">{t('aiClone:createPage.description')}</p>
             </div>
 
             {/* AI Clone Wizard Container */}

@@ -25,7 +25,7 @@ export default function RegisterForm() {
       setSubmitError(null);
       clearError();
       await registerUser(data);
-      navigate('/personal-info?edit=true');
+      navigate('/dashboard/account?edit=true');
     } catch (error) {
       console.error('Registration failed:', error);
       setSubmitError(t('auth:register.registrationFailed'));

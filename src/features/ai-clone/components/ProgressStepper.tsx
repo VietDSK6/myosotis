@@ -1,16 +1,19 @@
 import type { WizardStep } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface ProgressStepperProps {
   currentStep: WizardStep;
 }
 
-const steps = [
-  { number: 1, title: 'Character' },
-  { number: 2, title: 'Script' },
-  { number: 3, title: 'Preview' },
-];
-
 export default function ProgressStepper({ currentStep }: ProgressStepperProps) {
+  const { t } = useTranslation(['aiClone']);
+  
+  const steps = [
+    { number: 1, title: t('aiClone:wizard.steps.character') },
+    { number: 2, title: t('aiClone:wizard.steps.script') },
+    { number: 3, title: t('aiClone:wizard.steps.preview') },
+  ];
+
   return (
     <div className="w-full max-w-3xl mx-auto mb-8">
       <div className="flex items-center justify-between">

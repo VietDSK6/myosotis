@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface GenerationNotificationModalProps {
   isOpen: boolean;
   onGoToGallery: () => void;
@@ -9,6 +11,8 @@ export default function GenerationNotificationModal({
   onGoToGallery,
   onWaitOnPage,
 }: GenerationNotificationModalProps) {
+  const { t } = useTranslation(['aiClone']);
+  
   if (!isOpen) return null;
 
   return (
@@ -23,13 +27,11 @@ export default function GenerationNotificationModal({
           </div>
 
           {/* Headline */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Video Generation in Progress!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('aiClone:modal.title')}</h2>
 
           {/* Body Text */}
           <p className="text-gray-600 mb-8">
-            Your video is being processed in the background. Due to high processing demands, 
-            it may take longer than usual (5-15 minutes). Your video will appear in your 
-            history once it's ready. What would you like to do?
+            {t('aiClone:modal.description')}
           </p>
 
           {/* Action Buttons */}
@@ -39,7 +41,7 @@ export default function GenerationNotificationModal({
               onClick={onGoToGallery}
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors"
             >
-              Check History Later
+              {t('aiClone:modal.buttons.checkHistoryLater')}
             </button>
 
             {/* Secondary Button */}
@@ -47,7 +49,7 @@ export default function GenerationNotificationModal({
               onClick={onWaitOnPage}
               className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
-              Stay on This Page
+              {t('aiClone:modal.buttons.stayOnPage')}
             </button>
           </div>
         </div>

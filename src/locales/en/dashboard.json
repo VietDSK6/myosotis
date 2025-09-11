@@ -150,5 +150,25 @@
     "messages": {
       "updateSuccess": "Personal information updated successfully!"
     }
+  },
+  "emergencyContacts": {
+    "title": "Emergency Contacts",
+    "description": "Manage your emergency contacts and caregivers",
+    "addContact": "Add Contact",
+    "noContacts": {
+      "title": "No Emergency Contacts",
+      "subtitle": "Add your emergency contacts to keep important people just a tap away",
+      "addButton": "Add Contact"
+    },
+    "actions": {
+      "call": "Call",
+      "email": "Email",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "errors": {
+      "fetchFailed": "Failed to fetch emergency contacts"
+    },
+    "loading": "Loading contacts..."
   }
 }

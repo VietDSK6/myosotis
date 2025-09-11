@@ -1,0 +1,43 @@
+{
+  "historyPage": {
+    "title": "Tiến Trình Điểm MMSE",
+    "subtitle": "Theo dõi điểm đánh giá nhận thức của bạn theo thời gian",
+    "trendAnalysis": {
+      "title": "Phân Tích xu Hướng Điểm Số",
+      "subtitle": "Theo dõi điểm đánh giá nhận thức của bạn theo thời gian"
+    },
+    "domainAnalysis": {
+      "title": "Phân Tích Lĩnh Vực Bài Kiểm Tra Gần Nhất",
+      "subtitle": "Phân tích hiệu suất theo các lĩnh vực nhận thức khác nhau"
+    },
+    "severityBands": {
+      "noCognitive": "Không có suy giảm nhận thức",
+      "mildCognitive": "Suy giảm nhận thức nhẹ",
+      "moderateCognitive": "Suy giảm nhận thức trung bình",
+      "severeCognitive": "Suy giảm nhận thức nặng"
+    },
+    "tooltip": {
+      "testNumber": "Bài kiểm tra #{{number}}",
+      "date": "Ngày: {{date}}",
+      "score": "Điểm: {{score}}/{{maxScore}}",
+      "percentage": "Phần trăm: {{percentage}}%",
+      "change": "Thay đổi: {{change}} điểm",
+      "latestTest": "Bài Kiểm Tra Gần Nhất",
+      "scoreLabel": "Điểm: {{percentage}}%"
+    },
+    "chart": {
+      "yAxisLabel": "Điểm MMSE",
+      "higherScoresBetter": "• Điểm cao hơn cho thấy chức năng nhận thức tốt hơn",
+      "severityThresholds": "• Đường gạch ngang biểu thị ngưỡng mức độ nghiêm trọng của suy giảm nhận thức",
+      "cognitiveDomainsAxis": "• Mỗi trục đại diện cho một lĩnh vực nhận thức từ bài kiểm tra MMSE",
+      "percentagesShow": "• Phần trăm hiển thị câu trả lời đúng trong mỗi lĩnh vực",
+      "higherValuesBetter": "• Giá trị cao hơn cho thấy hiệu suất tốt hơn trong lĩnh vực đó"
+    },
+    "noHistory": {
+      "title": "Chưa Có Lịch Sử Kiểm Tra",
+      "subtitle": "Thực hiện bài kiểm tra MMSE đầu tiên để bắt đầu theo dõi sức khỏe nhận thức của bạn",
+      "takeFirstTest": "Thực Hiện Bài Kiểm Tra Đầu Tiên"
+    },
+    "loading": "Đang tải lịch sử kiểm tra..."
+  }
+}

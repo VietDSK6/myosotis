@@ -1,15 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { useAICloneStore } from '../store';
 import FileUploadZone from './FileUploadZone';
-
-const SAMPLE_TEXT = `
-Hello, this is a sample text for voice recording. 
-Please read this clearly and naturally so we can capture your voice pattern. 
-Technology today allows us to create amazing memories that will last forever.
-This recording will help us generate your digital avatar with your unique voice.
-`.trim();
+import { useTranslation } from 'react-i18next';
 
 export default function Step1Character() {
+  const { t } = useTranslation(['aiClone']);
   const {
     characterPhoto,
     characterPhotoPreview,
@@ -19,6 +14,8 @@ export default function Step1Character() {
     canProceedToStep2,
     nextStep,
   } = useAICloneStore();
+
+  const SAMPLE_TEXT = t('aiClone:step1.sampleText');
 
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -143,13 +140,13 @@ export default function Step1Character() {
   return (
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Create the Character</h2>
-        <p className="text-lg text-gray-600">Define the look and voice of your AI character</p>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('aiClone:step1.title')}</h2>
+        <p className="text-lg text-gray-600">{t('aiClone:step1.description')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-gray-900">Character's Photo</h3>
+          <h3 className="text-xl font-semibold text-gray-900">{t('aiClone:step1.photo.title')}</h3>
           
           <FileUploadZone
             onFileSelect={handlePhotoSelect}
@@ -166,10 +163,10 @@ export default function Step1Character() {
               </div>
               <div>
                 <p className="text-lg font-medium text-gray-900">
-                  Drag & drop a photo or click to browse
+                  {t('aiClone:step1.photo.uploadArea.dragDrop')}
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
-                  Tip: Use a clear, front-facing photo for the best results
+                  {t('aiClone:step1.photo.uploadArea.tip')}
                 </p>
               </div>
             </div>
@@ -177,7 +174,7 @@ export default function Step1Character() {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-gray-900">Character's Voice</h3>
+          <h3 className="text-xl font-semibold text-gray-900">{t('aiClone:step1.voice.title')}</h3>
           
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
@@ -189,7 +186,7 @@ export default function Step1Character() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                Record Now
+                {t('aiClone:step1.voice.tabs.record')}
               </button>
               <button
                 onClick={() => setActiveTab('upload')}
@@ -199,7 +196,7 @@ export default function Step1Character() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
-                Upload Audio File
+                {t('aiClone:step1.voice.tabs.upload')}
               </button>
             </nav>
           </div>
@@ -207,7 +204,7 @@ export default function Step1Character() {
           {activeTab === 'record' ? (
             <div className="space-y-4">
               <div className="p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">Please read this text:</h4>
+                <h4 className="font-medium text-gray-900 mb-2">{t('aiClone:step1.voice.recording.instruction')}</h4>
                 <p className="text-gray-700 leading-relaxed">{SAMPLE_TEXT}</p>
               </div>
 
@@ -230,7 +227,7 @@ export default function Step1Character() {
                       onClick={stopRecording}
                       className="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
                     >
-                      Stop Recording
+                      {t('aiClone:step1.voice.record.stopRecording')}
                     </button>
                   </div>
                 ) : (
@@ -240,13 +237,13 @@ export default function Step1Character() {
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <p className="text-sm text-gray-600">Recording completed!</p>
+                    <p className="text-sm text-gray-600">{t('aiClone:step1.voice.record.completed')}</p>
                     <div className="flex justify-center space-x-4">
                       <button
                         onClick={playRecording}
                         className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"
                       >
-                        {isPlaying ? 'Stop' : 'Listen Again'}
+                        {isPlaying ? t('aiClone:step1.voice.record.stop') : t('aiClone:step1.voice.record.listen')}
                       </button>
                       <button
                         onClick={() => {
@@ -255,7 +252,7 @@ export default function Step1Character() {
                         }}
                         className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
                       >
-                        Re-record
+                        {t('aiClone:step1.voice.record.reRecord')}
                       </button>
                     </div>
                   </div>
@@ -277,10 +274,10 @@ export default function Step1Character() {
                 </div>
                 <div>
                   <p className="text-lg font-medium text-gray-900">
-                    Upload an audio file
+                    {t('aiClone:step1.voice.upload.title')}
                   </p>
                   <p className="text-sm text-gray-500 mt-2">
-                    Supports MP3, WAV, M4A formats
+                    {t('aiClone:step1.voice.upload.description')}
                   </p>
                 </div>
               </div>
@@ -290,18 +287,18 @@ export default function Step1Character() {
           {(referenceAudio || recordedBlob) && (
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                What does the audio say? (Transcription)
+                {t('aiClone:step1.voice.transcription.label')}
               </label>
               <textarea
                 value={referenceText}
                 onChange={(e) => handleReferenceTextChange(e.target.value)}
-                placeholder="Type the transcription of your audio here..."
+                placeholder={t('aiClone:step1.voice.transcription.placeholder')}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 rows={4}
               />
               {activeTab === 'record' && (
                 <p className="text-xs text-gray-500">
-                  Tip: Copy the sample text above for accuracy
+                  {t('aiClone:step1.voice.transcription.tip')}
                 </p>
               )}
             </div>
@@ -319,7 +316,7 @@ export default function Step1Character() {
               : 'bg-gray-200 text-gray-500 cursor-not-allowed'
           }`}
         >
-          Next: Create Script →
+          {t('aiClone:step1.nextButton')}
         </button>
       </div>
     </div>

@@ -7,10 +7,16 @@ import enCommon from './locales/en/common.json';
 import enLanding from './locales/en/landing.json';
 import enAuth from './locales/en/auth.json';
 import enDashboard from './locales/en/dashboard.json';
+import enAiClone from './locales/en/aiClone.json';
+import enMemoryBook from './locales/en/memoryBook.json';
+import enMmse from './locales/en/mmse.json';
 import viCommon from './locales/vi/common.json';
 import viLanding from './locales/vi/landing.json';
 import viAuth from './locales/vi/auth.json';
 import viDashboard from './locales/vi/dashboard.json';
+import viAiClone from './locales/vi/aiClone.json';
+import viMemoryBook from './locales/vi/memoryBook.json';
+import viMmse from './locales/vi/mmse.json';
 
 const resources = {
   en: {
@@ -18,12 +24,18 @@ const resources = {
     landing: enLanding,
     auth: enAuth,
     dashboard: enDashboard,
+    aiClone: enAiClone,
+    memoryBook: enMemoryBook,
+    mmse: enMmse,
   },
   vi: {
     common: viCommon,
     landing: viLanding,
     auth: viAuth,
     dashboard: viDashboard,
+    aiClone: viAiClone,
+    memoryBook: viMemoryBook,
+    mmse: viMmse,
   },
 };
 
@@ -50,7 +62,7 @@ i18n
     
     
     // Separate translation files by namespace
-    ns: ['common', 'landing', 'auth', 'dashboard'],
+    ns: ['common', 'landing', 'auth', 'dashboard', 'aiClone', 'memoryBook', 'mmse'],
   });
 
 export default i18n;

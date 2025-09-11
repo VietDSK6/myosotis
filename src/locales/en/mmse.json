@@ -1,0 +1,43 @@
+{
+  "historyPage": {
+    "title": "MMSE Score Progression",
+    "subtitle": "Track your cognitive assessment scores over time",
+    "trendAnalysis": {
+      "title": "Score Trend Analysis",
+      "subtitle": "Track your cognitive assessment scores over time"
+    },
+    "domainAnalysis": {
+      "title": "Latest Test Domain Analysis",
+      "subtitle": "Performance breakdown across different cognitive domains"
+    },
+    "severityBands": {
+      "noCognitive": "No cognitive impairment",
+      "mildCognitive": "Mild cognitive impairment",
+      "moderateCognitive": "Moderate cognitive impairment",
+      "severeCognitive": "Severe cognitive impairment"
+    },
+    "tooltip": {
+      "testNumber": "Test #{{number}}",
+      "date": "Date: {{date}}",
+      "score": "Score: {{score}}/{{maxScore}}",
+      "percentage": "Percentage: {{percentage}}%",
+      "change": "Change: {{change}} points",
+      "latestTest": "Latest Test",
+      "scoreLabel": "Score: {{percentage}}%"
+    },
+    "chart": {
+      "yAxisLabel": "MMSE Score",
+      "higherScoresBetter": "• Higher scores indicate better cognitive function",
+      "severityThresholds": "• Dotted lines represent severity thresholds for cognitive impairment",
+      "cognitiveDomainsAxis": "• Each axis represents a cognitive domain from the MMSE test",
+      "percentagesShow": "• Percentages show correct answers within each domain",
+      "higherValuesBetter": "• Higher values indicate better performance in that domain"
+    },
+    "noHistory": {
+      "title": "No Test History",
+      "subtitle": "Take your first MMSE test to start tracking your cognitive health",
+      "takeFirstTest": "Take Your First Test"
+    },
+    "loading": "Loading test history..."
+  }
+}

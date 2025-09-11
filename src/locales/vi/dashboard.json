@@ -150,5 +150,25 @@
     "messages": {
       "updateSuccess": "Cập nhật thông tin cá nhân thành công!"
     }
+  },
+  "emergencyContacts": {
+    "title": "Liên Hệ Khẩn Cấp",
+    "description": "Quản lý liên hệ khẩn cấp và người chăm sóc của bạn",
+    "addContact": "Thêm Liên Hệ",
+    "noContacts": {
+      "title": "Chưa Có Liên Hệ Khẩn Cấp",
+      "subtitle": "Thêm các liên hệ khẩn cấp để có thể liên lạc dễ dàng khi cần thiết",
+      "addButton": "Thêm Liên Hệ"
+    },
+    "actions": {
+      "call": "Gọi",
+      "email": "Email",
+      "edit": "Sửa",
+      "delete": "Xóa"
+    },
+    "errors": {
+      "fetchFailed": "Không thể tải danh sách liên hệ khẩn cấp"
+    },
+    "loading": "Đang tải danh sách liên hệ..."
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { EmergencyContact, EmergencyContactPayload } from '../types/user';
 import { getEmergencyContacts, createEmergencyContact, updateEmergencyContact, deleteEmergencyContact } from '../api/user';
 import { EmergencyContactModal, ConfirmDeleteModal } from './index';
@@ -8,6 +9,7 @@ interface EmergencyContactsPanelProps {
 }
 
 export const EmergencyContactsPanel: React.FC<EmergencyContactsPanelProps> = ({ userId }) => {
+  const { t } = useTranslation(['dashboard', 'common']);
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
   const [isLoadingContacts, setIsLoadingContacts] = useState(false);
   const [contactsError, setContactsError] = useState<string | null>(null);
@@ -26,10 +28,10 @@ export const EmergencyContactsPanel: React.FC<EmergencyContactsPanelProps> = ({ 
         setContactsError(null);
       })
       .catch(error => {
-        setContactsError(error instanceof Error ? error.message : 'Failed to fetch emergency contacts');
+        setContactsError(error instanceof Error ? error.message : t('dashboard:emergencyContacts.errors.fetchFailed'));
       })
       .finally(() => setIsLoadingContacts(false));
-  }, [userId]);
+  }, [userId, t]);
 
   const handleAddContact = () => {
     setEditingContact(null);
@@ -81,12 +83,12 @@ export const EmergencyContactsPanel: React.FC<EmergencyContactsPanelProps> = ({ 
   return (
     <div className="p-4 lg:p-6 mb-4 lg:mb-6">
       <div className="flex items-center justify-between mb-4 lg:mb-6">
-        <h3 className="text-lg lg:text-xl font-semibold text-[#333333]"></h3>
+        <h3 className="text-lg lg:text-xl font-semibold text-[#333333]">{t('dashboard:emergencyContacts.title')}</h3>
         <button
           onClick={handleAddContact}
           className="bg-[#5A6DD0] text-white px-4 py-2 rounded-[12px] font-semibold hover:bg-[#5A6DD0]/90 transition-colors text-sm lg:text-base"
         >
-          Add Contact
+          {t('dashboard:emergencyContacts.addContact')}
         </button>
       </div>
       {contactsError && (
@@ -102,6 +104,7 @@ export const EmergencyContactsPanel: React.FC<EmergencyContactsPanelProps> = ({ 
       {isLoadingContacts ? (
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#5A6DD0]"></div>
+          <span className="ml-3 text-gray-600">{t('dashboard:emergencyContacts.loading')}</span>
         </div>
       ) : emergencyContacts.length > 0 ? (
         <div className="space-y-4">
@@ -124,27 +127,27 @@ export const EmergencyContactsPanel: React.FC<EmergencyContactsPanelProps> = ({ 
                   onClick={() => window.open(`tel:${contact.phone}`, '_self')}
                   className="bg-[#5A6DD0] text-white px-4 py-2 rounded-[8px] font-medium hover:bg-[#5A6DD0]/90 transition-colors"
                 >
-                  Call
+                  {t('dashboard:emergencyContacts.actions.call')}
                 </button>
                 {contact.email && (
                   <button
                     onClick={() => window.open(`mailto:${contact.email}`, '_self')}
                     className="bg-white border border-gray-300 text-[#333333] px-4 py-2 rounded-[8px] hover:bg-gray-50 transition-colors"
                   >
-                    Email
+                    {t('dashboard:emergencyContacts.actions.email')}
                   </button>
                 )}
                 <button
                   onClick={() => handleEditContact(contact)}
                   className="bg-white border border-[#5A6DD0] text-[#5A6DD0] px-4 py-2 rounded-[8px] font-medium hover:bg-[#5A6DD0]/10 transition-colors"
                 >
-                  Edit
+                  {t('dashboard:emergencyContacts.actions.edit')}
                 </button>
                 <button
                   onClick={() => handleDeleteContact(contact)}
                   className="bg-white border border-red-300 text-red-600 px-4 py-2 rounded-[8px] font-medium hover:bg-red-50 transition-colors"
                 >
-                  Delete
+                  {t('dashboard:emergencyContacts.actions.delete')}
                 </button>
               </div>
             </div>
@@ -157,13 +160,13 @@ export const EmergencyContactsPanel: React.FC<EmergencyContactsPanelProps> = ({ 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
-          <h4 className="text-lg font-semibold text-[#333333] mb-2">No Emergency Contacts</h4>
-          <p className="text-[#888888] mb-4">Add your emergency contacts to keep important people just a tap away</p>
+          <h4 className="text-lg font-semibold text-[#333333] mb-2">{t('dashboard:emergencyContacts.noContacts.title')}</h4>
+          <p className="text-[#888888] mb-4">{t('dashboard:emergencyContacts.noContacts.subtitle')}</p>
           <button
             onClick={handleAddContact}
             className="bg-[#5A6DD0] text-white px-6 py-3 rounded-[12px] font-semibold hover:bg-[#5A6DD0]/90 transition-colors"
           >
-            Add Contact
+            {t('dashboard:emergencyContacts.noContacts.addButton')}
           </button>
         </div>
       )}

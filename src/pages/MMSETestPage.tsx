@@ -5,7 +5,6 @@ export default function MMSETestPage() {
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
         <div className="bg-white border-b border-gray-200">
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
@@ -22,7 +21,6 @@ export default function MMSETestPage() {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="px-4 sm:px-6 lg:px-8 py-8">
           <MMSETestContent />
         </div>
