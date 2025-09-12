@@ -1,6 +1,4 @@
 export { default as AICloneWizard } from './components/AICloneWizard';
-export { default as AICloneChoiceScreen } from './components/AICloneChoiceScreen';
-export { default as AICloneHistoryPage } from './AICloneHistoryPage';
 export { default as ProgressStepper } from './components/ProgressStepper';
 export { default as FileUploadZone } from './components/FileUploadZone';
 export { default as Step1Character } from './components/Step1Character';

@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { LoginPage, RegisterPage } from '../features/auth';
-import { AICloneHistoryPage } from '../features/ai-clone';
 import { DashboardLayout } from '../components/layout';
 import {
   DashboardHomePage,
@@ -124,10 +123,6 @@ export const router = createBrowserRouter([
   {
     path: '/ai-clone/create',
     element: <AICloneCreatePage />,
-  },
-  {
-    path: '/ai-clone/history',
-    element: <AICloneHistoryPage />,
   },
   {
     path: '*',

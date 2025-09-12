@@ -19,14 +19,14 @@ interface MemoryMapStore extends MemoryMapState, MemoryMapActions {}
 export const useMemoryMapStore = create<MemoryMapStore>()(
   persist(
     (set, get) => ({
-      // Initial state
+      
       savedLocations: [],
       currentMapCenter: {
-        lat: 21.028511, // Hanoi coordinates
+        lat: 21.028511, 
         lng: 105.804817,
       },
 
-      // Actions
+      
       addMemoryLocation: (location: MemoryLocation) => {
         const { savedLocations } = get();
         set({

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { LifeEvent, LifeEventInput } from '../types/memory';
 
 interface LifeEventModalProps {
@@ -9,6 +10,7 @@ interface LifeEventModalProps {
 }
 
 export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeEventModalProps) {
+  const { t } = useTranslation('modals');
   const [formData, setFormData] = useState<LifeEventInput>({
     title: '',
     type: 'image',
@@ -102,13 +104,13 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
                   <h3 className="text-2xl font-bold leading-8 text-gray-900 mb-2">
-                    {event ? 'Edit Memory' : 'Add New Memory'}
+                    {event ? t('lifeEvent.title.edit') : t('lifeEvent.title.add')}
                   </h3>
                   
                   <div className="space-y-3">
                     <div>
                       <label htmlFor="title" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Title <span className="text-red-500">*</span>
+                        {t('lifeEvent.fields.title.label')} <span className="text-red-500">{t('lifeEvent.required')}</span>
                       </label>
                       <input
                         type="text"
@@ -116,14 +118,14 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
                         value={formData.title}
                         onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                         className="w-full rounded-lg border-2 border-gray-300 px-4 py-3 text-lg focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200"
-                        placeholder="Enter event title..."
+                        placeholder={t('lifeEvent.fields.title.placeholder')}
                         required
                       />
                     </div>
 
                     <div>
                       <label htmlFor="type" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Type <span className="text-red-500">*</span>
+                        {t('lifeEvent.fields.type.label')} <span className="text-red-500">{t('lifeEvent.required')}</span>
                       </label>
                       <select
                         id="type"
@@ -132,15 +134,15 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
                         className="w-full rounded-lg border-2 border-gray-300 px-4 py-3 text-lg focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200"
                         required
                       >
-                        <option value="image">Image</option>
-                        <option value="video">Video</option>
-                        <option value="audio">Audio</option>
+                        <option value="image">{t('lifeEvent.fields.type.options.image')}</option>
+                        <option value="video">{t('lifeEvent.fields.type.options.video')}</option>
+                        <option value="audio">{t('lifeEvent.fields.type.options.audio')}</option>
                       </select>
                     </div>
 
                     <div>
                       <label htmlFor="start_time" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Start Date <span className="text-red-500">*</span>
+                        {t('lifeEvent.fields.startDate.label')} <span className="text-red-500">{t('lifeEvent.required')}</span>
                       </label>
                       <input
                         type="date"
@@ -154,7 +156,7 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
 
                     <div>
                       <label htmlFor="end_time" className="block text-lg font-semibold text-gray-700 mb-2">
-                        End Date
+                        {t('lifeEvent.fields.endDate.label')}
                       </label>
                       <input
                         type="date"
@@ -167,7 +169,7 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
 
                     <div>
                       <label htmlFor="description" className="block text-lg font-semibold text-gray-700 mb-2">
-                        Description <span className="text-red-500">*</span>
+                        {t('lifeEvent.fields.description.label')} <span className="text-red-500">{t('lifeEvent.required')}</span>
                       </label>
                       <textarea
                         id="description"
@@ -175,7 +177,7 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
                         value={formData.description}
                         onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                         className="w-full rounded-lg border-2 border-gray-300 px-4 py-3 text-lg focus:border-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-200"
-                        placeholder="Tell us about this memory..."
+                        placeholder={t('lifeEvent.fields.description.placeholder')}
                         required
                       />
                     </div>
@@ -183,7 +185,9 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
                     {(formData.type === 'image' || formData.type === 'video' || formData.type === 'audio') && (
                       <div>
                         <label htmlFor="file" className="block text-lg font-semibold text-gray-700 mb-2">
-                          {formData.type === 'image' ? 'Photo' : formData.type === 'video' ? 'Video' : 'Audio'}
+                          {formData.type === 'image' ? t('lifeEvent.fields.file.photo') : 
+                           formData.type === 'video' ? t('lifeEvent.fields.file.video') : 
+                           t('lifeEvent.fields.file.audio')}
                         </label>
                         <input
                           type="file"
@@ -200,14 +204,14 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
                           <div className="mt-3">
                             <img
                               src={previewUrl}
-                              alt="Preview"
+                              alt={t('lifeEvent.preview.alt')}
                               className="h-32 w-32 rounded-lg object-cover shadow-md"
                             />
                           </div>
                         )}
                         {selectedFile && formData.type !== 'image' && (
                           <div className="mt-3 text-lg text-gray-600 bg-gray-50 p-3 rounded-lg">
-                            Selected: {selectedFile.name}
+                            {t('lifeEvent.fields.file.selected', { fileName: selectedFile.name })}
                           </div>
                         )}
                       </div>
@@ -222,14 +226,14 @@ export default function LifeEventModal({ isOpen, onClose, onSave, event }: LifeE
                 type="submit"
                 className="inline-flex w-full justify-center rounded-lg bg-cyan-600 px-6 py-4 text-lg font-bold text-white shadow-lg hover:bg-cyan-500 transition-colors focus:outline-none focus:ring-4 focus:ring-cyan-300 sm:ml-4 sm:w-auto"
               >
-                {event ? 'Update' : 'Add'} Memory
+                {event ? t('lifeEvent.buttons.update') : t('lifeEvent.buttons.add')}
               </button>
               <button
                 type="button"
                 onClick={onClose}
                 className="mt-4 inline-flex w-full justify-center rounded-lg bg-white px-6 py-4 text-lg font-bold text-gray-900 shadow-md ring-2 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-4 focus:ring-gray-300 sm:mt-0 sm:w-auto"
               >
-                Cancel
+                {t('lifeEvent.buttons.cancel')}
               </button>
             </div>
           </form>

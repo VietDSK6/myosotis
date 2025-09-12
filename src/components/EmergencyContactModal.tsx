@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { EmergencyContact, EmergencyContactPayload } from '../types/user';
 
 interface EmergencyContactModalProps {
@@ -16,6 +17,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
   contact,
   isLoading = false,
 }) => {
+  const { t } = useTranslation('modals');
   const [formData, setFormData] = useState<EmergencyContactPayload>({
     contact_name: '',
     relation: '',
@@ -72,25 +74,25 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
     const newErrors: Partial<EmergencyContactPayload> = {};
 
     if (!formData.contact_name.trim()) {
-      newErrors.contact_name = 'Contact name is required';
+      newErrors.contact_name = t('emergencyContact.validation.contactNameRequired');
     }
 
     if (!formData.relation.trim()) {
-      newErrors.relation = 'Relation is required';
+      newErrors.relation = t('emergencyContact.validation.relationRequired');
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = t('emergencyContact.validation.phoneRequired');
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('emergencyContact.validation.emailRequired');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = t('emergencyContact.validation.emailInvalid');
     }
 
     if (!formData.address.trim()) {
-      newErrors.address = 'Address is required';
+      newErrors.address = t('emergencyContact.validation.addressRequired');
     }
 
     setErrors(newErrors);
@@ -133,7 +135,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
         <div className="p-8">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-semibold text-gray-900">
-              {contact ? 'Edit Emergency Contact' : 'Add Emergency Contact'}
+              {contact ? t('emergencyContact.title.edit') : t('emergencyContact.title.add')}
             </h2>
             <button
               onClick={handleClose}
@@ -148,7 +150,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Contact Name <span className="text-red-500">*</span>
+                {t('emergencyContact.fields.contactName.label')} <span className="text-red-500">{t('emergencyContact.required')}</span>
               </label>
               <input
                 type="text"
@@ -160,7 +162,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                     ? 'border-red-300 focus:border-red-500 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-cyan-500 focus:ring-cyan-200'
                 }`}
-                placeholder="Enter contact name"
+                placeholder={t('emergencyContact.fields.contactName.placeholder')}
               />
               {errors.contact_name && (
                 <p className="mt-1 text-red-600">{errors.contact_name}</p>
@@ -169,7 +171,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Relationship <span className="text-red-500">*</span>
+                {t('emergencyContact.fields.relationship.label')} <span className="text-red-500">{t('emergencyContact.required')}</span>
               </label>
               <select
                 name="relation"
@@ -181,15 +183,15 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                     : 'border-gray-200 focus:border-cyan-500 focus:ring-cyan-200'
                 }`}
               >
-                <option value="">Select relationship</option>
-                <option value="parent">Parent</option>
-                <option value="spouse">Spouse</option>
-                <option value="child">Child</option>
-                <option value="sibling">Sibling</option>
-                <option value="friend">Friend</option>
-                <option value="caregiver">Caregiver</option>
-                <option value="doctor">Doctor</option>
-                <option value="other">Other</option>
+                <option value="">{t('emergencyContact.fields.relationship.placeholder')}</option>
+                <option value="parent">{t('emergencyContact.fields.relationship.options.parent')}</option>
+                <option value="spouse">{t('emergencyContact.fields.relationship.options.spouse')}</option>
+                <option value="child">{t('emergencyContact.fields.relationship.options.child')}</option>
+                <option value="sibling">{t('emergencyContact.fields.relationship.options.sibling')}</option>
+                <option value="friend">{t('emergencyContact.fields.relationship.options.friend')}</option>
+                <option value="caregiver">{t('emergencyContact.fields.relationship.options.caregiver')}</option>
+                <option value="doctor">{t('emergencyContact.fields.relationship.options.doctor')}</option>
+                <option value="other">{t('emergencyContact.fields.relationship.options.other')}</option>
               </select>
               {errors.relation && (
                 <p className="mt-1 text-red-600">{errors.relation}</p>
@@ -199,7 +201,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Phone Number <span className="text-red-500">*</span>
+                  {t('emergencyContact.fields.phone.label')} <span className="text-red-500">{t('emergencyContact.required')}</span>
                 </label>
                 <input
                   type="tel"
@@ -211,7 +213,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200' 
                       : 'border-gray-200 focus:border-cyan-500 focus:ring-cyan-200'
                   }`}
-                  placeholder="Enter phone number"
+                  placeholder={t('emergencyContact.fields.phone.placeholder')}
                 />
                 {errors.phone && (
                   <p className="mt-1 text-red-600">{errors.phone}</p>
@@ -220,7 +222,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
 
               <div>
                 <label className="block text-lg font-medium text-gray-700 mb-2">
-                  Email Address <span className="text-red-500">*</span>
+                  {t('emergencyContact.fields.email.label')} <span className="text-red-500">{t('emergencyContact.required')}</span>
                 </label>
                 <input
                   type="email"
@@ -232,7 +234,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                       ? 'border-red-300 focus:border-red-500 focus:ring-red-200' 
                       : 'border-gray-200 focus:border-cyan-500 focus:ring-cyan-200'
                   }`}
-                  placeholder="Enter email address"
+                  placeholder={t('emergencyContact.fields.email.placeholder')}
                 />
                 {errors.email && (
                   <p className="mt-1 text-red-600">{errors.email}</p>
@@ -242,7 +244,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
 
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-2">
-                Address <span className="text-red-500">*</span>
+                {t('emergencyContact.fields.address.label')} <span className="text-red-500">{t('emergencyContact.required')}</span>
               </label>
               <input
                 type="text"
@@ -254,7 +256,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                     ? 'border-red-300 focus:border-red-500 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-cyan-500 focus:ring-cyan-200'
                 }`}
-                placeholder="Enter address"
+                placeholder={t('emergencyContact.fields.address.placeholder')}
               />
               {errors.address && (
                 <p className="mt-1 text-red-600">{errors.address}</p>
@@ -271,7 +273,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                 className="w-5 h-5 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 focus:ring-2"
               />
               <label htmlFor="is_primary" className="ml-3 text-lg text-gray-700">
-                Set as primary emergency contact
+                {t('emergencyContact.fields.isPrimary')}
               </label>
             </div>
 
@@ -281,7 +283,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                 onClick={handleClose}
                 className="flex-1 min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300 border border-gray-200"
               >
-                Cancel
+                {t('emergencyContact.buttons.cancel')}
               </button>
               <button
                 type="submit"
@@ -291,7 +293,7 @@ export const EmergencyContactModal: React.FC<EmergencyContactModalProps> = ({
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 ) : (
-                  contact ? 'Update Contact' : 'Add Contact'
+                  contact ? t('emergencyContact.buttons.updateContact') : t('emergencyContact.buttons.addContact')
                 )}
               </button>
             </div>

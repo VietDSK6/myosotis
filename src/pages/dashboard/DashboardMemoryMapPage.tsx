@@ -143,7 +143,7 @@ export default function DashboardMemoryMapPage() {
           </div>
         </div>
 
-        {/* Map Container */}
+
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <GoogleMapComponent
             center={currentLocation}

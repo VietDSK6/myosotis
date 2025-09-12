@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmDeleteModalProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   contactName,
   isLoading = false,
 }) => {
+  const { t } = useTranslation('modals');
+  
   const handleConfirm = async () => {
     try {
       await onConfirm();
@@ -38,11 +41,10 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
 
           <div className="text-center mb-8">
             <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-              Delete Emergency Contact?
+              {t('confirmDelete.title')}
             </h3>
             <p className="text-lg text-gray-600">
-              Are you sure you want to delete <span className="font-medium text-gray-900">{contactName}</span>? 
-              This action cannot be undone.
+              {t('confirmDelete.message', { contactName })}
             </p>
           </div>
 
@@ -53,7 +55,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
               disabled={isLoading}
               className="flex-1 min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300 border border-gray-200 disabled:opacity-50"
             >
-              Cancel
+              {t('confirmDelete.buttons.cancel')}
             </button>
             <button
               type="button"
@@ -64,7 +66,7 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                'Delete'
+                t('confirmDelete.buttons.delete')
               )}
             </button>
           </div>
