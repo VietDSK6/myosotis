@@ -1,43 +1,104 @@
 {
   "historyPage": {
-    "title": "Tiến Trình Điểm MMSE",
-    "subtitle": "Theo dõi điểm đánh giá nhận thức của bạn theo thời gian",
+    "title": "Tiến Trình Điểm Số MMSE",
+    "subtitle": "Theo dõi điểm số đánh giá nhận thức của bạn theo thời gian",
     "trendAnalysis": {
-      "title": "Phân Tích xu Hướng Điểm Số",
-      "subtitle": "Theo dõi điểm đánh giá nhận thức của bạn theo thời gian"
+      "title": "Phân Tích Xu Hướng Điểm Số",
+      "subtitle": "Theo dõi điểm số đánh giá nhận thức của bạn theo thời gian"
     },
     "domainAnalysis": {
-      "title": "Phân Tích Lĩnh Vực Bài Kiểm Tra Gần Nhất",
-      "subtitle": "Phân tích hiệu suất theo các lĩnh vực nhận thức khác nhau"
+      "title": "Phân Tích Lĩnh Vực Bài Kiểm Tra Mới Nhất",
+      "subtitle": "Phân tích chi tiết hiệu suất qua các lĩnh vực nhận thức khác nhau"
     },
     "severityBands": {
-      "noCognitive": "Không có suy giảm nhận thức",
+      "noCognitive": "Không suy giảm nhận thức",
       "mildCognitive": "Suy giảm nhận thức nhẹ",
       "moderateCognitive": "Suy giảm nhận thức trung bình",
-      "severeCognitive": "Suy giảm nhận thức nặng"
+      "severeCognitive": "Suy giảm nhận thức nghiêm trọng"
     },
     "tooltip": {
       "testNumber": "Bài kiểm tra #{{number}}",
       "date": "Ngày: {{date}}",
       "score": "Điểm: {{score}}/{{maxScore}}",
-      "percentage": "Phần trăm: {{percentage}}%",
+      "percentage": "Tỷ lệ: {{percentage}}%",
       "change": "Thay đổi: {{change}} điểm",
-      "latestTest": "Bài Kiểm Tra Gần Nhất",
+      "latestTest": "Bài Kiểm Tra Mới Nhất",
       "scoreLabel": "Điểm: {{percentage}}%"
     },
     "chart": {
       "yAxisLabel": "Điểm MMSE",
       "higherScoresBetter": "• Điểm cao hơn cho thấy chức năng nhận thức tốt hơn",
-      "severityThresholds": "• Đường gạch ngang biểu thị ngưỡng mức độ nghiêm trọng của suy giảm nhận thức",
-      "cognitiveDomainsAxis": "• Mỗi trục đại diện cho một lĩnh vực nhận thức từ bài kiểm tra MMSE",
-      "percentagesShow": "• Phần trăm hiển thị câu trả lời đúng trong mỗi lĩnh vực",
+      "severityThresholds": "• Các đường chấm biểu thị ngưỡng mức độ suy giảm nhận thức",
+      "cognitiveDomainsAxis": "• Mỗi trục biểu thị một lĩnh vực nhận thức từ bài kiểm tra MMSE",
+      "percentagesShow": "• Tỷ lệ phần trăm cho thấy các câu trả lời đúng trong mỗi lĩnh vực",
       "higherValuesBetter": "• Giá trị cao hơn cho thấy hiệu suất tốt hơn trong lĩnh vực đó"
     },
     "noHistory": {
       "title": "Chưa Có Lịch Sử Kiểm Tra",
-      "subtitle": "Thực hiện bài kiểm tra MMSE đầu tiên để bắt đầu theo dõi sức khỏe nhận thức của bạn",
-      "takeFirstTest": "Thực Hiện Bài Kiểm Tra Đầu Tiên"
+      "subtitle": "Hãy làm bài kiểm tra MMSE đầu tiên để bắt đầu theo dõi sức khỏe nhận thức của bạn",
+      "takeFirstTest": "Làm Bài Kiểm Tra Đầu Tiên"
     },
     "loading": "Đang tải lịch sử kiểm tra..."
+  },
+  "testContent": {
+    "title": "Bài Kiểm Tra MMSE",
+    "subtitle": "Đánh giá Trạng thái Tâm thần Tối thiểu",
+    "loading": "Đang tải Bài kiểm tra MMSE...",
+    "failedToLoad": "Không thể tải dữ liệu bài kiểm tra",
+    "backToDashboard": "Về Bảng Điều Khiển",
+    "progress": "Tiến độ",
+    "complete": "Hoàn thành",
+    "question": "Câu {{current}} trên {{total}}",
+    "navigation": {
+      "previous": "Trước",
+      "next": "Tiếp theo",
+      "submit": "Nộp Bài Kiểm Tra",
+      "submitting": "Đang nộp..."
+    },
+    "placeholders": {
+      "enterAnswer": "Nhập câu trả lời của bạn...",
+      "selectOption": "Chọn một phương án..."
+    },
+    "audioNotSupported": "Trình duyệt của bạn không hỗ trợ phần tử âm thanh.",
+    "results": {
+      "title": "Kết Quả Kiểm Tra",
+      "subtitle": "Bài đánh giá MMSE của bạn đã hoàn tất",
+      "congratulations": "🎉 Đã Hoàn Thành Bài Kiểm Tra!",
+      "testCompletedSuccessfully": "Đã Hoàn Thành Bài Kiểm Tra Thành Công!",
+      "thankYou": "Cảm ơn bạn đã hoàn thành bài đánh giá MMSE.",
+      "score": "Điểm Của Bạn",
+      "totalScore": "Tổng Điểm",
+      "outOf": "trên",
+      "percentage": "{{percentage}}%",
+      "completedOn": "Hoàn thành vào ngày {{date}}",
+      "interpretation": "Diễn giải",
+      "recommendations": "Khuyến nghị",
+      "nextSteps": "Các Bước Tiếp Theo",
+      "actions": {
+        "viewHistory": "Xem Lịch Sử Kiểm Tra",
+        "retakeTest": "Làm Bài Kiểm Tra Khác",
+        "backToDashboard": "Về Bảng Điều Khiển"
+      },
+      "summary": {
+        "title": "Tóm Tắt Bài Kiểm Tra",
+        "totalQuestions": "Tổng Số Câu Hỏi",
+        "correctAnswers": "Số Câu Trả Lời Đúng",
+        "timeSpent": "Thời Gian Làm Bài",
+        "accuracy": "Độ Chính Xác"
+      }
+    }
+  },
+  "simpleChart": {
+    "title": "Tiến Trình Gần Đây",
+    "subtitle": "Xu hướng đánh giá nhận thức mới nhất của bạn",
+    "viewFullChart": "Xem Biểu Đồ Đầy Đủ",
+    "latestScore": "Điểm Mới Nhất:",
+    "noData": "Không có dữ liệu kiểm tra",
+    "takeFirstTest": "Làm bài kiểm tra MMSE đầu tiên để xem tiến trình",
+    "trends": {
+      "improving": "Cải thiện",
+      "declining": "Suy giảm",
+      "stable": "Ổn định"
+    }
   }
 }

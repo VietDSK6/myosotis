@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GameCard } from './components/GameCard';
 import { usePictureRecallStore } from './store';
 import { getGridLayout, formatTime } from '../../utils/picture-recall';
 import type { PictureRecallDifficulty } from '../../types/picture-recall';
 
 const DIFFICULTIES: { value: PictureRecallDifficulty; label: string; description: string }[] = [
-  { value: 3, label: '3 Pairs', description: 'Easy - 6 cards' },
-  { value: 4, label: '4 Pairs', description: 'Medium - 8 cards' },
-  { value: 5, label: '5 Pairs', description: 'Hard - 10 cards' }
+  { value: 3, label: '', description: '' },
+  { value: 4, label: '', description: '' },
+  { value: 5, label: '', description: '' }
 ];
 
 const GAME_MODES: { value: 'flags' | 'things'; label: string; description: string }[] = [
-  { value: 'flags', label: 'Flags', description: 'Country flags' },
-  { value: 'things', label: 'Objects', description: 'Everyday items' }
+  { value: 'flags', label: '', description: '' },
+  { value: 'things', label: '', description: '' }
 ];
 
 export const PictureRecallGame: React.FC = () => {
+  const { t } = useTranslation('miniGames');
   const {
     cards,
     selectedCards,
@@ -83,18 +85,18 @@ export const PictureRecallGame: React.FC = () => {
                 <div className="flex space-x-6 text-sm">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-800">{moves}</div>
-                    <div className="text-gray-600">Moves</div>
+                    <div className="text-gray-600">{t('pictureRecall.gameInfo.moves')}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-800">{matchedPairs}/{totalPairs}</div>
-                    <div className="text-gray-600">Pairs</div>
+                    <div className="text-gray-600">{t('pictureRecall.gameInfo.pairs')}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-800">
                       {showPreview ? previewTime : formatTime(displayTime)}
                     </div>
                     <div className="text-gray-600">
-                      {showPreview ? 'Preview' : 'Time'}
+                      {showPreview ? t('pictureRecall.gameInfo.preview') : t('pictureRecall.gameInfo.time')}
                     </div>
                   </div>
                 </div>
@@ -103,7 +105,7 @@ export const PictureRecallGame: React.FC = () => {
               {showPreview && (
                 <div className="text-center mb-4 p-4 bg-gray-100 rounded-lg">
                   <p className="text-gray-800 font-medium">
-                    Memorize the positions! Game starts in {previewTime} seconds...
+                    {t('pictureRecall.preview.message', { time: previewTime })}
                   </p>
                 </div>
               )}
@@ -127,9 +129,9 @@ export const PictureRecallGame: React.FC = () => {
 
               {isGameComplete && (
                 <div className="mt-6 text-center p-4 bg-gray-100 rounded-lg border border-gray-300">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Congratulations!</h3>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">{t('pictureRecall.completion.title')}</h3>
                   <p className="text-gray-700">
-                    You completed the puzzle in {moves} moves and {formatTime(displayTime)}!
+                    {t('pictureRecall.completion.message', { moves, time: formatTime(displayTime) })}
                   </p>
                 </div>
               )}
@@ -138,9 +140,9 @@ export const PictureRecallGame: React.FC = () => {
 
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">New Game</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('pictureRecall.controls.title')}</h3>
               <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Difficulty</label>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">{t('pictureRecall.controls.difficulty')}</label>
                 <div className="grid grid-cols-1 gap-2">
                   {DIFFICULTIES.map((diff) => (
                     <button
@@ -154,8 +156,8 @@ export const PictureRecallGame: React.FC = () => {
                         }
                       `}
                     >
-                      <div>{diff.label}</div>
-                      <div className="text-xs opacity-75">{diff.description}</div>
+                      <div>{t(`pictureRecall.difficulties.${diff.value}.label`)}</div>
+                      <div className="text-xs opacity-75">{t(`pictureRecall.difficulties.${diff.value}.description`)}</div>
                     </button>
                   ))}
                 </div>
@@ -163,7 +165,7 @@ export const PictureRecallGame: React.FC = () => {
 
               {/* Game Mode Selection */}
               <div className="mb-4">
-                <label className="text-sm font-medium text-gray-700 mb-2 block">Theme</label>
+                <label className="text-sm font-medium text-gray-700 mb-2 block">{t('pictureRecall.controls.theme')}</label>
                 <div className="grid grid-cols-1 gap-2">
                   {GAME_MODES.map((mode) => (
                     <button
@@ -177,8 +179,8 @@ export const PictureRecallGame: React.FC = () => {
                         }
                       `}
                     >
-                      <div>{mode.label}</div>
-                      <div className="text-xs opacity-75">{mode.description}</div>
+                      <div>{t(`pictureRecall.gameModes.${mode.value}.label`)}</div>
+                      <div className="text-xs opacity-75">{t(`pictureRecall.gameModes.${mode.value}.description`)}</div>
                     </button>
                   ))}
                 </div>
@@ -189,33 +191,33 @@ export const PictureRecallGame: React.FC = () => {
                 onClick={resetGame}
                 className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Reset Current Game
+                {t('pictureRecall.controls.resetGame')}
               </button>
             </div>
 
             {/* Statistics */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Statistics</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('pictureRecall.statistics.title')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Games Played:</span>
+                  <span className="text-gray-600">{t('pictureRecall.statistics.gamesPlayed')}</span>
                   <span className="font-medium">{stats.gamesPlayed}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Games Completed:</span>
+                  <span className="text-gray-600">{t('pictureRecall.statistics.gamesCompleted')}</span>
                   <span className="font-medium">{stats.gamesCompleted}</span>
                 </div>
                 
                 {/* Best Stats by Difficulty */}
                 {DIFFICULTIES.map((diff) => (
                   <div key={diff.value} className="border-t pt-2">
-                    <div className="font-medium text-gray-800 mb-1">{diff.label}</div>
+                    <div className="font-medium text-gray-800 mb-1">{t(`pictureRecall.difficulties.${diff.value}.label`)}</div>
                     <div className="flex justify-between text-xs">
-                      <span className="text-gray-600">Best Moves:</span>
+                      <span className="text-gray-600">{t('pictureRecall.statistics.bestMoves')}</span>
                       <span>{stats.bestMoves[diff.value] ?? '-'}</span>
                     </div>
                     <div className="flex justify-between text-xs">
-                      <span className="text-gray-600">Best Time:</span>
+                      <span className="text-gray-600">{t('pictureRecall.statistics.bestTime')}</span>
                       <span>{stats.bestTime[diff.value] ? formatTime(stats.bestTime[diff.value]!) : '-'}</span>
                     </div>
                   </div>
@@ -225,7 +227,7 @@ export const PictureRecallGame: React.FC = () => {
                   onClick={clearStats}
                   className="w-full mt-4 px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                 >
-                  Clear Statistics
+                  {t('pictureRecall.statistics.clearStats')}
                 </button>
               </div>
             </div>

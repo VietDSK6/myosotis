@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useChatbotStore } from '../store';
 import { useAuthStore } from '../../auth/store';
+import { useTranslation } from 'react-i18next';
 
 export const ChatInput: React.FC = () => {
+  const { t } = useTranslation('chatbot');
   const { user } = useAuthStore();
   const { 
     isSending, 
@@ -45,7 +47,7 @@ export const ChatInput: React.FC = () => {
             value={localMessage}
             onChange={(e) => setLocalMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
+            placeholder={t('input.placeholder')}
             disabled={isSending}
             rows={1}
             className="w-full px-6 py-4 text-lg border border-gray-300/50 rounded-3xl 
@@ -71,7 +73,7 @@ export const ChatInput: React.FC = () => {
                      disabled:opacity-50 disabled:cursor-not-allowed 
                      disabled:hover:from-blue-500 disabled:hover:to-indigo-600
                      shadow-lg hover:shadow-xl hover:scale-105"
-          aria-label="Send message"
+          aria-label={t('input.sendMessage')}
         >
           {isSending ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

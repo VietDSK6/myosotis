@@ -1,7 +1,10 @@
 import { ProtectedRoute } from '../features/auth';
 import MMSETestContent from '../components/MMSETestContent';
+import { useTranslation } from 'react-i18next';
 
 export default function MMSETestPage() {
+  const { t } = useTranslation('mmse');
+  
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
@@ -13,8 +16,8 @@ export default function MMSETestPage() {
                   <img src="/test-icon.png" alt="MMSE Test" className="w-6 h-6" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-semibold text-gray-900">MMSE Test</h1>
-                  <p className="text-sm text-gray-500">Mini-Mental State Examination</p>
+                  <h1 className="text-xl font-semibold text-gray-900">{t('testContent.title')}</h1>
+                  <p className="text-sm text-gray-500">{t('testContent.subtitle')}</p>
                 </div>
               </div>
             </div>

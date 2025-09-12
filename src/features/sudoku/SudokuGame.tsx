@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SudokuCell } from '../../components/SudokuCell';
 import { useSudokuStore } from '../sudoku/store';
 import { hasCellError, formatTime } from '../../utils/sudoku';
 import type { SudokuDifficulty } from '../../types/sudoku';
 
 const DIFFICULTIES: SudokuDifficulty[] = [
-  { name: 'easy', label: 'Easy', description: 'Perfect for beginners', blanks: 36 },
-  { name: 'medium', label: 'Medium', description: 'A moderate challenge', blanks: 46 },
-  { name: 'hard', label: 'Hard', description: 'For experienced players', blanks: 52 },
-  { name: 'expert', label: 'Expert', description: 'The ultimate challenge', blanks: 58 }
+  { name: 'easy', label: '', description: '', blanks: 36 },
+  { name: 'medium', label: '', description: '', blanks: 46 },
+  { name: 'hard', label: '', description: '', blanks: 52 },
+  { name: 'expert', label: '', description: '', blanks: 58 }
 ];
 
 export const SudokuGame: React.FC = () => {
+  const { t } = useTranslation('miniGames');
   const {
     puzzle,
     currentGrid,
@@ -34,7 +36,7 @@ export const SudokuGame: React.FC = () => {
 
   const [currentTime, setCurrentTime] = useState(0);
 
-  // Update timer
+  
   useEffect(() => {
     if (isCompleted || !startTime) return;
 
@@ -45,7 +47,7 @@ export const SudokuGame: React.FC = () => {
     return () => clearInterval(interval);
   }, [startTime, isCompleted]);
 
-  // Handle keyboard input
+  
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!selectedCell) return;
@@ -105,15 +107,15 @@ export const SudokuGame: React.FC = () => {
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium text-gray-600">
-                  Difficulty: <span className="text-gray-900 capitalize">{difficulty}</span>
+                  {t('sudoku.gameInfo.difficulty')} <span className="text-gray-900 capitalize">{difficulty}</span>
                 </span>
                 <span className="text-sm font-medium text-gray-600">
-                  Time: <span className="text-gray-900">{formatTime(displayTime)}</span>
+                  {t('sudoku.gameInfo.time')} <span className="text-gray-900">{formatTime(displayTime)}</span>
                 </span>
               </div>
               {hasErrors && (
                 <span className="text-red-600 text-sm font-medium">
-                  ⚠️ Check for errors
+                  {t('sudoku.gameInfo.checkErrors')}
                 </span>
               )}
             </div>
@@ -150,9 +152,9 @@ export const SudokuGame: React.FC = () => {
 
             {isCompleted && (
               <div className="mt-6 text-center p-4 bg-green-100 rounded-lg border border-green-300">
-                <h3 className="text-lg font-semibold text-green-800 mb-2">🎉 Congratulations!</h3>
+                <h3 className="text-lg font-semibold text-green-800 mb-2">{t('sudoku.completion.title')}</h3>
                 <p className="text-green-700">
-                  You completed the puzzle in {formatTime(displayTime)}!
+                  {t('sudoku.completion.message', { time: formatTime(displayTime) })}
                 </p>
               </div>
             )}
@@ -161,7 +163,7 @@ export const SudokuGame: React.FC = () => {
 
         <div className="space-y-6">
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">New Game</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('sudoku.controls.newGame')}</h3>
             <div className="grid grid-cols-2 gap-2">
               {DIFFICULTIES.map((diff) => (
                 <button
@@ -175,7 +177,7 @@ export const SudokuGame: React.FC = () => {
                     }
                   `}
                 >
-                  {diff.label}
+                  {t(`sudoku.difficulties.${diff.name}.label`)}
                 </button>
               ))}
             </div>
@@ -183,7 +185,7 @@ export const SudokuGame: React.FC = () => {
 
           {/* Game Controls */}
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Controls</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('sudoku.controls.title')}</h3>
             <div className="space-y-2">
               <button
                 onClick={clearCell}
@@ -191,7 +193,7 @@ export const SudokuGame: React.FC = () => {
                 className="w-full px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 
                          disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Clear Cell
+                {t('sudoku.controls.clearCell')}
               </button>
               <button
                 onClick={handleHint}
@@ -199,47 +201,47 @@ export const SudokuGame: React.FC = () => {
                 className="w-full px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 
                          disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Get Hint ({maxHints - hintsUsed} left)
+                {t('sudoku.controls.getHint', { remaining: maxHints - hintsUsed })}
               </button>
               <button
                 onClick={resetGame}
                 className="w-full px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
               >
-                Reset Game
+                {t('sudoku.controls.resetGame')}
               </button>
             </div>
           </div>
 
           {/* Statistics */}
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Statistics</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('sudoku.statistics.title')}</h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Games Played:</span>
+                <span className="text-gray-600">{t('sudoku.statistics.gamesPlayed')}</span>
                 <span className="font-medium">{stats.gamesPlayed}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Games Completed:</span>
+                <span className="text-gray-600">{t('sudoku.statistics.gamesCompleted')}</span>
                 <span className="font-medium">{stats.gamesCompleted}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Best Time:</span>
+                <span className="text-gray-600">{t('sudoku.statistics.bestTime')}</span>
                 <span className="font-medium">
                   {stats.bestTime ? formatTime(stats.bestTime) : '-'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Average Time:</span>
+                <span className="text-gray-600">{t('sudoku.statistics.averageTime')}</span>
                 <span className="font-medium">
                   {stats.averageTime ? formatTime(stats.averageTime) : '-'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Current Streak:</span>
+                <span className="text-gray-600">{t('sudoku.statistics.currentStreak')}</span>
                 <span className="font-medium">{stats.streakCurrent}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Best Streak:</span>
+                <span className="text-gray-600">{t('sudoku.statistics.bestStreak')}</span>
                 <span className="font-medium">{stats.streakBest}</span>
               </div>
             </div>

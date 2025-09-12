@@ -1,12 +1,15 @@
+import { useTranslation } from 'react-i18next';
 import { SudokuGame } from '../../features/sudoku/SudokuGame';
 import DashboardHeader from '../../components/DashboardHeader';
 
 export default function DashboardSudokuGamePage() {
+  const { t } = useTranslation('miniGames');
+
   return (
     <div className="lg:col-span-10">
       <DashboardHeader 
-        title="Sudoku" 
-        description="Exercise your logical thinking with number puzzles"
+        title={t('pages.sudoku.title')} 
+        description={t('pages.sudoku.description')}
       />
       
       <div className="bg-gray-50 min-h-screen">

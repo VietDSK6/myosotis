@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../features/auth/store';
 import { getMMSEInfo, submitMMSETest, type MMSETestData, type MMSEAnswer, type MMSETestResult } from '../api/mmse';
 import DashboardHeader from './DashboardHeader';
+import { useTranslation } from 'react-i18next';
 
 const getMediaUrl = (url: string): string => {
   if (url.startsWith('http')) {
@@ -13,6 +14,7 @@ const getMediaUrl = (url: string): string => {
 };
 
 export default function MMSETestContent() {
+  const { t } = useTranslation('mmse');
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [testData, setTestData] = useState<MMSETestData | null>(null);
@@ -28,7 +30,7 @@ export default function MMSETestContent() {
 
   useEffect(() => {
     fetchTestData();
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (!testData) return;
@@ -332,7 +334,7 @@ export default function MMSETestContent() {
             type="number"
             value={currentAnswer}
             onChange={(e) => handleAnswerChange(e.target.value)}
-            placeholder={question.placeholder || 'Enter your answer...'}
+            placeholder={question.placeholder || t('testContent.placeholders.enterAnswer')}
             className={commonInputClass}
           />
         );
@@ -343,7 +345,7 @@ export default function MMSETestContent() {
             type="text"
             value={currentAnswer}
             onChange={(e) => handleAnswerChange(e.target.value)}
-            placeholder={question.placeholder || 'Enter your answer...'}
+            placeholder={question.placeholder || t('testContent.placeholders.enterAnswer')}
             className={commonInputClass}
           />
         );
@@ -367,13 +369,13 @@ export default function MMSETestContent() {
     return (
       <div className="space-y-6">
         <DashboardHeader 
-          title="MMSE Test" 
-          description="Mini-Mental State Examination"
+          title={t('testContent.title')} 
+          description={t('testContent.subtitle')}
         />
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600">Loading MMSE Test...</p>
+            <p className="text-lg text-gray-600">{t('testContent.loading')}</p>
           </div>
         </div>
       </div>
@@ -402,8 +404,8 @@ export default function MMSETestContent() {
     return (
       <div className="space-y-6">
         <DashboardHeader 
-          title="Test Results" 
-          description="Your MMSE assessment has been completed"
+          title={t('testContent.results.title')} 
+          description={t('testContent.results.subtitle')}
         />
         
         {/* Results Card */}
@@ -412,12 +414,12 @@ export default function MMSETestContent() {
           <div className="bg-gradient-to-r from-indigo-600 to-indigo-700 px-8 py-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold mb-2">Test Completed Successfully!</h2>
-                <p className="text-indigo-100">Completed on {completedDate}</p>
+                <h2 className="text-2xl font-bold mb-2">{t('testContent.results.testCompletedSuccessfully')}</h2>
+                <p className="text-indigo-100">{t('testContent.results.completedOn', { date: completedDate })}</p>
               </div>
               <div className="text-right">
                 <div className="text-3xl font-bold">{result.total_score}/{result.max_score}</div>
-                <div className="text-indigo-100">Total Score</div>
+                <div className="text-indigo-100">{t('testContent.results.totalScore')}</div>
               </div>
             </div>
           </div>
@@ -509,17 +511,17 @@ export default function MMSETestContent() {
     return (
       <div className="space-y-6">
         <DashboardHeader 
-          title="MMSE Test" 
-          description="Mini-Mental State Examination"
+          title={t('testContent.title')} 
+          description={t('testContent.subtitle')}
         />
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
           <div className="text-center">
-            <p className="text-lg text-gray-600 mb-4">Failed to load test data</p>
+            <p className="text-lg text-gray-600 mb-4">{t('testContent.failedToLoad')}</p>
             <button
               onClick={() => navigate('/dashboard')}
               className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
             >
-              Back to Dashboard
+              {t('testContent.backToDashboard')}
             </button>
           </div>
         </div>
@@ -537,15 +539,14 @@ export default function MMSETestContent() {
   return (
     <div className="space-y-6">
       <DashboardHeader 
-        title="MMSE Test" 
-        description={`Question ${getCurrentQuestionNumber()} of ${getTotalQuestions()}`}
+        title={t('testContent.title')} 
+        description={t('testContent.question', { current: getCurrentQuestionNumber(), total: getTotalQuestions() })}
       />
 
-      {/* Progress Bar */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <div className="flex justify-between text-sm text-gray-600 mb-3">
-          <span>Progress</span>
-          <span>{Math.round(progressPercentage)}% Complete</span>
+          <span>{t('testContent.progress')}</span>
+          <span>{Math.round(progressPercentage)}% {t('testContent.complete')}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-3">
           <div 
@@ -575,7 +576,7 @@ export default function MMSETestContent() {
                       <p className="text-sm text-gray-600 mb-3">{media.description}</p>
                       <audio controls className="w-full">
                         <source src={getMediaUrl(media.url)} type="audio/mpeg" />
-                        Your browser does not support the audio element.
+                        {t('testContent.audioNotSupported')}
                       </audio>
                     </div>
                   )}
@@ -606,7 +607,7 @@ export default function MMSETestContent() {
                   {media.type === 'audio' && (
                     <audio controls className="w-full">
                       <source src={getMediaUrl(media.url)} type="audio/mpeg" />
-                      Your browser does not support the audio element.
+                      {t('testContent.audioNotSupported')}
                     </audio>
                   )}
                   {media.type === 'image' && (
@@ -627,7 +628,6 @@ export default function MMSETestContent() {
             {renderQuestion()}
           </div>
 
-          {/* Navigation Buttons */}
           <div className="flex justify-between pt-6 border-t border-gray-200">
             <button
               onClick={handlePrevious}
@@ -641,7 +641,7 @@ export default function MMSETestContent() {
               <svg className="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Previous
+              {t('testContent.navigation.previous')}
             </button>
 
             <button
@@ -659,11 +659,11 @@ export default function MMSETestContent() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Submitting...
+                  {t('testContent.navigation.submitting')}
                 </>
               ) : (
                 <>
-                  {isLastQuestion ? 'Submit Test' : 'Next'}
+                  {isLastQuestion ? t('testContent.navigation.submit') : t('testContent.navigation.next')}
                   <svg className="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

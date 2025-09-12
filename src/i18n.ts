@@ -10,6 +10,9 @@ import enDashboard from './locales/en/dashboard.json';
 import enAiClone from './locales/en/aiClone.json';
 import enMemoryBook from './locales/en/memoryBook.json';
 import enMmse from './locales/en/mmse.json';
+import enChatbot from './locales/en/chatbot.json';
+import enMemoryMap from './locales/en/memoryMap.json';
+import enMiniGames from './locales/en/miniGames.json';
 import viCommon from './locales/vi/common.json';
 import viLanding from './locales/vi/landing.json';
 import viAuth from './locales/vi/auth.json';
@@ -17,6 +20,9 @@ import viDashboard from './locales/vi/dashboard.json';
 import viAiClone from './locales/vi/aiClone.json';
 import viMemoryBook from './locales/vi/memoryBook.json';
 import viMmse from './locales/vi/mmse.json';
+import viChatbot from './locales/vi/chatbot.json';
+import viMemoryMap from './locales/vi/memoryMap.json';
+import viMiniGames from './locales/vi/miniGames.json';
 
 const resources = {
   en: {
@@ -27,6 +33,9 @@ const resources = {
     aiClone: enAiClone,
     memoryBook: enMemoryBook,
     mmse: enMmse,
+    chatbot: enChatbot,
+    memoryMap: enMemoryMap,
+    miniGames: enMiniGames,
   },
   vi: {
     common: viCommon,
@@ -36,6 +45,9 @@ const resources = {
     aiClone: viAiClone,
     memoryBook: viMemoryBook,
     mmse: viMmse,
+    chatbot: viChatbot,
+    memoryMap: viMemoryMap,
+    miniGames: viMiniGames,
   },
 };
 
@@ -62,7 +74,7 @@ i18n
     
     
     // Separate translation files by namespace
-    ns: ['common', 'landing', 'auth', 'dashboard', 'aiClone', 'memoryBook', 'mmse'],
+    ns: ['common', 'landing', 'auth', 'dashboard', 'aiClone', 'memoryBook', 'mmse', 'chatbot', 'memoryMap', 'miniGames'],
   });
 
 export default i18n;

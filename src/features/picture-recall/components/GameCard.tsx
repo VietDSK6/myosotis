@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { PictureRecallCard } from '../../../types/picture-recall';
 
 interface GameCardProps {
@@ -8,6 +9,8 @@ interface GameCardProps {
 }
 
 export const GameCard: React.FC<GameCardProps> = ({ card, onFlip, disabled }) => {
+  const { t } = useTranslation('miniGames');
+  
   const handleClick = () => {
     if (!disabled && !card.isFlipped && !card.isMatched) {
       onFlip(card.id);
@@ -48,7 +51,7 @@ export const GameCard: React.FC<GameCardProps> = ({ card, onFlip, disabled }) =>
           <div className="w-full h-full bg-gray-200 rounded border border-gray-300 p-2">
             <img
               src={card.imageUrl}
-              alt="Memory card"
+              alt={t('pictureRecall.accessibility.cardAlt')}
               className="w-full h-full object-contain rounded"
               draggable={false}
             />

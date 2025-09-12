@@ -1,14 +1,16 @@
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import DashboardHeader from '../../components/DashboardHeader';
 
 export default function DashboardMiniGamesPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation('miniGames');
 
   const games = [
     {
       id: 'sudoku',
-      title: 'Sudoku',
-      description: 'Exercise your logical thinking with number puzzles',
+      title: t('games.sudoku.title'),
+      description: t('games.sudoku.description'),
       icon: (
         <svg className="h-16 w-16 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M3 14h18m-9-4v8m-7 0V7a2 2 0 012-2h14a2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
@@ -18,12 +20,13 @@ export default function DashboardMiniGamesPage() {
       borderColor: 'border-blue-200',
       textColor: 'text-blue-800',
       buttonColor: 'bg-blue-600 hover:bg-blue-700',
+      buttonText: t('games.sudoku.playButton'),
       onClick: () => navigate('/dashboard/mini-games/sudoku')
     },
     {
       id: 'picture-recall',
-      title: 'Picture Recall',
-      description: 'Test your memory by recalling sequences of images',
+      title: t('games.pictureRecall.title'),
+      description: t('games.pictureRecall.description'),
       icon: (
         <svg className="h-16 w-16 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -33,6 +36,7 @@ export default function DashboardMiniGamesPage() {
       borderColor: 'border-purple-200',
       textColor: 'text-purple-800',
       buttonColor: 'bg-purple-600 hover:bg-purple-700',
+      buttonText: t('games.pictureRecall.playButton'),
       onClick: () => navigate('/dashboard/mini-games/picture-recall')
     }
   ];
@@ -40,8 +44,8 @@ export default function DashboardMiniGamesPage() {
   return (
     <div className="lg:col-span-10">
       <DashboardHeader 
-        title="Mini Games" 
-        description="Choose a game to exercise your mind and improve cognitive function"
+        title={t('title')} 
+        description={t('description')}
       />
       
       <div className="bg-gray-50 min-h-screen p-6">
@@ -69,7 +73,7 @@ export default function DashboardMiniGamesPage() {
                     onClick={game.onClick}
                     className={`${game.buttonColor} text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors duration-200 shadow-md hover:shadow-lg`}
                   >
-                    Play {game.title}
+                    {game.buttonText}
                   </button>
                 </div>
               </div>
@@ -79,11 +83,10 @@ export default function DashboardMiniGamesPage() {
           <div className="mt-12 text-center">
             <div className="bg-white rounded-xl p-6 shadow-sm">
               <h4 className="text-lg font-semibold text-gray-800 mb-2">
-                Why Play Brain Games?
+                {t('benefits.title')}
               </h4>
               <p className="text-gray-600">
-                Regular mental exercises can help maintain cognitive function, improve memory, 
-                and provide enjoyable challenges that keep your mind sharp and engaged.
+                {t('benefits.description')}
               </p>
             </div>
           </div>

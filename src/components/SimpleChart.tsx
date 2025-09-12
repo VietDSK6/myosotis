@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { getMMSEChartData } from '../api/mmse';
 import { useAuthStore } from '../features/auth/store';
+import { useTranslation } from 'react-i18next';
 
 interface SimpleChartProps {
   onNavigateToChart: () => void;
@@ -23,6 +24,7 @@ interface ProcessedTestData {
 }
 
 export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) => {
+  const { t } = useTranslation('mmse');
   const { user } = useAuthStore();
   const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -96,16 +98,16 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
     };
 
     fetchMMSEHistory();
-  }, [user?.id]);
+  }, [user?.id, t]);
 
-  
+  // Get trend information
   const getTrend = () => {
     if (chartData.length < 2) return null;
     const latest = chartData[chartData.length - 1].score;
     const previous = chartData[chartData.length - 2].score;
-    if (latest > previous) return { text: 'Improving', icon: '↗', color: 'text-green-600' };
-    if (latest < previous) return { text: 'Declining', icon: '↘', color: 'text-red-600' };
-    return { text: 'Stable', icon: '→', color: 'text-blue-600' };
+    if (latest > previous) return { text: t('simpleChart.trends.improving'), icon: '↗', color: 'text-green-600' };
+    if (latest < previous) return { text: t('simpleChart.trends.declining'), icon: '↘', color: 'text-red-600' };
+    return { text: t('simpleChart.trends.stable'), icon: '→', color: 'text-blue-600' };
   };
 
   const trend = getTrend();
@@ -113,8 +115,8 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Recent Progress</h3>
-          <p className="text-sm text-gray-600">Your latest cognitive assessment trends</p>
+          <h3 className="text-lg font-semibold text-gray-900">{t('simpleChart.title')}</h3>
+          <p className="text-sm text-gray-600">{t('simpleChart.subtitle')}</p>
         </div>
         <button
           onClick={onNavigateToChart}
@@ -123,7 +125,7 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
-          View Full Chart
+          {t('simpleChart.viewFullChart')}
         </button>
       </div>
       
@@ -137,8 +139,8 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
             <svg className="w-12 h-12 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            <p className="text-gray-500 text-sm">No test data available</p>
-            <p className="text-gray-400 text-xs mt-1">Take your first MMSE test to see progress</p>
+            <p className="text-gray-500 text-sm">{t('simpleChart.noData')}</p>
+            <p className="text-gray-400 text-xs mt-1">{t('simpleChart.takeFirstTest')}</p>
           </div>
         </div>
       ) : (
@@ -169,7 +171,7 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
         {latestScore ? (
           <>
             <span className="text-gray-600">
-              Latest Score: <span className="font-semibold text-gray-900">{latestScore.score}/{latestScore.maxScore}</span>
+              {t('simpleChart.latestScore')} <span className="font-semibold text-gray-900">{latestScore.score}/{latestScore.maxScore}</span>
             </span>
             {trend && (
               <span className={`font-medium ${trend.color}`}>
@@ -178,7 +180,7 @@ export const SimpleChart: React.FC<SimpleChartProps> = ({ onNavigateToChart }) =
             )}
           </>
         ) : (
-          <span className="text-gray-500">No test data available</span>
+          <span className="text-gray-500">{t('simpleChart.noData')}</span>
         )}
       </div>
     </div>

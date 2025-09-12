@@ -23,7 +23,6 @@ import CaregiverGuidePage from '../pages/CaregiverGuidePage';
 import MMSETestPage from '../pages/MMSETestPage';
 import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
-import AIClonePage from '../pages/AIClonePage';
 import AICloneCreatePage from '../pages/AICloneCreatePage';
 import RootRedirect from '../components/RootRedirect';
 
@@ -121,10 +120,6 @@ export const router = createBrowserRouter([
   {
     path: '/memory-film',
     element: <MemoryFilmPage />,
-  },
-  {
-    path: '/ai-clone',
-    element: <AIClonePage />,
   },
   {
     path: '/ai-clone/create',

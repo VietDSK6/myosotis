@@ -104,7 +104,7 @@ export const useChatbotStore = create<ChatbotStore>()(
           const newActiveSession = state.activeSession || {
             session_id: response.session_id,
             session_number: sessionNumber || parseInt(response.session_id), 
-            session_name: `Chat Session ${sessionNumber || response.session_id}`,
+            session_name: `${sessionNumber || response.session_id}`,
             total_messages: 1,
             last_message_preview: payload.message,
             created_at: response.timestamp,

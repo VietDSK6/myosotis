@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useChatbotStore } from '../store';
 import { useAuthStore } from '../../auth/store';
 import { LoadingSpinner } from '../../../components';
+import { useTranslation } from 'react-i18next';
 
 export const ChatSessionHistory: React.FC = () => {
+  const { t } = useTranslation('chatbot');
   const { user } = useAuthStore();
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
   const { 
@@ -24,7 +26,7 @@ export const ChatSessionHistory: React.FC = () => {
     if (user?.id && sessionHistory.length === 0) {
       loadSessionHistory(user.id);
     }
-  }, [user?.id, sessionHistory.length, loadSessionHistory]);
+  }, [user?.id, sessionHistory.length, loadSessionHistory, t]);
 
   // const formatDate = (dateString: string) => {
   //   const date = new Date(dateString);
@@ -81,7 +83,7 @@ export const ChatSessionHistory: React.FC = () => {
   if (isHistoryLoading) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <LoadingSpinner text="Loading conversations..." />
+        <LoadingSpinner text={t('conversations.loading')} />
       </div>
     );
   }
@@ -89,7 +91,7 @@ export const ChatSessionHistory: React.FC = () => {
   return (
     <div className="h-full flex flex-col">
       <div className="p-3 sm:p-4 border-b border-gray-200">
-        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Conversations</h2>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">{t('conversations.title')}</h2>
         <button
           onClick={handleNewChat}
           className="w-full bg-[#5A6DD0] hover:bg-[#1932b1] text-white py-2.5 sm:py-3 px-3 sm:px-4 
@@ -100,7 +102,7 @@ export const ChatSessionHistory: React.FC = () => {
           <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          New Chat
+          {t('conversations.newChat')}
         </button>
       </div>
 
@@ -118,7 +120,7 @@ export const ChatSessionHistory: React.FC = () => {
                 onClick={clearError}
                 className="mt-2 text-sm text-red-600 underline hover:text-red-500"
               >
-                Dismiss
+                {t('errors.dismiss')}
               </button>
             </div>
           </div>
@@ -131,8 +133,8 @@ export const ChatSessionHistory: React.FC = () => {
             <svg className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <p className="text-base sm:text-lg">No conversations yet</p>
-            <p className="text-xs sm:text-sm mt-1">Start a new chat to begin!</p>
+            <p className="text-base sm:text-lg">{t('conversations.noConversations')}</p>
+            <p className="text-xs sm:text-sm mt-1">{t('conversations.startNewChat')}</p>
           </div>
         ) : (
           <div className="p-1.5 sm:p-2">
@@ -159,7 +161,7 @@ export const ChatSessionHistory: React.FC = () => {
                       {session.last_message_preview}
                     </p>
                     <div className="text-xs sm:text-sm text-gray-500">
-                      <span>{session.total_messages} message{session.total_messages !== 1 ? 's' : ''}</span>
+                      <span>{t('conversations.messageCount', { count: session.total_messages })}</span>
                     </div>
                   </div>
                 </button>
@@ -169,7 +171,7 @@ export const ChatSessionHistory: React.FC = () => {
                   className="absolute top-1.5 sm:top-2 right-1.5 sm:right-2 p-1.5 sm:p-2 text-gray-400 hover:text-red-500 
                            hover:bg-red-50 rounded-lg transition-colors duration-200
                            focus:outline-none focus:ring-2 focus:ring-red-200"
-                  title="Delete conversation"
+                  title={t('conversations.deleteConversation')}
                 >
                   <svg className="w-5 h-5 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
@@ -195,10 +197,10 @@ export const ChatSessionHistory: React.FC = () => {
 
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                  Delete Conversation?
+                  {t('deleteDialog.title')}
                 </h3>
                 <p className="text-lg text-gray-600">
-                  Are you sure you want to delete this conversation? This action cannot be undone.
+                  {t('deleteDialog.message')}
                 </p>
               </div>
 
@@ -208,7 +210,7 @@ export const ChatSessionHistory: React.FC = () => {
                   disabled={isLoading}
                   className="flex-1 min-h-12 px-6 py-2 text-lg font-medium text-gray-600 hover:text-gray-700 hover:bg-gray-50 rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-gray-300 border border-gray-200 disabled:opacity-50"
                 >
-                  Cancel
+                  {t('deleteDialog.cancel')}
                 </button>
                 <button
                   onClick={confirmDelete}
@@ -218,7 +220,7 @@ export const ChatSessionHistory: React.FC = () => {
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
-                    'Delete'
+                    t('deleteDialog.delete')
                   )}
                 </button>
               </div>

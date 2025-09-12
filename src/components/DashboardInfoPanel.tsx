@@ -102,7 +102,6 @@ export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
         </div>
       </div>
 
-      {/* Simple Chart Section */}
       <div className="px-4 lg:px-6 mb-4 lg:mb-6">
         <SimpleChart onNavigateToChart={onNavigateToChart} />
       </div>

@@ -3,19 +3,21 @@ import ReactMarkdown from 'react-markdown';
 import { useChatbotStore } from '../store';
 import { LoadingSpinner } from '../../../components';
 import { chatMarkdownComponents } from '../utils/markdownComponents';
+import { useTranslation } from 'react-i18next';
 
 export const ChatMessages: React.FC = () => {
+  const { t } = useTranslation('chatbot');
   const { currentMessages, isLoading, isSending } = useChatbotStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [currentMessages, isSending]);
+  }, [currentMessages, isSending, t]);
 
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <LoadingSpinner text="Loading messages..." />
+        <LoadingSpinner text={t('messages.loading')} />
       </div>
     );
   }
@@ -40,7 +42,7 @@ export const ChatMessages: React.FC = () => {
               <div className="max-w-[75%]">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <img src="/chatbot.png" alt="Care Companion" className="w-6 h-6" />
+                    <img src="/chatbot.png" alt={t('messages.careCompanion')} className="w-6 h-6" />
                   </div>
                   
                   <div className="flex-1">
@@ -67,7 +69,7 @@ export const ChatMessages: React.FC = () => {
           <div className="max-w-[75%]">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <img src="/chatbot.png" alt="Care Companion" className="w-6 h-6" />
+                <img src="/chatbot.png" alt={t('messages.careCompanion')} className="w-6 h-6" />
               </div>
               
               <div className="bg-white/90 backdrop-blur-sm text-gray-900 rounded-3xl rounded-bl-lg px-6 py-4 shadow-lg border border-gray-200/50">

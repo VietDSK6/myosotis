@@ -5,8 +5,10 @@ import { ChatMessages } from '../features/chatbot/components/ChatMessages';
 import { ChatInput } from '../features/chatbot/components/ChatInput';
 import { ConversationStarters } from '../features/chatbot/components/ConversationStarters';
 import { useAuthStore } from '../features/auth/store';
+import { useTranslation } from 'react-i18next';
 
 export default function ChatbotContent() {
+  const { t } = useTranslation('chatbot');
   const { user } = useAuthStore();
   const { 
     currentMessages,
@@ -23,7 +25,7 @@ export default function ChatbotContent() {
     } else {
       clearUserData();
     }
-  }, [user?.id, loadSessionHistory, clearUserData]);
+  }, [user?.id, loadSessionHistory, clearUserData, t]);
 
   const showConversationStarters = currentMessages.length === 0;
 

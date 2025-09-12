@@ -2,92 +2,92 @@
   "title": "Ký Ức Sống Động",
   "description": "Tạo avatar AI với giọng nói của người thân và lưu giữ những kỷ niệm quý giá",
   "tabs": {
-    "overview": "Tổng quan",
-    "memoryGallery": "Thư viện Kỷ niệm"
+    "overview": "Tổng Quan",
+    "memoryGallery": "Thư Viện Ký Ức"
   },
   "createNew": {
     "title": "Tạo Ký Ức Sống Động Mới",
-    "description": "Biến đổi ảnh và giọng nói thành những kỷ niệm tương tác làm sống lại người thân yêu của bạn",
-    "startButton": "Bắt đầu tạo"
+    "description": "Biến những bức ảnh và giọng nói thành ký ức tương tác, mang người thân của bạn trở lại cuộc sống",
+    "startButton": "Bắt Đầu Tạo"
   },
   "features": {
     "uploadPhotos": {
-      "title": "Tải lên Ảnh",
-      "description": "Tải lên những bức ảnh rõ nét của người thân"
+      "title": "Tải Ảnh Lên",
+      "description": "Tải lên những bức ảnh rõ nét của người thân bạn"
     },
     "recordVoice": {
-      "title": "Ghi âm Giọng nói",
-      "description": "Thu lại giọng nói độc đáo và cách nói chuyện của họ"
+      "title": "Ghi Âm Giọng Nói",
+      "description": "Ghi lại giọng nói và ngữ điệu đặc trưng của họ"
     },
     "generateVideo": {
       "title": "Tạo Video",
-      "description": "AI tạo ra avatar biết nói với giọng nói của họ"
+      "description": "AI tạo ra một avatar biết nói bằng chính giọng của họ"
     }
   },
   "createPage": {
     "title": "Tạo Ký Ức Sống Động",
-    "description": "Biến đổi ảnh và giọng nói thành những kỷ niệm tương tác làm sống lại người thân yêu của bạn"
+    "description": "Biến những bức ảnh và giọng nói thành ký ức tương tác, mang người thân của bạn trở lại cuộc sống"
   },
   "navigation": {
-    "back": "Quay lại",
-    "viewGallery": "Xem Thư viện"
+    "back": "Quay Lại",
+    "viewGallery": "Xem Thư Viện"
   },
   "modal": {
-    "title": "Đang Tạo Video!",
-    "description": "Video của bạn đang được xử lý trong nền. Do nhu cầu xử lý cao, có thể mất nhiều thời gian hơn bình thường (5-15 phút). Video sẽ xuất hiện trong lịch sử của bạn khi hoàn thành. Bạn muốn làm gì?",
+    "title": "Đang Trong Quá Trình Tạo Video!",
+    "description": "Video của bạn đang được xử lý dưới nền. Do yêu cầu xử lý cao, quá trình này có thể mất nhiều thời gian hơn bình thường (5-15 phút). Video sẽ xuất hiện trong lịch sử của bạn sau khi hoàn tất. Bạn muốn làm gì tiếp theo?",
     "buttons": {
-      "checkHistoryLater": "Kiểm tra Lịch sử Sau",
-      "stayOnPage": "Ở lại Trang này"
+      "checkHistoryLater": "Kiểm Tra Lịch Sử Sau",
+      "stayOnPage": "Ở Lại Trang Này"
     }
   },
   "step1": {
     "title": "Thiết Lập Nhân Vật",
-    "description": "Tải lên ảnh và ghi âm giọng nói để tạo AI Clone của bạn",
-    "sampleText": "Xin chào, hôm nay tôi đang tạo AI Clone của mình. Mẫu giọng nói này sẽ giúp tạo ra giọng nói chân thực. Tôi đang nói rõ ràng và tự nhiên để đảm bảo chất lượng đầu ra tốt nhất. Hôm nay thời tiết đẹp, và tôi rất hào hứng với công nghệ mới này có thể bảo tồn giọng nói của tôi để sử dụng trong tương lai.",
+    "description": "Tải ảnh lên và ghi âm mẫu giọng nói để tạo bản sao AI của bạn",
+    "sampleText": "Xin chào, hôm nay tôi đang tạo bản sao AI của mình. Mẫu giọng nói này sẽ giúp tạo ra lời nói chân thực. Tôi đang nói một cách rõ ràng và tự nhiên để đảm bảo chất lượng tốt nhất. Thời tiết hôm nay rất đẹp, và tôi rất hào hứng với công nghệ mới này có thể lưu giữ giọng nói của tôi cho tương lai.",
     "photo": {
       "title": "Ảnh Nhân Vật",
-      "description": "Tải lên một bức ảnh rõ ràng của bạn để tạo avatar AI",
+      "description": "Tải lên một bức ảnh rõ nét của bạn để tạo avatar AI",
       "uploadArea": {
-        "title": "Tải Lên Ảnh",
-        "subtitle": "Chọn một bức ảnh rõ ràng của bạn",
+        "title": "Tải Ảnh Lên",
+        "subtitle": "Chọn một bức ảnh rõ nét",
         "browseButton": "Chọn Tệp",
         "dropText": "hoặc kéo thả tệp vào đây",
         "supportedFormats": "Định dạng hỗ trợ: JPG, PNG, WEBP (Tối đa 10MB)",
         "dragDrop": "Kéo và thả ảnh của bạn vào đây",
-        "tip": "Sử dụng ảnh chất lượng cao, được chiếu sáng tốt để có kết quả tốt nhất"
+        "tip": "Mẹo: Sử dụng ảnh chất lượng cao, đủ sáng để có kết quả tốt nhất"
       }
     },
     "voice": {
       "title": "Mẫu Giọng Nói",
-      "description": "Ghi âm hoặc tải lên mẫu giọng nói để nhân bản giọng của bạn",
+      "description": "Ghi âm hoặc tải lên một mẫu giọng nói để nhân bản giọng của bạn",
       "tabs": {
         "record": "Ghi Âm",
-        "upload": "Tải Lên Audio"
+        "upload": "Tải Lên Âm Thanh"
       },
       "recording": {
-        "instruction": "Nhấn nút ghi âm và nói ít nhất 30 giây. Đọc văn bản mẫu bên dưới để có kết quả tốt nhất:",
-        "instructions": "Nhấn nút ghi âm và nói ít nhất 30 giây. Đọc văn bản mẫu bên dưới để có kết quả tốt nhất:",
-        "sampleText": "Xin chào, hôm nay tôi đang tạo AI Clone của mình. Mẫu giọng nói này sẽ giúp tạo ra giọng nói chân thực. Tôi đang nói rõ ràng và tự nhiên để đảm bảo chất lượng đầu ra tốt nhất. Hôm nay thời tiết đẹp, và tôi rất hào hứng với công nghệ mới này có thể bảo tồn giọng nói của tôi để sử dụng trong tương lai.",
-        "startButton": "Bắt Đầu Ghi",
-        "stopButton": "Dừng Ghi",
-        "currentLength": "Độ dài hiện tại:",
+        "instruction": "Nhấn nút ghi âm và nói trong ít nhất 30 giây. Đọc đoạn văn mẫu dưới đây để có kết quả tốt nhất:",
+        "instructions": "Nhấn nút ghi âm và nói trong ít nhất 30 giây. Đọc đoạn văn mẫu dưới đây để có kết quả tốt nhất:",
+        "sampleText": "Xin chào, hôm nay tôi đang tạo bản sao AI của mình. Mẫu giọng nói này sẽ giúp tạo ra lời nói chân thực. Tôi đang nói một cách rõ ràng và tự nhiên để đảm bảo chất lượng tốt nhất. Thời tiết hôm nay rất đẹp, và tôi rất hào hứng với công nghệ mới này có thể lưu giữ giọng nói của tôi cho tương lai.",
+        "startButton": "Bắt Đầu Ghi Âm",
+        "stopButton": "Dừng Ghi Âm",
+        "currentLength": "Thời lượng hiện tại:",
         "minimumLength": "Yêu cầu tối thiểu 30 giây"
       },
       "upload": {
-        "title": "Tải Lên Tệp Audio",
-        "description": "Chọn một tệp audio từ thiết bị của bạn",
+        "title": "Tải Lên Tệp Âm Thanh",
+        "description": "Chọn một tệp âm thanh từ thiết bị của bạn",
         "uploadArea": {
-          "title": "Tải Lên Tệp Audio",
-          "subtitle": "Chọn một tệp audio",
-          "browseButton": "Chọn Tệp", 
+          "title": "Tải Lên Tệp Âm Thanh",
+          "subtitle": "Chọn một tệp âm thanh",
+          "browseButton": "Chọn Tệp",
           "dropText": "hoặc kéo thả tệp vào đây",
           "supportedFormats": "Định dạng hỗ trợ: MP3, WAV, M4A (Tối đa 25MB)"
         }
       },
       "transcription": {
-        "label": "Audio nói gì? (Phiên âm)",
-        "placeholder": "Nhập phiên âm của audio tại đây...",
-        "tip": "Mẹo: Sao chép văn bản mẫu ở trên để chính xác"
+        "label": "Nội dung đoạn âm thanh là gì? (Bản ghi lời nói)",
+        "placeholder": "Nhập bản ghi lời nói của bạn tại đây...",
+        "tip": "Mẹo: Sao chép đoạn văn mẫu ở trên để đảm bảo độ chính xác"
       }
     },
     "nextButton": "Tiếp Theo: Tạo Kịch Bản →"
@@ -97,36 +97,36 @@
     "description": "Chọn cách bạn muốn tạo nội dung cho nhân vật của mình",
     "modes": {
       "manual": {
-        "title": "Viết Văn Bản Chính Xác",
-        "description": "Nhập toàn bộ thông điệp bạn muốn nhân vật nói. Hoàn hảo cho tin nhắn cá nhân hoặc kể lại một câu chuyện cụ thể.",
-        "feature": "Kiểm soát hoàn toàn nội dung"
+        "title": "Tự Viết Lời Thoại",
+        "description": "Nhập toàn bộ thông điệp bạn muốn nhân vật nói. Hoàn hảo cho các tin nhắn cá nhân hoặc kể lại một câu chuyện cụ thể.",
+        "feature": "Toàn quyền kiểm soát nội dung"
       },
       "aiGenerated": {
-        "title": "Tạo Nội Dung với AI",
-        "description": "Chỉ cần cung cấp chủ đề và một vài từ khóa, AI của chúng tôi sẽ giúp bạn viết một kịch bản ấm áp, tự nhiên.",
-        "feature": "Tạo nội dung bằng AI"
+        "title": "Tạo Nội Dung Bằng AI",
+        "description": "Chỉ cần cung cấp chủ đề và một vài từ khóa, AI của chúng tôi sẽ giúp bạn viết một kịch bản ấm áp và tự nhiên.",
+        "feature": "Tạo nội dung được hỗ trợ bởi AI"
       }
     },
     "manual": {
       "title": "Viết Kịch Bản Của Bạn",
-      "placeholder": "Xin chào, tôi nhớ khi chúng ta đi biển cùng nhau vào năm 1995. Đó là một ngày hè thật đẹp, và cả gia đình đều có mặt...",
-      "tip": "Viết một cách tự nhiên, như thể đang nói chuyện với người thân yêu",
+      "placeholder": "Xin chào, tôi nhớ khi chúng ta cùng nhau đi biển vào năm 1995. Đó là một ngày hè thật đẹp, và cả gia đình đều có mặt...",
+      "tip": "Mẹo: Hãy viết một cách tự nhiên, như thể bạn đang nói chuyện với người thân yêu",
       "characterCount": "{{count}} ký tự"
     },
     "aiGenerated": {
-      "title": "Tạo Nội Dung AI",
+      "title": "Tạo Nội Dung Bằng AI",
       "topic": {
         "label": "Chủ Đề",
-        "placeholder": "ví dụ: Kỳ Nghỉ Gia Đình, Ngày Cưới, Lời Khuyến Khích"
+        "placeholder": "ví dụ: Kỳ nghỉ gia đình, Ngày cưới, Lời động viên"
       },
       "keywords": {
         "label": "Từ Khóa (tùy chọn)",
         "placeholder": "ví dụ: Vũng Tàu, 1995, vui vẻ, cả gia đình",
-        "help": "Phân tách từ khóa bằng dấu phẩy"
+        "help": "Phân cách các từ khóa bằng dấu phẩy"
       },
       "description": {
         "label": "Mô Tả (tùy chọn)",
-        "placeholder": "ví dụ: Kể một câu chuyện vui về chuyến đi biển gia đình, với giọng điệu ấm áp và vui tươi.",
+        "placeholder": "ví dụ: Kể một câu chuyện vui về chuyến đi biển của gia đình, với giọng điệu ấm áp và vui tươi.",
         "help": "Mô tả giọng điệu và phong cách bạn muốn"
       }
     },
@@ -135,16 +135,16 @@
   },
   "step3": {
     "titles": {
-      "generating": "Đang Tạo Kỷ Niệm Sống Động",
-      "preview": "Xem Trước Kỷ Niệm Sống Động"
+      "generating": "Đang Tạo Ký Ức Sống Động Của Bạn",
+      "preview": "Xem Trước Ký Ức Sống Động Của Bạn"
     },
     "descriptions": {
-      "generating": "AI đang tạo video nhân vật cá nhân hóa của bạn",
+      "generating": "AI đang tạo video nhân vật được cá nhân hóa cho bạn",
       "preview": "Xem lại và hoàn thiện nhân vật AI của bạn"
     },
     "characterPreview": {
       "title": "Xem Trước Nhân Vật",
-      "imageAlt": "Nhân Vật",
+      "imageAlt": "Nhân vật",
       "noImage": "Không có ảnh nhân vật"
     },
     "video": {
@@ -155,28 +155,28 @@
       "subtitle": "Quá trình này có thể mất vài phút"
     },
     "aiMode": {
-      "autoGenerate": "Video sẽ tự động tạo"
+      "autoGenerate": "Video sẽ được tạo tự động"
     },
     "characterInfo": {
-      "image": "Ảnh",
+      "image": "Hình Ảnh",
       "voice": "Giọng Nói"
     },
     "script": {
       "title": "Kịch Bản",
-      "aiGenerated": "Được Tạo Bởi AI",
+      "aiGenerated": "Tạo bởi AI",
       "placeholders": {
         "generating": "AI đang tạo kịch bản của bạn...",
         "manual": "Kịch bản của bạn sẽ xuất hiện ở đây..."
       },
       "tips": {
         "manual": "Bạn có thể chỉnh sửa kịch bản trước khi tạo",
-        "aiGenerated": "Kịch bản được tạo bởi AI (có thể chỉnh sửa)"
+        "aiGenerated": "Kịch bản do AI tạo (có thể chỉnh sửa)"
       },
       "characterCount": "{{count}} ký tự"
     },
     "aiGeneration": {
-      "title": "Tạo Kịch Bản AI",
-      "inProgress": "Đang Tiến Hành",
+      "title": "Tạo Kịch Bản Bằng AI",
+      "inProgress": "Đang Thực Hiện",
       "generating": "Đang tạo kịch bản từ chủ đề của bạn...",
       "topic": "Chủ Đề",
       "keywords": "Từ Khóa"
@@ -185,27 +185,27 @@
       "editScript": "← Chỉnh Sửa Kịch Bản",
       "generateVideo": "Tạo Video",
       "aiGenerating": "AI Đang Tạo Video...",
-      "saveMemory": "Lưu Kỷ Niệm"
+      "saveMemory": "Lưu Ký Ức"
     },
     "generatingStatus": {
-      "message": "Đang tạo video nhân vật AI của bạn. Quá trình này có thể mất vài phút tùy thuộc vào độ dài kịch bản."
+      "message": "Đang tạo video nhân vật AI của bạn. Quá trình này có thể mất vài phút tùy thuộc vào độ dài của kịch bản."
     },
     "errors": {
-      "missingData": "Thiếu dữ liệu nhân vật cần thiết. Vui lòng quay lại và hoàn thành tất cả các bước.",
+      "missingData": "Thiếu dữ liệu nhân vật bắt buộc. Vui lòng quay lại và hoàn thành tất cả các bước.",
       "notAuthenticated": "Người dùng chưa được xác thực. Vui lòng đăng nhập lại.",
-      "generationFailed": "Không thể tạo video. Vui lòng thử lại.",
-      "generalError": "Đã xảy ra lỗi khi tạo video. Vui lòng thử lại."
+      "generationFailed": "Tạo video thất bại. Vui lòng thử lại.",
+      "generalError": "Đã xảy ra lỗi trong quá trình tạo video. Vui lòng thử lại."
     },
     "success": {
-      "generationStarted": "Tạo video đã bắt đầu thành công! Nó sẽ xuất hiện trong lịch sử khi hoàn tất.",
-      "memorySaved": "Kỷ niệm đã được lưu thành công!"
+      "generationStarted": "Bắt đầu tạo video thành công! Video sẽ xuất hiện trong lịch sử của bạn sau khi sẵn sàng.",
+      "memorySaved": "Đã lưu ký ức thành công!"
     }
   },
   "wizard": {
     "steps": {
-      "character": "Nhân vật",
-      "script": "Kịch bản",
-      "preview": "Xem trước"
+      "character": "Nhân Vật",
+      "script": "Kịch Bản",
+      "preview": "Xem Trước"
     }
   }
 }

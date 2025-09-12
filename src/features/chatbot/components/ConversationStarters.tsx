@@ -2,13 +2,17 @@ import React from 'react';
 import { conversationStarters } from '../constants.tsx';
 import { useChatbotStore } from '../store';
 import { useAuthStore } from '../../auth/store';
+import { useTranslation } from 'react-i18next';
 
 export const ConversationStarters: React.FC = () => {
+  const { t } = useTranslation('chatbot');
   const { user } = useAuthStore();
   const { sendMessage, isSending, activeSession } = useChatbotStore();
 
-  const handleStarterClick = async (starterText: string) => {
+  const handleStarterClick = async (starterId: string) => {
     if (!user?.id || isSending) return;
+    
+    const starterText = t(`starters.suggestions.${starterId}`);
         
     await sendMessage({
       user_id: user.id,
@@ -21,10 +25,10 @@ export const ConversationStarters: React.FC = () => {
     <div className="max-w-4xl mx-auto px-4">
       <div className="mb-8 text-center">
         <h3 className="text-xl font-semibold text-gray-900 mb-3">
-          Get started with these suggestions
+          {t('starters.title')}
         </h3>
         <p className="text-gray-600">
-          Or type your own question below
+          {t('starters.subtitle')}
         </p>
       </div>
 
@@ -32,7 +36,7 @@ export const ConversationStarters: React.FC = () => {
         {conversationStarters.map((starter) => (
           <button
             key={starter.id}
-            onClick={() => handleStarterClick(starter.text)}
+            onClick={() => handleStarterClick(starter.id)}
             disabled={isSending}
             className="group flex items-center gap-4 p-6 bg-white/80 backdrop-blur-sm rounded-2xl 
                        shadow-sm hover:shadow-md transition-all duration-300 
@@ -48,7 +52,7 @@ export const ConversationStarters: React.FC = () => {
             </div>
             <div className="flex-1">
               <span className="text-gray-800 font-medium text-lg leading-relaxed">
-                {starter.text}
+                {t(`starters.suggestions.${starter.id}`)}
               </span>
             </div>
             <div className="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -62,7 +66,7 @@ export const ConversationStarters: React.FC = () => {
       
       <div className="mt-8 text-center">
         <p className="text-sm text-gray-500">
-          I'm here to chat, provide information, and keep you company anytime you need.
+          {t('starters.helpText')}
         </p>
       </div>
     </div>

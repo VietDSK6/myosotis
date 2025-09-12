@@ -39,5 +39,66 @@
       "takeFirstTest": "Take Your First Test"
     },
     "loading": "Loading test history..."
+  },
+  "testContent": {
+    "title": "MMSE Test",
+    "subtitle": "Mini-Mental State Examination",
+    "loading": "Loading MMSE Test...",
+    "failedToLoad": "Failed to load test data",
+    "backToDashboard": "Back to Dashboard",
+    "progress": "Progress",
+    "complete": "Complete",
+    "question": "Question {{current}} of {{total}}",
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "submit": "Submit Test",
+      "submitting": "Submitting..."
+    },
+    "placeholders": {
+      "enterAnswer": "Enter your answer...",
+      "selectOption": "Select an option..."
+    },
+    "audioNotSupported": "Your browser does not support the audio element.",
+    "results": {
+      "title": "Test Results",
+      "subtitle": "Your MMSE assessment has been completed",
+      "congratulations": "🎉 Test Completed!",
+      "testCompletedSuccessfully": "Test Completed Successfully!",
+      "thankYou": "Thank you for completing the MMSE assessment.",
+      "score": "Your Score",
+      "totalScore": "Total Score",
+      "outOf": "out of",
+      "percentage": "{{percentage}}%",
+      "completedOn": "Completed on {{date}}",
+      "interpretation": "Interpretation",
+      "recommendations": "Recommendations",
+      "nextSteps": "Next Steps",
+      "actions": {
+        "viewHistory": "View Test History",
+        "retakeTest": "Take Another Test",
+        "backToDashboard": "Back to Dashboard"
+      },
+      "summary": {
+        "title": "Test Summary",
+        "totalQuestions": "Total Questions",
+        "correctAnswers": "Correct Answers",
+        "timeSpent": "Time Spent",
+        "accuracy": "Accuracy"
+      }
+    }
+  },
+  "simpleChart": {
+    "title": "Recent Progress",
+    "subtitle": "Your latest cognitive assessment trends",
+    "viewFullChart": "View Full Chart",
+    "latestScore": "Latest Score:",
+    "noData": "No test data available",
+    "takeFirstTest": "Take your first MMSE test to see progress",
+    "trends": {
+      "improving": "Improving",
+      "declining": "Declining",
+      "stable": "Stable"
+    }
   }
 }

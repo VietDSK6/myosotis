@@ -1,19 +1,19 @@
 {
   "buttons": {
-    "signIn": "Đăng nhập",
-    "getStarted": "Bắt đầu",
-    "register": "Đăng ký",
-    "login": "Đăng nhập",
-    "learnMore": "Tìm hiểu thêm",
-    "experienceDemo": "Trải nghiệm Demo"
+    "signIn": "Đăng Nhập",
+    "getStarted": "Bắt Đầu",
+    "register": "Đăng Ký",
+    "login": "Đăng Nhập",
+    "learnMore": "Tìm Hiểu Thêm",
+    "experienceDemo": "Trải Nghiệm Bản Demo"
   },
   "navigation": {
-    "features": "Tính năng",
-    "signIn": "Đăng nhập",
-    "register": "Đăng ký"
+    "features": "Tính Năng",
+    "signIn": "Đăng Nhập",
+    "register": "Đăng Ký"
   },
   "common": {
     "myosotis": "Myosotis",
-    "copyright": "© 2025 Myosotis. Chăm sóc kí ức, hỗ trợ gia đình."
+    "copyright": "© 2025 Myosotis. Gìn giữ ký ức, hỗ trợ gia đình."
   }
 }
