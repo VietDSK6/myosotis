@@ -7,7 +7,7 @@
   },
   "createNew": {
     "title": "Tạo Ký Ức Sống Động Mới",
-    "description": "Biến những bức ảnh và giọng nói thành ký ức tương tác, mang người thân của bạn trở lại cuộc sống",
+    "description": "Biến những bức ảnh và giọng nói thành ký ức tương tác, tái hiện những kỷ niệm thân thương với người thân",
     "startButton": "Bắt Đầu Tạo"
   },
   "features": {
@@ -42,8 +42,8 @@
   },
   "step1": {
     "title": "Thiết Lập Nhân Vật",
-    "description": "Tải ảnh lên và ghi âm mẫu giọng nói để tạo bản sao AI của bạn",
-    "sampleText": "Xin chào, hôm nay tôi đang tạo bản sao AI của mình. Mẫu giọng nói này sẽ giúp tạo ra lời nói chân thực. Tôi đang nói một cách rõ ràng và tự nhiên để đảm bảo chất lượng tốt nhất. Thời tiết hôm nay rất đẹp, và tôi rất hào hứng với công nghệ mới này có thể lưu giữ giọng nói của tôi cho tương lai.",
+    "description": "Tải ảnh lên và ghi âm mẫu giọng nói để tạo avatar ký ức AI của bạn",
+    "sampleText": "Xin chào, hôm nay tôi đang lưu giữ giọng nói của mình bằng công nghệ AI. Bản ghi âm này sẽ giúp tạo ra một giọng nói tự nhiên và rõ ràng. Tôi rất vui khi công nghệ này có thể giúp gìn giữ ký ức cho tương lai.",
     "photo": {
       "title": "Ảnh Nhân Vật",
       "description": "Tải lên một bức ảnh rõ nét của bạn để tạo avatar AI",

@@ -25,7 +25,7 @@
     "subtitle": "Experience our core features designed to make a real difference in Alzheimer's care. Each feature has been carefully crafted based on real family needs and clinical insights.",
     "aiMemories": {
       "label": "AI Living Memories",
-      "title": "Bring Loved Ones Back to Life",
+      "title": "Keep Loved Ones’ Memories Alive",
       "description": "Transform cherished photos and voice recordings into interactive AI avatars. With just one photo and a short voice sample, create lifelike talking memories that can tell stories, share wisdom, or provide comfort—preserving the essence of your loved ones forever.",
       "features": {
         "voiceSynthesis": "Deep neural voice synthesis technology",
@@ -36,7 +36,7 @@
     "aiCompanion": {
       "label": "AI Care Companion",
       "title": "24/7 Caring Companion",
-      "description": "An intelligent, always-available companion that understands and responds with empathy. Powered by SEA-LION AI for culturally-aware conversations in local languages, providing comfort, guidance, and friendly chat whenever needed.",
+      "description": "An intelligent, a supportive companion available anytime you need it. Powered by SEA-LION AI for culturally-aware conversations in local languages, providing comfort, guidance, and friendly chat whenever needed.",
       "features": {
         "seaLion": "SEA-LION AI for local language support",
         "contextualMemory": "Contextual memory for natural conversations",

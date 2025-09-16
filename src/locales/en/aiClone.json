@@ -7,7 +7,7 @@
   },
   "createNew": {
     "title": "Create New Living Memory",
-    "description": "Transform photos and voices into interactive memories that bring your loved ones back to life",
+    "description": "Transform photos and voices into interactive memories that relive and preserve precious moments",
     "startButton": "Start Creating"
   },
   "features": {
@@ -42,7 +42,7 @@
   },
   "step1": {
     "title": "Setup Character",
-    "description": "Upload a photo and record voice sample to create your AI clone",
+    "description": "Upload a photo and record voice sample to create your AI memory avatar",
     "sampleText": "Hello, I'm creating my AI clone today. This voice sample will help generate realistic speech. I'm speaking clearly and naturally to ensure the best quality output. The weather is nice today, and I'm excited about this new technology that can preserve my voice for future use.",
     "photo": {
       "title": "Character Photo",
@@ -59,7 +59,7 @@
     },
     "voice": {
       "title": "Voice Sample",
-      "description": "Record or upload a voice sample to clone your voice",
+      "description": "Record or upload a voice sample to preserve your voice",
       "tabs": {
         "record": "Record Audio",
         "upload": "Upload Audio"
