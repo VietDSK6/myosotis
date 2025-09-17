@@ -85,6 +85,27 @@
         "correctAnswers": "Correct Answers",
         "timeSpent": "Time Spent",
         "accuracy": "Accuracy"
+      },
+      "details": {
+        "scorePercentage": "Score Percentage",
+        "assessmentResult": "Assessment Result",
+        "testDetails": "Test Details",
+        "assessmentId": "Assessment ID",
+        "questionsAnswered": "Questions Answered",
+        "maximumPossibleScore": "Maximum Possible Score",
+        "dataStatus": "Data Status",
+        "successfullySaved": "Successfully Saved",
+        "notSaved": "Not Saved",
+        "yourPerformance": "Your performance on this assessment",
+        "basedOnResponses": "Based on your responses",
+        "scoreRange": "Score Range:",
+        "questions": "questions",
+        "points": "points"
+      },
+      "buttons": {
+        "viewTestHistory": "View Test History",
+        "returnToDashboard": "Return to Dashboard",
+        "takeTestAgain": "Take Test Again"
       }
     }
   },

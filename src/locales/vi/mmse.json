@@ -85,6 +85,27 @@
         "correctAnswers": "Số Câu Trả Lời Đúng",
         "timeSpent": "Thời Gian Làm Bài",
         "accuracy": "Độ Chính Xác"
+      },
+      "details": {
+        "scorePercentage": "Tỷ Lệ Điểm Số",
+        "assessmentResult": "Kết Quả Đánh Giá",
+        "testDetails": "Chi Tiết Bài Kiểm Tra",
+        "assessmentId": "ID Đánh Giá",
+        "questionsAnswered": "Số Câu Trả Lời",
+        "maximumPossibleScore": "Điểm Tối Đa Có Thể",
+        "dataStatus": "Trạng Thái Dữ Liệu",
+        "successfullySaved": "Đã Lưu Thành Công",
+        "notSaved": "Chưa Được Lưu",
+        "yourPerformance": "Kết quả của bạn trong bài đánh giá này",
+        "basedOnResponses": "Dựa trên phản hồi của bạn",
+        "scoreRange": "Phạm Vi Điểm:",
+        "questions": "câu hỏi",
+        "points": "điểm"
+      },
+      "buttons": {
+        "viewTestHistory": "Xem Lịch Sử Kiểm Tra",
+        "returnToDashboard": "Về Bảng Điều Khiển",
+        "takeTestAgain": "Làm Lại Bài Kiểm Tra"
       }
     }
   },

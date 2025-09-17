@@ -431,39 +431,39 @@ export default function MMSETestContent() {
                 <div className={`inline-flex items-center justify-center w-24 h-24 rounded-full ${bgColor} ${borderColor} border-2 mb-4`}>
                   <span className={`text-2xl font-bold ${textColor}`}>{scorePercentage}%</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Score Percentage</h3>
-                <p className="text-gray-600">Your performance on this assessment</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('testContent.results.details.scorePercentage')}</h3>
+                <p className="text-gray-600">{t('testContent.results.details.yourPerformance')}</p>
               </div>
 
               <div className="text-center">
                 <div className="bg-indigo-50 text-indigo-800 px-6 py-4 rounded-lg mb-4 border border-indigo-200">
                   <div className="text-xl font-semibold">{result.interpretation.level}</div>
-                  <div className="text-sm text-indigo-600 mt-1">Score Range: {result.interpretation.score_range}</div>
+                  <div className="text-sm text-indigo-600 mt-1">{t('testContent.results.details.scoreRange')} {result.interpretation.score_range}</div>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Assessment Result</h3>
-                <p className="text-gray-600">Based on your responses</p>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('testContent.results.details.assessmentResult')}</h3>
+                <p className="text-gray-600">{t('testContent.results.details.basedOnResponses')}</p>
               </div>
             </div>
 
             <div className="border-t border-gray-200 pt-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Test Details</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-6">{t('testContent.results.details.testDetails')}</h3>
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                  <div className="text-sm text-gray-600 mb-1">Assessment ID</div>
+                  <div className="text-sm text-gray-600 mb-1">{t('testContent.results.details.assessmentId')}</div>
                   <div className="font-semibold text-gray-900">#{result.assessment_id}</div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                  <div className="text-sm text-gray-600 mb-1">Questions Answered</div>
-                  <div className="font-semibold text-gray-900">{getTotalQuestions()} questions</div>
+                  <div className="text-sm text-gray-600 mb-1">{t('testContent.results.details.questionsAnswered')}</div>
+                  <div className="font-semibold text-gray-900">{getTotalQuestions()} {t('testContent.results.details.questions')}</div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                  <div className="text-sm text-gray-600 mb-1">Maximum Possible Score</div>
-                  <div className="font-semibold text-gray-900">{result.max_score} points</div>
+                  <div className="text-sm text-gray-600 mb-1">{t('testContent.results.details.maximumPossibleScore')}</div>
+                  <div className="font-semibold text-gray-900">{result.max_score} {t('testContent.results.details.points')}</div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                  <div className="text-sm text-gray-600 mb-1">Data Status</div>
+                  <div className="text-sm text-gray-600 mb-1">{t('testContent.results.details.dataStatus')}</div>
                   <div className="font-semibold text-green-600">
-                    {result.saved_to_database ? 'Successfully Saved' : 'Not Saved'}
+                    {result.saved_to_database ? t('testContent.results.details.successfullySaved') : t('testContent.results.details.notSaved')}
                   </div>
                 </div>
               </div>
@@ -479,7 +479,7 @@ export default function MMSETestContent() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
-                  View Test History
+                  {t('testContent.results.buttons.viewTestHistory')}
                 </button>
                 <button
                   onClick={() => navigate('/dashboard')}
@@ -488,7 +488,7 @@ export default function MMSETestContent() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011 1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                   </svg>
-                  Return to Dashboard
+                  {t('testContent.results.buttons.returnToDashboard')}
                 </button>
                 <button
                   onClick={() => window.location.reload()}
@@ -497,7 +497,7 @@ export default function MMSETestContent() {
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                  Take Test Again
+                  {t('testContent.results.buttons.takeTestAgain')}
                 </button>
               </div>
             </div>
