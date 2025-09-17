@@ -2,7 +2,8 @@
   "navigation": {
     "dashboard": "Dashboard",
     "myAccount": "My Account",
-    "discover": "Discover"
+    "discover": "Discover",
+    "faq": "FAQ"
   },
   "buttons": {
     "createNewSchedule": "Create New Schedule",

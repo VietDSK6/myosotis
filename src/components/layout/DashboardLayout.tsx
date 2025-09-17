@@ -50,6 +50,12 @@ export default function DashboardLayout() {
       icon: '/discover.png',
       path: '/dashboard/discover',
     },
+    {
+      key: 'faq',
+      label: t('dashboard:navigation.faq'),
+      icon: '/faq.png',
+      path: '/dashboard/faq',
+    },
   ];
 
   
@@ -65,6 +71,9 @@ export default function DashboardLayout() {
     }
     if (path.startsWith('/dashboard/discover')) {
       return 'discover';
+    }
+    if (path.startsWith('/dashboard/faq')) {
+      return 'faq';
     }
 
     if (path.startsWith('/dashboard/')) {

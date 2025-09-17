@@ -23,6 +23,7 @@ import MMSETestPage from '../pages/MMSETestPage';
 import MMSEHistoryPage from '../pages/MMSEHistoryPage';
 import MemoryFilmPage from '../pages/MemoryBookPage';
 import AICloneCreatePage from '../pages/AICloneCreatePage';
+import FAQPage from '../pages/FAQPage';
 import RootRedirect from '../components/RootRedirect';
 
 export const router = createBrowserRouter([
@@ -65,6 +66,10 @@ export const router = createBrowserRouter([
       {
         path: 'discover',
         element: <DashboardDiscoverPage />,
+      },
+      {
+        path: 'faq',
+        element: <FAQPage />,
       },
       {
         path: 'contacts',

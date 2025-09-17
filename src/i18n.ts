@@ -14,6 +14,7 @@ import enChatbot from './locales/en/chatbot.json';
 import enMemoryMap from './locales/en/memoryMap.json';
 import enMiniGames from './locales/en/miniGames.json';
 import enModals from './locales/en/modals.json';
+import enFaq from './locales/en/faq.json';
 import viCommon from './locales/vi/common.json';
 import viLanding from './locales/vi/landing.json';
 import viAuth from './locales/vi/auth.json';
@@ -25,6 +26,7 @@ import viChatbot from './locales/vi/chatbot.json';
 import viMemoryMap from './locales/vi/memoryMap.json';
 import viMiniGames from './locales/vi/miniGames.json';
 import viModals from './locales/vi/modals.json';
+import viFaq from './locales/vi/faq.json';
 
 const resources = {
   en: {
@@ -39,6 +41,7 @@ const resources = {
     memoryMap: enMemoryMap,
     miniGames: enMiniGames,
     modals: enModals,
+    faq: enFaq,
   },
   vi: {
     common: viCommon,
@@ -52,6 +55,7 @@ const resources = {
     memoryMap: viMemoryMap,
     miniGames: viMiniGames,
     modals: viModals,
+    faq: viFaq,
   },
 };
 

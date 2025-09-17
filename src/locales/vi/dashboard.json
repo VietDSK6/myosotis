@@ -2,7 +2,8 @@
   "navigation": {
     "dashboard": "Bảng Điều Khiển",
     "myAccount": "Tài Khoản Của Tôi",
-    "discover": "Khám Phá"
+    "discover": "Khám Phá",
+    "faq": "Câu Hỏi Thường Gặp"
   },
   "buttons": {
     "createNewSchedule": "Tạo Lịch Trình Mới",
@@ -113,6 +114,10 @@
       "miniGames": {
         "title": "Trò Chơi Nhỏ",
         "description": "Rèn luyện trí não với Sudoku và các câu đố trí tuệ khác"
+      },
+      "faq": {
+        "title": "Câu Hỏi Thường Gặp",
+        "description": "Tìm câu trả lời cho các câu hỏi thường gặp về chăm sóc Alzheimer"
       }
     }
   },
