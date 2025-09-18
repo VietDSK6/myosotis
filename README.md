@@ -19,7 +19,7 @@ A modern, accessible web application designed to support people with Alzheimer's
 
 2. **Install dependencies**
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
 
 3. **Set up environment**
