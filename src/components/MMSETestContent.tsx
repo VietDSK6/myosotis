@@ -365,6 +365,54 @@ export default function MMSETestContent() {
     return currentAnswer.trim() !== '';
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement;
+      
+      if (target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'text' || (target as HTMLInputElement).type === 'number') {
+        if (event.key !== 'Enter') {
+          return;
+        }
+      }
+      
+      if (target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      if (isSubmitting) {
+        return;
+      }
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        const question = getCurrentQuestion();
+        if (!question) return;
+        
+        const isValid = question.type === 'multi-select' 
+          ? selectedOptions.length > 0 
+          : currentAnswer.trim() !== '';
+          
+        if (isValid) {
+          handleNext();
+        } else {
+        }
+      } else if (event.key === 'Backspace') {
+        event.preventDefault();
+        const isFirstQuestion = currentSectionIndex === 0 && currentQuestionIndex === 0;
+        if (!isFirstQuestion) {
+          handlePrevious();
+        } else {
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currentSectionIndex, currentQuestionIndex, isSubmitting, currentAnswer, selectedOptions]);
+
   if (isLoading) {
     return (
       <div className="space-y-6">
