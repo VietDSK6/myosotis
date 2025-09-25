@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from '../../i18n';
 import type {
   CreateVideoFullTextPayload,
   CreateVideoFromTopicPayload,
@@ -19,9 +20,9 @@ export async function createVideoWithFullText(
   formData.append('reference_text', payload.reference_text);
   formData.append('target_text', payload.target_text);
   
-  if (payload.language) {
-    formData.append('language', payload.language);
-  }
+  const i18nLanguage = payload.language || i18n.language || 'en';
+  const currentLanguage = i18nLanguage === 'vi' ? 'vietnamese' : 'english';
+  formData.append('language', currentLanguage);
   
   if (payload.dynamic_scale) {
     formData.append('dynamic_scale', payload.dynamic_scale.toString());
@@ -75,9 +76,10 @@ export async function createVideoFromTopic(
     formData.append('description', payload.description);
   }
   
-  if (payload.language) {
-    formData.append('language', payload.language);
-  }
+  // Always send the current user's language
+  const i18nLanguage = payload.language || i18n.language || 'en';
+  const currentLanguage = i18nLanguage === 'vi' ? 'vietnamese' : 'english';
+  formData.append('language', currentLanguage);
 
   try {
     const response = await axios.post(

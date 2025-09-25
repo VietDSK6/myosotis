@@ -19,7 +19,7 @@ export interface CreateVideoFullTextPayload {
   reference_audio: File;
   reference_text: string;
   target_text: string;
-  language?: string;
+  language?: string; // Optional - will auto-populate with current user language ('english' or 'vietnamese')
   dynamic_scale?: number;
 }
 
@@ -31,7 +31,7 @@ export interface CreateVideoFromTopicPayload {
   topic: string;
   keywords?: string;
   description?: string;
-  language?: string;
+  language?: string; // Optional - will auto-populate with current user language ('english' or 'vietnamese')
 }
 
 export interface CreateVideoResponse {

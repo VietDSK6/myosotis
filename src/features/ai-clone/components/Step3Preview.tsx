@@ -78,7 +78,7 @@ export default function Step3Preview() {
           reference_audio: referenceAudio,
           reference_text: referenceText,
           target_text: currentScript,
-          language: 'english',
+          
         });
       } else {
         response = await createVideoFromTopic({
@@ -89,7 +89,7 @@ export default function Step3Preview() {
           topic: topic || '',
           keywords,
           description,
-          language: 'english',
+          
         });
         
         if (response.generated_target_text) {
@@ -148,8 +148,8 @@ export default function Step3Preview() {
 
   const handleWaitOnPage = () => {
     setShowNotificationModal(false);
-    updateData({ isGenerating: false }); // Stop showing loading state
-    // Continue waiting - the user can manually check history later or refresh
+    updateData({ isGenerating: false }); 
+    
   };
 
   return (

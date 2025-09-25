@@ -71,7 +71,11 @@
         "startButton": "Start Recording",
         "stopButton": "Stop Recording",
         "currentLength": "Current length:",
-        "minimumLength": "Minimum 30 seconds required"
+        "minimumLength": "Minimum 30 seconds required",
+        "stopRecording": "Stop Recording",
+        "completed": "Recording completed",
+        "listen": "Listen to Recording",
+        "reRecord": "Re-record"
       },
       "upload": {
         "title": "Upload Audio File",

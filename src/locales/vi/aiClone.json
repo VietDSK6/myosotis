@@ -71,7 +71,11 @@
         "startButton": "Bắt Đầu Ghi Âm",
         "stopButton": "Dừng Ghi Âm",
         "currentLength": "Thời lượng hiện tại:",
-        "minimumLength": "Yêu cầu tối thiểu 30 giây"
+        "minimumLength": "Yêu cầu tối thiểu 30 giây",
+        "stopRecording": "Dừng Ghi Âm",
+        "completed": "Ghi âm đã hoàn tất",
+        "listen": "Nghe Ghi Âm",
+        "reRecord": "Ghi Âm Lại"
       },
       "upload": {
         "title": "Tải Lên Tệp Âm Thanh",
