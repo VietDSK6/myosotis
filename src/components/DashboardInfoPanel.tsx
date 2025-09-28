@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { SimpleChart } from './SimpleChart';
 
 interface DashboardInfoPanelProps {
@@ -23,6 +23,30 @@ export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
   handleCarouselScroll,
   onNavigateToChart,
 }) => {
+  const [itemsPerView, setItemsPerView] = useState(1);
+
+  useEffect(() => {
+    const updateItemsPerView = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) {
+        setItemsPerView(3);
+      } else if (width >= 640) { 
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(1);
+      }
+    };
+
+    updateItemsPerView();
+    window.addEventListener('resize', updateItemsPerView);
+    return () => window.removeEventListener('resize', updateItemsPerView);
+  }, []);
+
+  const getTransformValue = () => {
+    const percentage = (100 / itemsPerView);
+    return `translateX(-${currentCarouselIndex * percentage}%)`;
+  };
+
   return (
     <>
       <div
@@ -53,11 +77,11 @@ export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
           </div>
         </div>
 
-        <div className="relative overflow-hidden">
+        <div className="relative overflow-hidden rounded-lg">
           <div
             className={`flex ${isTransitioning ? 'transition-transform duration-[400ms] ease-in-out' : ''}`}
             style={{
-              transform: `translateX(-${currentCarouselIndex * (100/3)}%)`
+              transform: getTransformValue()
             }}
           >
             {[...dashboardFeatures, ...dashboardFeatures].map((feature, index) => {
@@ -67,29 +91,29 @@ export const DashboardInfoPanel: React.FC<DashboardInfoPanelProps> = ({
               return (
                 <div
                   key={index}
-                  className="flex-shrink-0 w-1/3 px-2"
+                  className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/3 px-1 sm:px-2"
                 >
                   <div
                     onClick={feature.onClick}
-                    className={`w-full border rounded-[16px] p-6 cursor-pointer hover:shadow-lg transition-all transform hover:scale-105 ${
+                    className={`w-full border rounded-[16px] p-3 sm:p-4 lg:p-6 cursor-pointer hover:shadow-lg transition-all transform hover:scale-105 ${
                       isActive
                         ? 'bg-gradient-to-br from-[#5A6DD0] to-[#5A6DD0]/80 text-white border-[#5A6DD0]'
                         : 'bg-white border-gray-100 text-gray-900'
                     }`}
                   >
-                    <div className={`w-16 h-16 rounded-[12px] flex items-center justify-center mb-4 ${
+                    <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-[12px] flex items-center justify-center mb-3 sm:mb-4 ${
                       isActive
                         ? 'bg-white/20'
                         : 'bg-gray-50'
                     }`}>
                       {feature.icon}
                     </div>
-                    <h4 className={`font-semibold mb-2 text-lg ${
+                    <h4 className={`font-semibold mb-2 text-sm sm:text-base lg:text-lg ${
                       isActive ? 'text-white' : 'text-[#333333]'
                     }`}>
                       {feature.title}
                     </h4>
-                    <p className={`text-sm ${
+                    <p className={`text-xs sm:text-sm ${
                       isActive ? 'text-white/80' : 'text-[#888888]'
                     }`}>
                       {feature.subtitle}
