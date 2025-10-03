@@ -23,6 +23,45 @@ export default function AICloneHistoryContent() {
 
       try {
         setLoading(true);
+        
+
+        if (user.id === 2) {
+          const fakeVideos: AICloneVideo[] = [
+            {
+              id: 1,
+              status: 'completed',
+              video_url: '/video/video1.mp4',
+              video_filename: 'video1.mp4',
+              target_text: 'This is a demo AI clone video showcasing the voice synthesis and lip-sync technology.',
+              reference_text: 'Hello, this is my reference voice recording for creating the AI clone.',
+              is_ai_generated_text: false,
+              topic: null,
+              description: 'Demo AI Clone Video 1 - Testing voice synthesis and facial animation',
+              keywords: null,
+              error_message: null,
+              created_at: new Date().toISOString()
+            },
+            {
+              id: 2,
+              status: 'completed',
+              video_url: '/video/video2.mp4',
+              video_filename: 'video2.mp4',
+              target_text: 'Another example of AI-generated video with personalized content and natural speech.',
+              reference_text: 'This is my voice sample for the second AI clone demonstration.',
+              is_ai_generated_text: true,
+              topic: 'Family memories and personal stories',
+              description: 'Demo AI Clone Video 2 - AI-generated content with family theme',
+              keywords: 'family, memories, storytelling',
+              error_message: null,
+              created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() // Yesterday
+            }
+          ];
+          setVideos(fakeVideos);
+          setCurrentIndex(0);
+          setLoading(false);
+          return;
+        }
+
         const response = await getUserVideos(user.id);
         if (response.success) {
           const successfulVideos = response.videos.filter(video => video.status !== 'failed');
@@ -42,7 +81,6 @@ export default function AICloneHistoryContent() {
     fetchVideos();
   }, [user?.id]);
 
-  // Reset video state when changing videos
   useEffect(() => {
     setIsPlaying(false);
     setCurrentTime(0);
@@ -159,7 +197,12 @@ export default function AICloneHistoryContent() {
               <div className="aspect-w-16 aspect-h-9 bg-gray-100">
                 <video
                   ref={videoRef}
-                  src={videos[currentIndex]?.video_url ? getVideoUrl(videos[currentIndex].video_url) : ''}
+                  src={videos[currentIndex]?.video_url ? 
+                    (videos[currentIndex].video_url.startsWith('/video/') ? 
+                      videos[currentIndex].video_url : 
+                      getVideoUrl(videos[currentIndex].video_url)
+                    ) : ''
+                  }
                   className="w-full h-full object-cover rounded-t-xl"
                   style={{ maxHeight: '700px' }}
                   onTimeUpdate={handleTimeUpdate}
